@@ -16,7 +16,7 @@ class LandingPage extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
-                height: 175.h,
+                height: 150.h,
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -24,7 +24,6 @@ class LandingPage extends StatelessWidget {
                   SizedBox(
                     child: Image(
                       height: 200.h,
-                      width: 400.w,
                       fit: BoxFit.contain,
                       image: const AssetImage('assets/landingpage.png'),
                     ),
@@ -33,20 +32,21 @@ class LandingPage extends StatelessWidget {
                     'Welcome to',
                     style: TextStyle(
                       color: Colors.grey.shade600,
-                      fontSize: 22,
+                      fontSize: 18.sp,
                     ),
                   ),
                   Text(
                     'OutsourcePro',
                     style: TextStyle(
                         color: primaryColor,
-                        fontSize: 36,
-                        fontWeight: FontWeight.w500),
+                        fontSize: 32.sp,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Poppins'),
                   ),
                 ],
               ),
               SizedBox(
-                height: 175.h,
+                height: 150.h,
               ),
               MyButton(
                   onTap: () {
@@ -54,8 +54,8 @@ class LandingPage extends StatelessWidget {
                   },
                   buttonText: 'Get Started',
                   buttonColor: primaryColor,
-                  buttonWidth: 300,
-                  buttonHeight: 50)
+                  buttonWidth: 260.w,
+                  buttonHeight: 45.h)
             ],
           ),
         ),

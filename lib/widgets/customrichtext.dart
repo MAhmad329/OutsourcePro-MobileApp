@@ -2,9 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/constants.dart';
-import 'package:outsourcepro/screens/companyLogin.dart';
 import 'package:outsourcepro/screens/companyRegistration.dart';
-import 'package:outsourcepro/screens/freelancerLogin.dart';
+import 'package:outsourcepro/screens/loginScreen.dart';
 import 'package:outsourcepro/screens/freelancerRegistration.dart';
 
 class CustomRichText extends StatelessWidget {
@@ -31,12 +30,20 @@ class CustomRichText extends StatelessWidget {
                   builder: (context) => const FreelancerRegistration()));
       } else if (currentScreen == 'signupfreelancer') {
         return TapGestureRecognizer()
-          ..onTap = () => Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const FreelancerLogin()));
+          ..onTap = () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const LoginScreen(
+                        loginType: LoginType.freelancer,
+                      )));
       } else if (currentScreen == 'signupcompany') {
         return TapGestureRecognizer()
-          ..onTap = () => Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const CompanyLogin()));
+          ..onTap = () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const LoginScreen(
+                        loginType: LoginType.company,
+                      )));
       } else if (currentScreen == 'logincompany') {
         return TapGestureRecognizer()
           ..onTap = () => Navigator.pushReplacement(
@@ -51,19 +58,19 @@ class CustomRichText extends StatelessWidget {
     return RichText(
       text: TextSpan(
         text: text1,
-        style: clickable
-            ? kText2.copyWith(fontSize: 14.sp)
-            : kText1.copyWith(fontSize: 20.sp),
+        style: kText2.copyWith(
+          fontSize: 14.sp,
+        ),
         children: <TextSpan>[
           TextSpan(
-              text: text2,
-              recognizer: checkScreen(),
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: clickable ? 16.sp : 20.sp,
-                fontWeight: FontWeight.bold,
-                color: primaryColor,
-              )),
+            text: text2,
+            recognizer: checkScreen(),
+            style: kText2.copyWith(
+              fontSize: 14.sp,
+              color: primaryColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ],
       ),
     );

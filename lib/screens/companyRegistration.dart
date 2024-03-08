@@ -105,180 +105,208 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
         elevation: 0,
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.0.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Welcome to OutsourcePro!",
-                          style: TextStyle(
-                              fontSize: 36,
-                              color: primaryColor,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          height: 5.h,
-                        ),
-                        Text(
-                          "Create Your Company Account Below",
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 25.h,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextField(
-                          controller: companyNameController,
-                          cursorColor: primaryColor,
-                          decoration: kTextFieldDecoration.copyWith(
-                            hintText: 'Company Name',
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Welcome to OutsourcePro!",
+                            style: TextStyle(
+                                fontSize: 32.sp,
+                                color: primaryColor,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Poppins'),
                           ),
-                        ),
-                        SizedBox(
-                          height: 12.h,
-                        ),
-                        TextField(
-                          controller: businessAddressController,
-                          cursorColor: primaryColor,
-                          decoration: kTextFieldDecoration.copyWith(
-                            hintText: 'Business Address',
+                          SizedBox(
+                            height: 5.h,
                           ),
-                        ),
-                        SizedBox(
-                          height: 12.h,
-                        ),
-                        TextField(
-                          controller: focalPersonNameController,
-                          cursorColor: primaryColor,
-                          decoration: kTextFieldDecoration.copyWith(
-                            hintText: 'Focal Person Name',
+                          Text(
+                            "Create Your Company Account Below",
+                            style: TextStyle(
+                                fontSize: 13.sp,
+                                color: Colors.grey.shade600,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Poppins'),
                           ),
-                        ),
-                        SizedBox(
-                          height: 12.h,
-                        ),
-                        TextField(
-                          controller: emailController,
-                          cursorColor: primaryColor,
-                          decoration: kTextFieldDecoration.copyWith(
-                            hintText: 'Focal Person Email',
-                          ),
-                        ),
-                        SizedBox(
-                          height: 12.h,
-                        ),
-                        TextFormField(
-                          controller: passwordController,
-                          cursorColor: primaryColor,
-                          obscureText: !_isObscure,
-                          decoration: kTextFieldDecoration.copyWith(
-                            hintText: 'Password',
-                            suffixIcon: IconButton(
-                              splashColor: Colors.transparent,
-                              color: Colors.grey.shade500,
-                              icon: Icon(
-                                _isObscure
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: _togglePasswordVisibility,
+                        ],
+                      ),
+                      SizedBox(
+                        height: 35.h,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextField(
+                            controller: companyNameController,
+                            cursorColor: primaryColor,
+                            decoration: kTextFieldDecoration.copyWith(
+                              hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Poppins'),
+                              hintText: 'Company Name',
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 12.h,
-                        ),
-                        TextFormField(
-                          controller: confirmPasswordController,
-                          cursorColor: primaryColor,
-                          obscureText: !_isObscure,
-                          decoration: kTextFieldDecoration.copyWith(
-                            hintText: 'Confirm Password',
-                            suffixIcon: IconButton(
-                              splashColor: Colors.transparent,
-                              color: Colors.grey.shade500,
-                              icon: Icon(
-                                _isObscure
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: _togglePasswordVisibility,
+                          SizedBox(
+                            height: 12.h,
+                          ),
+                          TextField(
+                            controller: businessAddressController,
+                            cursorColor: primaryColor,
+                            decoration: kTextFieldDecoration.copyWith(
+                              hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Poppins'),
+                              hintText: 'Business Address',
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        SizedBox(
-                          height: 15.h,
-                        ),
-                        MyButton(
-                          buttonText: 'Sign Up',
-                          buttonColor: primaryColor,
-                          buttonWidth: 350,
-                          buttonHeight: 50,
-                          onTap: () {
-                            if (_isNotValidEmail(emailController.text)) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Email is not valid!'),
-                                  duration: Duration(seconds: 3),
+                          SizedBox(
+                            height: 12.h,
+                          ),
+                          TextField(
+                            controller: focalPersonNameController,
+                            cursorColor: primaryColor,
+                            decoration: kTextFieldDecoration.copyWith(
+                              hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Poppins'),
+                              hintText: 'Focal Person Name',
+                            ),
+                          ),
+                          SizedBox(
+                            height: 12.h,
+                          ),
+                          TextField(
+                            controller: emailController,
+                            cursorColor: primaryColor,
+                            decoration: kTextFieldDecoration.copyWith(
+                              hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Poppins'),
+                              hintText: 'Focal Person Email',
+                            ),
+                          ),
+                          SizedBox(
+                            height: 12.h,
+                          ),
+                          TextFormField(
+                            controller: passwordController,
+                            cursorColor: primaryColor,
+                            obscureText: !_isObscure,
+                            decoration: kTextFieldDecoration.copyWith(
+                              hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Poppins'),
+                              hintText: 'Password',
+                              suffixIcon: IconButton(
+                                splashColor: Colors.transparent,
+                                color: Colors.grey.shade500,
+                                icon: Icon(
+                                  size: 20.r,
+                                  _isObscure
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
                                 ),
-                              );
-                            } else if (passwordController.text ==
-                                    confirmPasswordController.text &&
-                                passwordController.text.isNotEmpty) {
-                              _register();
-                            } else if (passwordController.text !=
-                                confirmPasswordController.text) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Passwords do not match!'),
-                                  duration: Duration(seconds: 3),
+                                onPressed: _togglePasswordVisibility,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 12.h,
+                          ),
+                          TextFormField(
+                            controller: confirmPasswordController,
+                            cursorColor: primaryColor,
+                            obscureText: !_isObscure,
+                            decoration: kTextFieldDecoration.copyWith(
+                              hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Poppins'),
+                              hintText: 'Confirm Password',
+                              suffixIcon: IconButton(
+                                splashColor: Colors.transparent,
+                                color: Colors.grey.shade500,
+                                icon: Icon(
+                                  size: 20.r,
+                                  _isObscure
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
                                 ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Please fill all the fields!'),
-                                  duration: Duration(seconds: 3),
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 35.h,
-                    ),
-                    const CustomRichText(
-                      text1: "Already Have an Account? ",
-                      text2: 'Sign In',
-                      clickable: true,
-                      currentScreen: 'signupcompany',
-                    ),
-                  ],
+                                onPressed: _togglePasswordVisibility,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          MyButton(
+                            buttonText: 'Sign Up',
+                            buttonColor: primaryColor,
+                            buttonWidth: double.infinity,
+                            buttonHeight: 40.h,
+                            onTap: () {
+                              if (_isNotValidEmail(emailController.text)) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Email is not valid!'),
+                                    duration: Duration(seconds: 3),
+                                  ),
+                                );
+                              } else if (passwordController.text ==
+                                      confirmPasswordController.text &&
+                                  passwordController.text.isNotEmpty) {
+                                _register();
+                              } else if (passwordController.text !=
+                                  confirmPasswordController.text) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Passwords do not match!'),
+                                    duration: Duration(seconds: 3),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Please fill all the fields!'),
+                                    duration: Duration(seconds: 3),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      const CustomRichText(
+                        text1: "Already Have an Account? ",
+                        text2: 'Sign In',
+                        clickable: true,
+                        currentScreen: 'signupcompany',
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:outsourcepro/widgets/button.dart';
 import 'package:outsourcepro/constants.dart';
 
 class SelectionScreen extends StatelessWidget {
@@ -23,16 +22,18 @@ class SelectionScreen extends StatelessWidget {
                   Text(
                     "Continue As?",
                     style: TextStyle(
-                        fontSize: 36,
+                        fontSize: 30.sp,
                         color: primaryColor,
-                        fontWeight: FontWeight.w500),
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Poppins'),
                   ),
                   Text(
                     "Select a Category",
                     style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 15.sp,
                         color: Colors.grey.shade600,
-                        fontWeight: FontWeight.w500),
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Poppins'),
                   ),
                 ],
               ),
@@ -53,15 +54,14 @@ class SelectionScreen extends StatelessWidget {
                           color: primaryColor, // Set your desired color
                           width: 1.0.h, // Set the border width
                         ),
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(10.0.r),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(
                             child: Image(
-                              height: 100.h,
-                              width: 150.w,
+                              height: 75.h,
                               fit: BoxFit.contain,
                               image: const AssetImage(
                                   'assets/freelancerlogin.png'),
@@ -71,16 +71,15 @@ class SelectionScreen extends StatelessWidget {
                             "Freelancer",
                             style: TextStyle(
                                 color: primaryColor,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w500),
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Poppins'),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 25.h,
-                  ),
+                  SizedBox(height: 25.h),
                   InkWell(
                     onTap: () {
                       Navigator.pushNamed(context, 'company_login_screen');
@@ -93,15 +92,14 @@ class SelectionScreen extends StatelessWidget {
                           color: primaryColor, // Set your desired color
                           width: 1.0.h, // Set the border width
                         ),
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(10.0.r),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(
                             child: Image(
-                              height: 100.h,
-                              width: 150.w,
+                              height: 75.h,
                               fit: BoxFit.contain,
                               image:
                                   const AssetImage('assets/companylogin.png'),
@@ -111,8 +109,9 @@ class SelectionScreen extends StatelessWidget {
                             "Company",
                             style: TextStyle(
                                 color: primaryColor,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w500),
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Poppins'),
                           ),
                         ],
                       ),

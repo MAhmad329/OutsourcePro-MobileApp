@@ -34,30 +34,29 @@ TextStyle kText3 = TextStyle(
 
 InputDecoration kTextFieldDecoration = InputDecoration(
   hintText: 'hint text',
-  hintStyle: TextStyle(color: Colors.grey.shade600),
   filled: true,
   fillColor: Color.fromRGBO(152, 126, 255, 0.10),
-  contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+  contentPadding: EdgeInsets.symmetric(vertical: 14.0.h, horizontal: 16.0.w),
   border: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    borderRadius: BorderRadius.all(Radius.circular(10.0.r)),
   ),
   enabledBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.transparent, width: 1.0),
-    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    borderSide: BorderSide(color: Colors.transparent, width: 1.0.w),
+    borderRadius: BorderRadius.all(Radius.circular(10.0.r)),
   ),
   focusedBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: primaryColor, width: 2.0),
-    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    borderSide: BorderSide(color: primaryColor, width: 2.0.w),
+    borderRadius: BorderRadius.all(Radius.circular(10.0.r)),
   ),
   errorBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(10)),
+    borderRadius: BorderRadius.all(Radius.circular(10.r)),
     borderSide: BorderSide(
       width: 2,
       color: Colors.red,
     ),
   ),
   focusedErrorBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(10)),
+    borderRadius: BorderRadius.all(Radius.circular(10.r)),
     borderSide: BorderSide(
       width: 2,
       color: Colors.red,

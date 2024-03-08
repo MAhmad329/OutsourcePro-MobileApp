@@ -105,25 +105,23 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0.w),
+            padding: EdgeInsets.symmetric(horizontal: 30.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
                   child: Column(
                     children: [
-                      SizedBox(
-                        height: 10.h,
-                      ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             "Welcome to OutsourcePro!",
                             style: TextStyle(
-                                fontSize: 36,
+                                fontSize: 32.sp,
                                 color: primaryColor,
-                                fontWeight: FontWeight.w500),
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Poppins'),
                           ),
                           SizedBox(
                             height: 5.h,
@@ -131,14 +129,15 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                           Text(
                             "Create Your Freelancer Account Below",
                             style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 14.sp,
                                 color: Colors.grey.shade600,
-                                fontWeight: FontWeight.w500),
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Poppins'),
                           ),
                         ],
                       ),
                       SizedBox(
-                        height: 25.h,
+                        height: 35.h,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,6 +146,10 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                             controller: firstNameController,
                             cursorColor: primaryColor,
                             decoration: kTextFieldDecoration.copyWith(
+                              hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Poppins'),
                               hintText: 'First Name',
                             ),
                           ),
@@ -157,6 +160,10 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                             controller: lastNameController,
                             cursorColor: primaryColor,
                             decoration: kTextFieldDecoration.copyWith(
+                              hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Poppins'),
                               hintText: 'Last Name',
                             ),
                           ),
@@ -167,6 +174,10 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                             controller: userNameController,
                             cursorColor: primaryColor,
                             decoration: kTextFieldDecoration.copyWith(
+                              hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Poppins'),
                               hintText: 'Username',
                             ),
                           ),
@@ -177,6 +188,10 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                             controller: emailController,
                             cursorColor: primaryColor,
                             decoration: kTextFieldDecoration.copyWith(
+                              hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Poppins'),
                               hintText: 'Email',
                             ),
                           ),
@@ -188,11 +203,16 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                             cursorColor: primaryColor,
                             obscureText: !_isObscure,
                             decoration: kTextFieldDecoration.copyWith(
+                              hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Poppins'),
                               hintText: 'Password',
                               suffixIcon: IconButton(
                                 splashColor: Colors.transparent,
                                 color: Colors.grey.shade500,
                                 icon: Icon(
+                                  size: 20.r,
                                   _isObscure
                                       ? Icons.visibility
                                       : Icons.visibility_off,
@@ -209,11 +229,16 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                             cursorColor: primaryColor,
                             obscureText: !_isObscure,
                             decoration: kTextFieldDecoration.copyWith(
+                              hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Poppins'),
                               hintText: 'Confirm Password',
                               suffixIcon: IconButton(
                                 splashColor: Colors.transparent,
                                 color: Colors.grey.shade500,
                                 icon: Icon(
+                                  size: 20.r,
                                   _isObscure
                                       ? Icons.visibility
                                       : Icons.visibility_off,
@@ -223,16 +248,13 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                             ),
                           ),
                           SizedBox(
-                            height: 6.h,
-                          ),
-                          SizedBox(
-                            height: 15.h,
+                            height: 20.h,
                           ),
                           MyButton(
                             buttonText: 'Sign Up',
                             buttonColor: primaryColor,
-                            buttonWidth: 350,
-                            buttonHeight: 50,
+                            buttonWidth: double.infinity,
+                            buttonHeight: 40.h,
                             onTap: () {
                               if (_isNotValidEmail(emailController.text)) {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -267,7 +289,7 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                         ],
                       ),
                       SizedBox(
-                        height: 35.h,
+                        height: 20.h,
                       ),
                       const CustomRichText(
                         text1: "Already Have an Account? ",
@@ -276,7 +298,7 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                         currentScreen: 'signupfreelancer',
                       ),
                       SizedBox(
-                        height: 35.h,
+                        height: 20.h,
                       ),
                     ],
                   ),

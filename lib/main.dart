@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/screens/addEducation.dart';
 import 'package:outsourcepro/screens/addExperience.dart';
-import 'package:outsourcepro/screens/companyLogin.dart';
 import 'package:outsourcepro/screens/editAboutMe.dart';
-import 'package:outsourcepro/screens/freelancerLogin.dart';
+import 'package:outsourcepro/screens/loginScreen.dart';
 import 'package:outsourcepro/screens/homepage.dart';
 import 'package:outsourcepro/screens/homepageFreelancer.dart';
 import 'package:outsourcepro/screens/landingPage.dart';
@@ -43,8 +42,12 @@ class MyApp extends StatelessWidget {
             routes: {
               'landing_screen': (context) => const LandingPage(),
               'selection_screen': (context) => const SelectionScreen(),
-              'freelancer_login_screen': (context) => const FreelancerLogin(),
-              'company_login_screen': (context) => const CompanyLogin(),
+              'freelancer_login_screen': (context) => const LoginScreen(
+                    loginType: LoginType.freelancer,
+                  ),
+              'company_login_screen': (context) => const LoginScreen(
+                    loginType: LoginType.company,
+                  ),
               'homepage_screen': (context) => const HomePage(),
               'homepage_freelancer_screen': (context) =>
                   const HomepageFreelancer(),
@@ -70,5 +73,5 @@ class AuthenticationProvider extends ChangeNotifier {
 }
 
 class IPAddressProvider extends ChangeNotifier {
-  String ipaddress = '192.168.0.120';
+  String ipaddress = '192.168.45.124';
 }
