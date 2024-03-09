@@ -19,6 +19,7 @@ class FreelancerRegistration extends StatefulWidget {
 class _FreelancerRegistrationState extends State<FreelancerRegistration> {
   bool _isObscure = false;
   String ipaddress = '';
+  bool isLoading = false;
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
@@ -40,6 +41,9 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
   }
 
   Future<void> _register() async {
+    setState(() {
+      isLoading = true; // Set loading to true
+    });
     ipaddress =
         Provider.of<IPAddressProvider>(context, listen: false).ipaddress;
     var headers = {
@@ -58,20 +62,19 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
 
     http.StreamedResponse response = await request.send();
 
-    print('Response Status Code: ${response.statusCode}');
-    print('Response Body: ${await response.stream.bytesToString()}');
+    // Read the response stream into a variable
+    String responseBody = await response.stream.bytesToString();
 
     if (response.statusCode == 201) {
       Navigator.pushReplacementNamed(context, 'freelancer_login_screen');
-      print(await response.stream.bytesToString());
+      print(responseBody);
     } else {
       print(response.reasonPhrase);
 
       String errorMessage = 'Signup failed.';
 
       try {
-        Map<String, dynamic> errorResponse =
-            json.decode(await response.stream.bytesToString());
+        Map<String, dynamic> errorResponse = json.decode(responseBody);
 
         if (errorResponse.containsKey('error')) {
           errorMessage = errorResponse['error'];
@@ -89,6 +92,9 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
         ),
       );
     }
+    setState(() {
+      isLoading = false; // Set loading to false
+    });
   }
 
   @override
@@ -251,40 +257,58 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                             height: 20.h,
                           ),
                           MyButton(
-                            buttonText: 'Sign Up',
+                            buttonText: isLoading ? '' : 'Sign Up',
                             buttonColor: primaryColor,
                             buttonWidth: double.infinity,
                             buttonHeight: 40.h,
-                            onTap: () {
-                              if (_isNotValidEmail(emailController.text)) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Email is not valid!'),
-                                    duration: Duration(seconds: 3),
-                                  ),
-                                );
-                              } else if (passwordController.text ==
-                                      confirmPasswordController.text &&
-                                  passwordController.text.isNotEmpty) {
-                                _register();
-                              } else if (passwordController.text !=
-                                  confirmPasswordController.text) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Passwords do not match!'),
-                                    duration: Duration(seconds: 3),
-                                  ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text('Please fill all the fields!'),
-                                    duration: Duration(seconds: 3),
-                                  ),
-                                );
-                              }
-                            },
+                            onTap: isLoading
+                                ? null
+                                : () {
+                                    if (_isNotValidEmail(
+                                        emailController.text)) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Email is not valid!'),
+                                          duration: Duration(seconds: 3),
+                                        ),
+                                      );
+                                    } else if (passwordController.text ==
+                                            confirmPasswordController.text &&
+                                        passwordController.text.isNotEmpty) {
+                                      _register();
+                                    } else if (passwordController.text !=
+                                        confirmPasswordController.text) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content:
+                                              Text('Passwords do not match!'),
+                                          duration: Duration(seconds: 3),
+                                        ),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'Please fill all the fields!'),
+                                          duration: Duration(seconds: 3),
+                                        ),
+                                      );
+                                    }
+                                  },
+                            child: isLoading
+                                ? SizedBox(
+                                    width: 24.w,
+                                    height: 24.h,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2.w,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    ),
+                                  )
+                                : null,
                           ),
                         ],
                       ),

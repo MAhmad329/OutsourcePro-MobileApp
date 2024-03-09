@@ -20,6 +20,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isObscure = false;
+  bool isLoading = false;
   String ipaddress = '';
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -31,6 +32,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
+    setState(() {
+      isLoading = true; // Set loading to true
+    });
     ipaddress =
         Provider.of<IPAddressProvider>(context, listen: false).ipaddress;
     var headers = {
@@ -38,51 +42,48 @@ class _LoginScreenState extends State<LoginScreen> {
     };
     var request = http.Request(
         'POST', Uri.parse('http://$ipaddress:3000/api/v1/freelancer/login'));
-    print('Request Payload: ${json.encode({
-          "email": emailController.text,
-          "password": passwordController.text
-        })}');
     request.body = json.encode({
       "email": emailController.text,
       "password": passwordController.text,
     });
     request.headers.addAll(headers);
 
-    http.StreamedResponse response = await request.send();
+    try {
+      http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
-      // Save the cookie to the provider
-      Provider.of<AuthenticationProvider>(context, listen: false)
-          .setCookie(response.headers['set-cookie']!);
+      if (response.statusCode == 200) {
+        Provider.of<AuthenticationProvider>(context, listen: false)
+            .setCookie(response.headers['set-cookie']!);
 
-      Navigator.pushReplacementNamed(context, 'homepage_freelancer_screen');
-      print(await response.stream.bytesToString());
-    } else {
-      print(response.reasonPhrase);
-
-      String errorMessage = 'Login failed.';
-
-      try {
+        Navigator.pushReplacementNamed(context, 'homepage_freelancer_screen');
+      } else {
+        String errorMessage = 'Login failed.';
         Map<String, dynamic> errorResponse =
             json.decode(await response.stream.bytesToString());
-
-        // Check for specific error messages
         if (errorResponse.containsKey('error')) {
           errorMessage = errorResponse['error'];
         } else if (errorResponse.containsKey('message')) {
-          // Example: {"message": "Wrong password."}
           errorMessage = errorResponse['message'];
         }
-      } catch (e) {
-        print('Error parsing response body: $e');
-      }
 
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(errorMessage),
-          duration: Duration(seconds: 3),
+          content: Text("Failed to sign in: ${e.toString()}"),
+          backgroundColor: Colors.red,
         ),
       );
+    } finally {
+      setState(() {
+        isLoading = false; // Set loading to false
+      });
     }
   }
 
@@ -197,11 +198,24 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 25.h,
                           ),
                           MyButton(
-                            buttonText: 'Sign in',
+                            buttonText: isLoading ? '' : 'Sign in',
                             buttonColor: primaryColor,
                             buttonWidth: double.infinity,
                             buttonHeight: 40.h,
-                            onTap: _login,
+                            onTap: isLoading ? null : _login,
+                            child: isLoading
+                                ? SizedBox(
+                                    width: 24.w, // Adjust the size as needed
+                                    height: 20.h, // Adjust the size as needed
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2
+                                          .w, // Adjust the thickness of the indicator
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
+                                              Colors.white),
+                                    ),
+                                  )
+                                : null,
                           ),
                         ],
                       ),

@@ -4,22 +4,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class MyButton extends StatelessWidget {
   const MyButton({
     super.key,
-    required this.buttonText,
+    this.buttonText, // Make this nullable
     required this.buttonColor,
     required this.buttonWidth,
     required this.buttonHeight,
     this.textColor = Colors.white,
     this.borderColor = Colors.transparent,
     this.onTap,
+    this.child, // Add this line
   });
 
-  final String buttonText;
+  final String? buttonText; // Make this nullable
   final Color buttonColor;
   final double buttonHeight;
   final double buttonWidth;
   final Color textColor;
   final Color borderColor;
   final Function()? onTap;
+  final Widget? child; // Add this line
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -32,11 +35,12 @@ class MyButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.0.r),
           color: buttonColor,
         ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                buttonText,
+        child: Center(
+          // Change this to Center
+          child: child ??
+              Text(
+                // Use child if provided, otherwise use buttonText
+                buttonText ?? '', // Use empty string if buttonText is null
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 16.sp,
@@ -44,8 +48,6 @@ class MyButton extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                     fontFamily: 'Poppins'),
               ),
-            ),
-          ],
         ),
       ),
     );
