@@ -101,10 +101,6 @@ class _AddEducationState extends State<AddEducation> {
 
   @override
   Widget build(BuildContext context) {
-    String ipaddress =
-        Provider.of<IPAddressProvider>(context, listen: false).ipaddress;
-    String cookie =
-        Provider.of<AuthenticationProvider>(context, listen: false).cookie!;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -321,8 +317,7 @@ class _AddEducationState extends State<AddEducation> {
                                         : 'N/A',
                               );
 
-                              provider.addEducationEntry(
-                                  newEducation, ipaddress, cookie);
+                              provider.addEducationEntry(newEducation);
 
                               // Do something with the educationDetails list, such as print or save to a database
                               Navigator.pop(context);

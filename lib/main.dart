@@ -25,10 +25,17 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthenticationProvider()),
         ChangeNotifierProvider(create: (context) => IPAddressProvider()),
-        ChangeNotifierProvider(
-            create: (context) => FreelancerProfileProvider(
-                  context: context,
-                )),
+        ChangeNotifierProxyProvider2<IPAddressProvider, AuthenticationProvider,
+                FreelancerProfileProvider>(
+            create: (_) => FreelancerProfileProvider(), // Initial empty values
+            update: (_, ipAddressProvider, authProvider,
+                freelancerProfileProvider) {
+              return freelancerProfileProvider!
+                ..updateDependencies(
+                  ipAddressProvider.ipaddress,
+                  authProvider.cookie,
+                );
+            }),
         // Add more providers as needed
       ],
       child: ScreenUtilInit(
@@ -64,7 +71,7 @@ class MyApp extends StatelessWidget {
 }
 
 class AuthenticationProvider extends ChangeNotifier {
-  String? cookie;
+  String cookie = '';
 
   void setCookie(String value) {
     cookie = value;
@@ -73,5 +80,5 @@ class AuthenticationProvider extends ChangeNotifier {
 }
 
 class IPAddressProvider extends ChangeNotifier {
-  String ipaddress = '192.168.45.124';
+  String ipaddress = '192.168.0.120';
 }

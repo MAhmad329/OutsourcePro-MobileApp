@@ -100,10 +100,6 @@ class _AddExperienceState extends State<AddExperience> {
 
   @override
   Widget build(BuildContext context) {
-    String ipaddress =
-        Provider.of<IPAddressProvider>(context, listen: false).ipaddress;
-    String cookie =
-        Provider.of<AuthenticationProvider>(context, listen: false).cookie!;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -320,8 +316,7 @@ class _AddExperienceState extends State<AddExperience> {
                                         : 'N/A',
                               );
 
-                              provider.addExperienceEntry(
-                                  newExp, ipaddress, cookie);
+                              provider.addExperienceEntry(newExp);
 
                               // Do something with the experienceDetails list, such as print or save to a database
                               Navigator.pop(context);

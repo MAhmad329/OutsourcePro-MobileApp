@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -8,24 +7,29 @@ import '../schemas/FreelanceProfile.dart';
 
 class FreelancerProfileProvider extends ChangeNotifier {
   FreelancerProfile _profile = FreelancerProfile();
-
+  String _ipAddress = '';
+  String _cookie = '';
   FreelancerProfile get profile => _profile;
 
-  FreelancerProfileProvider({
-    required BuildContext context,
-  }) {
-    fetchFreelancerDetails(
-      Provider.of<IPAddressProvider>(context, listen: false).ipaddress,
-      Provider.of<AuthenticationProvider>(context, listen: false).cookie!,
-    );
+  FreelancerProfileProvider() {
+    fetchFreelancerDetails();
   }
 
-  Future<void> fetchFreelancerDetails(String ipaddress, String cookie) async {
+  void updateDependencies(String ipAddress, String cookie) {
+    _ipAddress = ipAddress;
+    _cookie = cookie;
+    fetchFreelancerDetails();
+  }
+
+  Future<void> fetchFreelancerDetails() async {
+    if (_ipAddress.isEmpty || _cookie.isEmpty) {
+      return;
+    }
     var headers = {
-      'Cookie': cookie,
+      'Cookie': _cookie,
     };
     var request = http.Request(
-        'GET', Uri.parse('http://$ipaddress:3000/api/v1/freelancer/details'));
+        'GET', Uri.parse('http://$_ipAddress:3000/api/v1/freelancer/details'));
     request.body = '''''';
     request.headers.addAll(headers);
 
@@ -61,14 +65,17 @@ class FreelancerProfileProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> updateFreelancerDetails(String ipaddress, String cookie) async {
+  Future<void> updateFreelancerDetails() async {
+    if (_ipAddress.isEmpty || _cookie.isEmpty) {
+      return;
+    }
     var headers = {
       'Content-Type': 'application/json',
-      'Cookie': cookie,
+      'Cookie': _cookie,
     };
 
     var request = http.Request('PUT',
-        Uri.parse('http://$ipaddress:3000/api/v1/freelancer/updateprofile'));
+        Uri.parse('http://$_ipAddress:3000/api/v1/freelancer/updateprofile'));
 
     // Convert education entries and experience entries to map format
     List<Map<String, dynamic>> existingEducationEntries =
@@ -106,8 +113,7 @@ class FreelancerProfileProvider extends ChangeNotifier {
 
   void updateFirstname(String firstname) {
     _profile.firstname = firstname;
-    updateFreelancerDetails(
-        IPAddressProvider().ipaddress, AuthenticationProvider().cookie!);
+    updateFreelancerDetails();
     notifyListeners();
   }
 
@@ -121,9 +127,9 @@ class FreelancerProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateAboutMe(String aboutMe, String ipaddress, String cookie) {
+  void updateAboutMe(String aboutMe) {
     _profile.aboutMe = aboutMe;
-    updateFreelancerDetails(ipaddress, cookie);
+    updateFreelancerDetails();
     notifyListeners();
   }
 
@@ -132,15 +138,15 @@ class FreelancerProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addSkill(String skill, String ipaddress, String cookie) {
+  void addSkill(String skill) {
     _profile.skills.add(skill);
-    updateFreelancerDetails(ipaddress, cookie);
+    updateFreelancerDetails();
     notifyListeners();
   }
 
-  void removeSkill(int index, String ipaddress, String cookie) {
+  void removeSkill(int index) {
     _profile.skills.removeAt(index);
-    updateFreelancerDetails(ipaddress, cookie);
+    updateFreelancerDetails();
     notifyListeners();
   }
 
@@ -149,10 +155,9 @@ class FreelancerProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addEducationEntry(
-      EducationEntry entry, String ipaddress, String cookie) {
+  void addEducationEntry(EducationEntry entry) {
     _profile.educationEntries.add(entry);
-    updateFreelancerDetails(ipaddress, cookie);
+    updateFreelancerDetails();
     notifyListeners();
   }
 
@@ -161,10 +166,9 @@ class FreelancerProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addExperienceEntry(
-      ExperienceEntry entry, String ipaddress, String cookie) {
+  void addExperienceEntry(ExperienceEntry entry) {
     _profile.experienceEntries.add(entry);
-    updateFreelancerDetails(ipaddress, cookie);
+    updateFreelancerDetails();
     notifyListeners();
   }
 

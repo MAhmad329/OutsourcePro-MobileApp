@@ -36,10 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
     var headers = {
       'Content-Type': 'application/json',
     };
-    var endpoint =
-        widget.loginType == LoginType.freelancer ? 'freelancer' : 'company';
     var request = http.Request(
-        'POST', Uri.parse('http://$ipaddress:3000/api/v1/$endpoint/login'));
+        'POST', Uri.parse('http://$ipaddress:3000/api/v1/freelancer/login'));
     print('Request Payload: ${json.encode({
           "email": emailController.text,
           "password": passwordController.text
@@ -53,10 +51,11 @@ class _LoginScreenState extends State<LoginScreen> {
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      String nextPage = widget.loginType == LoginType.freelancer
-          ? 'homepage_freelancer_screen'
-          : 'homepage_screen';
-      Navigator.pushReplacementNamed(context, nextPage);
+      // Save the cookie to the provider
+      Provider.of<AuthenticationProvider>(context, listen: false)
+          .setCookie(response.headers['set-cookie']!);
+
+      Navigator.pushReplacementNamed(context, 'homepage_freelancer_screen');
       print(await response.stream.bytesToString());
     } else {
       print(response.reasonPhrase);
@@ -71,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (errorResponse.containsKey('error')) {
           errorMessage = errorResponse['error'];
         } else if (errorResponse.containsKey('message')) {
+          // Example: {"message": "Wrong password."}
           errorMessage = errorResponse['message'];
         }
       } catch (e) {

@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/constants.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import '../main.dart';
 import '../schemas/FreelanceProfile.dart';
 import '../widgets/button.dart';
 
@@ -14,11 +11,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String ipaddress =
-        Provider.of<IPAddressProvider>(context, listen: false).ipaddress;
-    String cookie =
-        Provider.of<AuthenticationProvider>(context, listen: false).cookie!;
-
+    final profileProvider = Provider.of<FreelancerProfileProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -79,28 +72,24 @@ class ProfileScreen extends StatelessWidget {
                         SizedBox(
                           height: 10.h,
                         ),
-                        Consumer<FreelancerProfileProvider>(
-                          builder: (context, profileProvider, child) {
-                            return Column(
-                              children: [
-                                Text(
-                                  profileProvider.profile.firstname,
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  profileProvider.profile.username,
-                                  style: TextStyle(
-                                    color: Colors.grey.shade400,
-                                    fontSize: 14.sp,
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
+                        Column(
+                          children: [
+                            Text(
+                              profileProvider.profile.firstname,
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              profileProvider.profile.username,
+                              style: TextStyle(
+                                color: Colors.grey.shade400,
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -111,54 +100,38 @@ class ProfileScreen extends StatelessWidget {
                 height: 20.h,
               ),
               // About Me Section
-              Consumer<FreelancerProfileProvider>(
-                builder: (context, profileProvider, child) {
-                  return buildAboutMeSection(
-                    title: 'About Me',
-                    content: profileProvider.profile.aboutMe,
-                    editCallback: () {
-                      Navigator.pushNamed(
-                        context,
-                        'edit_about_me_screen',
-                      );
-                    },
+              buildAboutMeSection(
+                title: 'About Me',
+                content: profileProvider.profile.aboutMe,
+                editCallback: () {
+                  Navigator.pushNamed(
+                    context,
+                    'edit_about_me_screen',
                   );
                 },
               ),
               // Skills Section
-              Consumer<FreelancerProfileProvider>(
-                builder: (context, profileProvider, child) {
-                  return buildSkillsSection(
-                      profileProvider, context, ipaddress, cookie);
-                },
-              ),
+              buildSkillsSection(profileProvider, context),
               // Education Section
-              Consumer<FreelancerProfileProvider>(
-                builder: (context, profileProvider, child) {
-                  return buildEducationEntriesSection(
-                    title: 'Education',
-                    entries: profileProvider.profile.educationEntries,
-                    editCallback: () {
-                      Navigator.pushNamed(
-                        context,
-                        'add_education_screen',
-                      );
-                    },
+              buildEducationEntriesSection(
+                title: 'Education',
+                entries: profileProvider.profile.educationEntries,
+                editCallback: () {
+                  Navigator.pushNamed(
+                    context,
+                    'add_education_screen',
                   );
                 },
               ),
+
               // Experience Section
-              Consumer<FreelancerProfileProvider>(
-                builder: (context, profileProvider, child) {
-                  return buildExperienceEntriesSection(
-                    title: 'Experience',
-                    entries: profileProvider.profile.experienceEntries,
-                    editCallback: () {
-                      Navigator.pushNamed(
-                        context,
-                        'add_experience_screen',
-                      );
-                    },
+              buildExperienceEntriesSection(
+                title: 'Experience',
+                entries: profileProvider.profile.experienceEntries,
+                editCallback: () {
+                  Navigator.pushNamed(
+                    context,
+                    'add_experience_screen',
                   );
                 },
               ),
@@ -177,7 +150,6 @@ class ProfileScreen extends StatelessWidget {
     required String content,
     required VoidCallback editCallback,
   }) {
-    print("AboutMeSection rebuilt");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -190,7 +162,7 @@ class ProfileScreen extends StatelessWidget {
                   Icons.info,
                   color: primaryColor,
                 ),
-                SizedBox(width: 8.0),
+                const SizedBox(width: 8.0),
                 Text(
                   title,
                   style:
@@ -228,9 +200,8 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget buildSkillsSection(FreelancerProfileProvider provider,
-      BuildContext context, String ipaddress, String cookie) {
-    print('skillsection built');
+  Widget buildSkillsSection(
+      FreelancerProfileProvider provider, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -243,7 +214,7 @@ class ProfileScreen extends StatelessWidget {
                   Icons.info,
                   color: primaryColor,
                 ),
-                SizedBox(width: 8.0),
+                const SizedBox(width: 8.0),
                 Text(
                   'Skills',
                   style:
@@ -253,8 +224,8 @@ class ProfileScreen extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
-                _showAddSkillEntryDialog('Skill', provider.profile.skills,
-                    context, provider, ipaddress, cookie);
+                _showAddSkillEntryDialog(
+                    'Skill', provider.profile.skills, context, provider);
               },
               icon: Icon(
                 Icons.add,
@@ -285,8 +256,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      _showDeleteSkillDialog(
-                          index, context, provider, ipaddress, cookie);
+                      _showDeleteSkillDialog(index, context, provider);
                     },
                     child: Icon(
                       Icons.cancel_outlined,
@@ -304,14 +274,14 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  void _showDeleteSkillDialog(int index, BuildContext context,
-      FreelancerProfileProvider provider, String ipaddress, String cookie) {
+  void _showDeleteSkillDialog(
+      int index, BuildContext context, FreelancerProfileProvider provider) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete Skill'),
-          content: Text('Are you sure you want to delete this skill?'),
+          title: const Text('Delete Skill'),
+          content: const Text('Are you sure you want to delete this skill?'),
           actions: [
             MyButton(
               buttonText: 'Cancel',
@@ -328,7 +298,7 @@ class ProfileScreen extends StatelessWidget {
               buttonWidth: 110.w,
               buttonHeight: 40.h,
               onTap: () {
-                provider.removeSkill(index, ipaddress, cookie);
+                provider.removeSkill(index);
                 Navigator.of(context).pop();
               },
             ),
@@ -358,7 +328,7 @@ class ProfileScreen extends StatelessWidget {
                   Icons.info,
                   color: primaryColor,
                 ),
-                SizedBox(width: 8.0),
+                const SizedBox(width: 8.0),
                 Text(
                   title,
                   style:
@@ -381,7 +351,7 @@ class ProfileScreen extends StatelessWidget {
         // Use ListView to allow scrolling if there are many entries
         ListView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: entries.length,
           itemBuilder: (context, index) {
             return Container(
@@ -456,7 +426,7 @@ class ProfileScreen extends StatelessWidget {
                   Icons.info,
                   color: primaryColor,
                 ),
-                SizedBox(width: 8.0),
+                const SizedBox(width: 8.0),
                 Text(
                   title,
                   style:
@@ -479,7 +449,7 @@ class ProfileScreen extends StatelessWidget {
         // Use ListView to allow scrolling if there are many entries
         ListView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: entries.length,
           itemBuilder: (context, index) {
             return Container(
@@ -538,12 +508,11 @@ class ProfileScreen extends StatelessWidget {
   }
 
   void _showAddSkillEntryDialog(
-      String title,
-      List<String> entries,
-      BuildContext context,
-      FreelancerProfileProvider provider,
-      String ipaddress,
-      String cookie) {
+    String title,
+    List<String> entries,
+    BuildContext context,
+    FreelancerProfileProvider provider,
+  ) {
     TextEditingController entryController = TextEditingController();
 
     showDialog(
@@ -552,9 +521,10 @@ class ProfileScreen extends StatelessWidget {
         return AlertDialog(
           title: Center(child: Text('Add $title')),
           content: TextField(
-              controller: entryController,
-              decoration:
-                  kTextFieldDecoration.copyWith(hintText: 'Enter a skill')),
+            controller: entryController,
+            decoration:
+                kTextFieldDecoration.copyWith(hintText: 'Enter a skill'),
+          ),
           actions: [
             MyButton(
               buttonText: 'Cancel',
@@ -574,7 +544,7 @@ class ProfileScreen extends StatelessWidget {
                 String entryText = entryController.text.trim();
 
                 if (entryText.isNotEmpty) {
-                  provider.addSkill(entryText, ipaddress, cookie);
+                  provider.addSkill(entryText);
 
                   Navigator.of(context).pop();
                 }

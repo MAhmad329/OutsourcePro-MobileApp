@@ -17,11 +17,23 @@ class _EditAboutMeState extends State<EditAboutMe> {
   TextEditingController captionController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // Set default text
+    captionController.text =
+        Provider.of<FreelancerProfileProvider>(context, listen: false)
+            .profile
+            .aboutMe;
+  }
+
+  @override
+  void dispose() {
+    captionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    String ipaddress =
-        Provider.of<IPAddressProvider>(context, listen: false).ipaddress;
-    String cookie =
-        Provider.of<AuthenticationProvider>(context, listen: false).cookie!;
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -29,7 +41,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(
-              Icons.arrow_back_ios,
+              Icons.arrow_back,
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -90,7 +102,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
                         // Use the provider method to update the text
                         Provider.of<FreelancerProfileProvider>(context,
                                 listen: false)
-                            .updateAboutMe(editedText, ipaddress, cookie);
+                            .updateAboutMe(editedText);
                         Navigator.pop(context);
                       },
                     ),
