@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+
 import '../Providers/freelance_profile_provider.dart';
 import '../constants.dart';
-import '../main.dart';
 import '../widgets/button.dart';
 
 class EditAboutMe extends StatefulWidget {
-  const EditAboutMe({Key? key}) : super(key: key);
+  const EditAboutMe({super.key});
 
   @override
   State<EditAboutMe> createState() => _EditAboutMeState();
@@ -40,21 +40,30 @@ class _EditAboutMeState extends State<EditAboutMe> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           leading: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back,
+              size: 24.r,
             ),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
-          title: const Text('About Me '),
+          title: Text(
+            'About Me ',
+            style: TextStyle(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           centerTitle: true,
           foregroundColor: Colors.black,
           backgroundColor: Colors.white,
           elevation: 0,
         ),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+          padding: EdgeInsets.symmetric(
+            horizontal: 15.0.w,
+          ),
           child: Column(
             children: [
               Column(
@@ -63,9 +72,10 @@ class _EditAboutMeState extends State<EditAboutMe> {
                     height: 25.h,
                   ),
                   TextField(
+                    style: TextStyle(fontSize: 14.sp),
                     controller: captionController,
                     keyboardType: TextInputType.multiline,
-                    minLines: 10,
+                    minLines: 5,
                     maxLines: null,
                     decoration: kPostTextFieldDecoration,
                   ),
@@ -74,42 +84,42 @@ class _EditAboutMeState extends State<EditAboutMe> {
                   ),
                 ],
               ),
-              Flexible(
-                child: Row(
-                  children: [
-                    MyButton(
-                      buttonText: 'Cancel',
-                      buttonColor: Colors.black26,
-                      buttonWidth: 160.w,
-                      buttonHeight: 50,
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
+              Row(
+                children: [
+                  MyButton(
+                    buttonText: 'Cancel',
+                    buttonColor: Colors.black26,
+                    buttonWidth: 160.w,
+                    buttonHeight: 40.h,
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  Flexible(
+                    child: SizedBox(
+                      width: 10.w,
                     ),
-                    Flexible(
-                      child: SizedBox(
-                        width: 10.w,
-                      ),
-                    ),
-                    MyButton(
-                      buttonText: 'Confirm',
-                      buttonColor: primaryColor,
-                      buttonWidth: 160.w,
-                      buttonHeight: 50,
-                      onTap: () {
-                        // Get the text from the text field
-                        String editedText = captionController.text;
-                        // Use the provider method to update the text
-                        Provider.of<FreelancerProfileProvider>(context,
-                                listen: false)
-                            .updateAboutMe(editedText);
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
+                  ),
+                  MyButton(
+                    buttonText: 'Confirm',
+                    buttonColor: primaryColor,
+                    buttonWidth: 160.w,
+                    buttonHeight: 40.h,
+                    onTap: () {
+                      // Get the text from the text field
+                      String editedText = captionController.text;
+                      // Use the provider method to update the text
+                      Provider.of<FreelancerProfileProvider>(context,
+                              listen: false)
+                          .updateAboutMe(editedText);
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
               ),
-              const SizedBox(),
+              SizedBox(
+                height: 25.h,
+              ),
             ],
           ),
         ),

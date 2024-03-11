@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:outsourcepro/screens/homepageFreelancer.dart';
+import 'package:outsourcepro/screens/homepage_freelancer.dart';
 
 import '../constants.dart';
 import '../widgets/button.dart';

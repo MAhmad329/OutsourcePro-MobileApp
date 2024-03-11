@@ -1,9 +1,11 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
-import '../main.dart';
-import '../schemas/FreelanceProfile.dart';
+
+import '../models/freelancer.dart';
+import '../models/education_entry.dart';
+import '../models/experience_entry.dart';
 
 class FreelancerProfileProvider extends ChangeNotifier {
   FreelancerProfile _profile = FreelancerProfile();

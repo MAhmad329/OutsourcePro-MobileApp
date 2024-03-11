@@ -67,18 +67,27 @@ InputDecoration kTextFieldDecoration = InputDecoration(
 InputDecoration kPostTextFieldDecoration = InputDecoration(
   alignLabelWithHint: true,
   hintText: 'Write something about yourself...',
-  hintStyle: const TextStyle(color: Color(0xFFBDBDBD)),
+  hintStyle: TextStyle(
+    color: const Color(0xFFBDBDBD),
+    fontSize: 14.sp,
+  ),
   filled: true,
   fillColor: const Color(0xFFF5F5F5),
   border: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(15.0.r)),
+    borderRadius: BorderRadius.all(
+      Radius.circular(15.0.r),
+    ),
   ),
   enabledBorder: OutlineInputBorder(
     borderSide: const BorderSide(color: Colors.transparent),
-    borderRadius: BorderRadius.all(Radius.circular(15.0.r)),
+    borderRadius: BorderRadius.all(
+      Radius.circular(15.0.r),
+    ),
   ),
   focusedBorder: OutlineInputBorder(
     borderSide: const BorderSide(color: Colors.transparent),
-    borderRadius: BorderRadius.all(Radius.circular(15.0.r)),
+    borderRadius: BorderRadius.all(
+      Radius.circular(15.0.r),
+    ),
   ),
 );

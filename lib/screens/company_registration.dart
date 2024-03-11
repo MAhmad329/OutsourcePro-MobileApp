@@ -1,12 +1,15 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
+import 'package:outsourcepro/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
+
 import '../constants.dart';
 import '../main.dart';
 import '../widgets/button.dart';
-import '../widgets/customrichtext.dart';
+import '../widgets/custom_richtext.dart';
 
 class CompanyRegistration extends StatefulWidget {
   const CompanyRegistration({Key? key}) : super(key: key);
@@ -81,13 +84,14 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
           errorMessage = errorResponse['message'];
         }
       } catch (e) {
-        print('Error parsing response body: $e');
+        print(
+          'Error parsing response body: $e',
+        );
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          duration: Duration(seconds: 3),
+        customSnackBar(
+          errorMessage,
         ),
       );
     }
@@ -267,9 +271,8 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
                                         emailController.text)) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Email is not valid!'),
-                                          duration: Duration(seconds: 3),
+                                        customSnackBar(
+                                          'Email is not valid!',
                                         ),
                                       );
                                     } else if (passwordController.text ==
@@ -280,19 +283,15 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
                                         confirmPasswordController.text) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
-                                        const SnackBar(
-                                          content:
-                                              Text('Passwords do not match!'),
-                                          duration: Duration(seconds: 3),
+                                        customSnackBar(
+                                          'Passwords do not match!',
                                         ),
                                       );
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Please fill all the fields!'),
-                                          duration: Duration(seconds: 3),
+                                        customSnackBar(
+                                          'Please fill all the fields!',
                                         ),
                                       );
                                     }

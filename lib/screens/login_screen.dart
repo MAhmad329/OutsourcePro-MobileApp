@@ -1,12 +1,15 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:outsourcepro/widgets/button.dart';
-import 'package:outsourcepro/constants.dart';
-import 'package:provider/provider.dart';
-import '../main.dart';
-import '../widgets/customrichtext.dart';
 import 'package:http/http.dart' as http;
+import 'package:outsourcepro/constants.dart';
+import 'package:outsourcepro/widgets/button.dart';
+import 'package:outsourcepro/widgets/custom_snackbar.dart';
+import 'package:provider/provider.dart';
+
+import '../main.dart';
+import '../widgets/custom_richtext.dart';
 
 enum LoginType { freelancer, company }
 
@@ -67,17 +70,15 @@ class _LoginScreenState extends State<LoginScreen> {
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            duration: Duration(seconds: 3),
+          customSnackBar(
+            errorMessage,
           ),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Failed to sign in: ${e.toString()}"),
-          backgroundColor: Colors.red,
+        customSnackBar(
+          "Failed to sign in: ${e.toString()}",
         ),
       );
     } finally {
@@ -144,6 +145,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextField(
+                            style: TextStyle(
+                                fontFamily: 'Poppins', fontSize: 14.sp),
                             controller: emailController,
                             cursorColor: primaryColor,
                             decoration: kTextFieldDecoration.copyWith(
@@ -158,6 +161,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 12.h,
                           ),
                           TextFormField(
+                            style: TextStyle(
+                                fontFamily: 'Poppins', fontSize: 14.sp),
                             controller: passwordController,
                             cursorColor: primaryColor,
                             obscureText: !_isObscure,
@@ -205,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onTap: isLoading ? null : _login,
                             child: isLoading
                                 ? SizedBox(
-                                    width: 24.w, // Adjust the size as needed
+                                    width: 22.w, // Adjust the size as needed
                                     height: 20.h, // Adjust the size as needed
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
 import '../Providers/freelance_profile_provider.dart';
 import '../constants.dart';
-import '../main.dart';
-import '../schemas/FreelanceProfile.dart';
+import '../models/freelancer.dart';
+import '../models/experience_entry.dart';
 import '../widgets/button.dart';
+import '../widgets/custom_snackbar.dart';
 
 class AddExperience extends StatefulWidget {
   const AddExperience({Key? key}) : super(key: key);
@@ -105,14 +107,21 @@ class _AddExperienceState extends State<AddExperience> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
+          icon: Icon(
+            Icons.arrow_back,
+            size: 24.r,
           ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: const Text('Add Education'),
+        title: Text(
+          'Add Experience',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20.sp,
+          ),
+        ),
         centerTitle: true,
         foregroundColor: Colors.black,
         backgroundColor: Colors.white,
@@ -120,7 +129,9 @@ class _AddExperienceState extends State<AddExperience> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.0.w),
+          padding: EdgeInsets.symmetric(
+            horizontal: 15.0.w,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -135,32 +146,50 @@ class _AddExperienceState extends State<AddExperience> {
                       children: [
                         Text(
                           "Add Job Title",
-                          style: TextStyle(fontSize: 16.sp),
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                          ),
                         ),
                         SizedBox(
                           height: 10.h,
                         ),
                         TextField(
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                          ),
                           controller: jobTitleController,
                           cursorColor: primaryColor,
                           decoration: kTextFieldDecoration.copyWith(
-                              hintText: 'Add Job Title here'),
+                            hintText: 'Add Job Title here',
+                            hintStyle: TextStyle(
+                              fontSize: 14.sp,
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 20.h,
                         ),
                         Text(
                           "Add Company Name",
-                          style: TextStyle(fontSize: 16.sp),
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                          ),
                         ),
                         SizedBox(
                           height: 10.h,
                         ),
                         TextFormField(
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                          ),
                           controller: companyController,
                           cursorColor: primaryColor,
                           decoration: kTextFieldDecoration.copyWith(
-                              hintText: 'Add Company Name here'),
+                            hintText: 'Add Company Name here',
+                            hintStyle: TextStyle(
+                              fontSize: 14.sp,
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 20.h,
@@ -174,13 +203,20 @@ class _AddExperienceState extends State<AddExperience> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            _selectDate(context, true);
+                            _selectDate(
+                              context,
+                              true,
+                            );
                           },
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(
+                              15.r,
+                            ),
                             decoration: BoxDecoration(
                               border: Border.all(color: primaryColor),
-                              borderRadius: BorderRadius.circular(5),
+                              borderRadius: BorderRadius.circular(
+                                5.r,
+                              ),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -190,11 +226,15 @@ class _AddExperienceState extends State<AddExperience> {
                                       ? DateFormat('dd-MM-yyyy')
                                           .format(startDate!)
                                       : 'Select Date',
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14.sp,
+                                  ),
                                 ),
                                 Icon(
                                   Icons.calendar_month_outlined,
                                   color: primaryColor,
+                                  size: 20.r,
                                 ),
                               ],
                             ),
@@ -217,11 +257,15 @@ class _AddExperienceState extends State<AddExperience> {
                                   if (startDate != null) {
                                     _selectDate(context, false);
                                   } else {
-                                    print("Select start date first!");
+                                    customSnackBar(
+                                      'Select Start Date First',
+                                    );
                                   }
                                 },
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(
+                              15.r,
+                            ),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: currentlyWorking
@@ -229,7 +273,9 @@ class _AddExperienceState extends State<AddExperience> {
                                         .grey // Change the color for disabled state
                                     : primaryColor,
                               ),
-                              borderRadius: BorderRadius.circular(5),
+                              borderRadius: BorderRadius.circular(
+                                5.r,
+                              ),
                               color: currentlyWorking
                                   ? Colors.grey.withOpacity(
                                       0.3) // Change the color for disabled state
@@ -244,15 +290,14 @@ class _AddExperienceState extends State<AddExperience> {
                                           .format(endDate!)
                                       : 'Select Date',
                                   style: TextStyle(
-                                    color: currentlyWorking
-                                        ? Colors
-                                            .grey // Change the color for disabled state
-                                        : Colors.black,
+                                    fontSize: 14.sp,
+                                    color: Colors.grey,
                                   ),
                                 ),
                                 Icon(
                                   Icons.calendar_month_outlined,
                                   color: primaryColor,
+                                  size: 20.r,
                                 ),
                               ],
                             ),
@@ -263,20 +308,29 @@ class _AddExperienceState extends State<AddExperience> {
                         ),
                         Row(
                           children: [
-                            Checkbox(
-                              checkColor: Colors.white,
-                              fillColor: MaterialStatePropertyAll(primaryColor),
-                              value: currentlyWorking,
-                              onChanged: (value) {
-                                setState(() {
-                                  currentlyWorking = value ?? false;
-                                  if (currentlyWorking) {
-                                    endDate = null;
-                                  }
-                                });
-                              },
+                            Transform.scale(
+                              scale: 1.r,
+                              child: Checkbox(
+                                checkColor: Colors.white,
+                                value: currentlyWorking,
+                                onChanged: (value) {
+                                  setState(
+                                    () {
+                                      currentlyWorking = value ?? false;
+                                      if (currentlyWorking) {
+                                        endDate = null;
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
                             ),
-                            Text("Currently Working"),
+                            Text(
+                              "Currently Working",
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                              ),
+                            ),
                           ],
                         ),
                         SizedBox(
@@ -285,15 +339,16 @@ class _AddExperienceState extends State<AddExperience> {
                         MyButton(
                           buttonText: 'Add Experience',
                           buttonColor: primaryColor,
-                          buttonWidth: 350,
-                          buttonHeight: 50,
+                          buttonWidth: double.infinity,
+                          buttonHeight: 45.h,
                           onTap: () {
                             if (jobTitleController.text.isEmpty ||
                                 companyController.text.isEmpty ||
                                 startDate == null ||
                                 (!currentlyWorking && endDate == null)) {
-                              // Show an error message or prevent further action
-                              print("Please fill in all the fields");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                customSnackBar('Please fill in all the fields'),
+                              );
                             } else {
                               // All fields are filled, proceed with confirmation
                               FreelancerProfileProvider provider =

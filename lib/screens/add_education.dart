@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:outsourcepro/constants.dart';
-import 'package:outsourcepro/screens/profileScreen.dart';
+import 'package:outsourcepro/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
+
 import '../Providers/freelance_profile_provider.dart';
-import '../main.dart';
-import '../schemas/FreelanceProfile.dart';
+import '../models/freelancer.dart';
+import '../models/education_entry.dart';
 import '../widgets/button.dart';
 
 class AddEducation extends StatefulWidget {
-  const AddEducation({Key? key}) : super(key: key);
+  const AddEducation({super.key});
 
   @override
   State<AddEducation> createState() => _AddEducationState();
@@ -78,27 +79,6 @@ class _AddEducationState extends State<AddEducation> {
     }
   }
 
-  List<String> getEducationDetails() {
-    String institute = institutionController.text;
-    String course = courseController.text;
-    String startDateString =
-        startDate != null ? "${startDate!.toLocal()}".split(' ')[0] : 'N/A';
-    String endDateString = endDate != null
-        ? "${endDate!.toLocal()}".split(' ')[0]
-        : currentlyEnrolled
-            ? 'Currently Enrolled'
-            : 'N/A';
-
-    List<String> educationDetails = [
-      'Institution: $institute',
-      'Course: $course',
-      'Start Date: $startDateString',
-      'End Date: $endDateString',
-    ];
-
-    return educationDetails;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,14 +86,21 @@ class _AddEducationState extends State<AddEducation> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
+          icon: Icon(
+            Icons.arrow_back,
+            size: 24.r,
           ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: const Text('Add Education'),
+        title: Text(
+          'Add Education',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20.sp,
+          ),
+        ),
         centerTitle: true,
         foregroundColor: Colors.black,
         backgroundColor: Colors.white,
@@ -121,7 +108,9 @@ class _AddEducationState extends State<AddEducation> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.0.w),
+          padding: EdgeInsets.symmetric(
+            horizontal: 15.0.w,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -136,66 +125,100 @@ class _AddEducationState extends State<AddEducation> {
                       children: [
                         Text(
                           "Add Institution",
-                          style: TextStyle(fontSize: 16.sp),
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                          ),
                         ),
                         SizedBox(
                           height: 10.h,
                         ),
                         TextField(
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                          ),
                           controller: institutionController,
                           cursorColor: primaryColor,
                           decoration: kTextFieldDecoration.copyWith(
-                              hintText: 'Add Institution here'),
+                            hintText: 'Add Institution here',
+                            hintStyle: TextStyle(
+                              fontSize: 14.sp,
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 20.h,
                         ),
                         Text(
                           "Add Course",
-                          style: TextStyle(fontSize: 16.sp),
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                          ),
                         ),
                         SizedBox(
                           height: 10.h,
                         ),
                         TextFormField(
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                          ),
                           controller: courseController,
                           cursorColor: primaryColor,
                           decoration: kTextFieldDecoration.copyWith(
-                              hintText: 'Add course here'),
+                            hintText: 'Add course here',
+                            hintStyle: TextStyle(
+                              fontSize: 14.sp,
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 20.h,
                         ),
                         Text(
                           "Start Date",
-                          style: TextStyle(fontSize: 16.sp),
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                          ),
                         ),
                         SizedBox(
                           height: 10.h,
                         ),
                         GestureDetector(
                           onTap: () {
-                            _selectDate(context, true);
+                            _selectDate(
+                              context,
+                              true,
+                            );
                           },
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(
+                              15.r,
+                            ),
                             decoration: BoxDecoration(
-                              border: Border.all(color: primaryColor),
-                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                color: primaryColor,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                5.r,
+                              ),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   startDate != null
-                                      ? DateFormat('dd-MM-yyyy')
-                                          .format(startDate!)
+                                      ? DateFormat('dd-MM-yyyy').format(
+                                          startDate!,
+                                        )
                                       : 'Select Date',
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14.sp,
+                                  ),
                                 ),
                                 Icon(
                                   Icons.calendar_month_outlined,
                                   color: primaryColor,
+                                  size: 20.r,
                                 ),
                               ],
                             ),
@@ -206,7 +229,9 @@ class _AddEducationState extends State<AddEducation> {
                         ),
                         Text(
                           "End Date",
-                          style: TextStyle(fontSize: 16.sp),
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                          ),
                         ),
                         SizedBox(
                           height: 10.h,
@@ -216,13 +241,20 @@ class _AddEducationState extends State<AddEducation> {
                               ? null
                               : () {
                                   if (startDate != null) {
-                                    _selectDate(context, false);
+                                    _selectDate(
+                                      context,
+                                      false,
+                                    );
                                   } else {
-                                    print("Select start date first!");
+                                    customSnackBar(
+                                      'Select Start Date First',
+                                    );
                                   }
                                 },
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(
+                              15.r,
+                            ),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: currentlyEnrolled
@@ -230,10 +262,13 @@ class _AddEducationState extends State<AddEducation> {
                                         .grey // Change the color for disabled state
                                     : primaryColor,
                               ),
-                              borderRadius: BorderRadius.circular(5),
+                              borderRadius: BorderRadius.circular(
+                                5.r,
+                              ),
                               color: currentlyEnrolled
                                   ? Colors.grey.withOpacity(
-                                      0.3) // Change the color for disabled state
+                                      0.3,
+                                    ) // Change the color for disabled state
                                   : Colors.white,
                             ),
                             child: Row(
@@ -245,15 +280,14 @@ class _AddEducationState extends State<AddEducation> {
                                           .format(endDate!)
                                       : 'Select Date',
                                   style: TextStyle(
-                                    color: currentlyEnrolled
-                                        ? Colors
-                                            .grey // Change the color for disabled state
-                                        : Colors.black,
+                                    fontSize: 14.sp,
+                                    color: Colors.grey,
                                   ),
                                 ),
                                 Icon(
                                   Icons.calendar_month_outlined,
                                   color: primaryColor,
+                                  size: 20.r,
                                 ),
                               ],
                             ),
@@ -264,21 +298,31 @@ class _AddEducationState extends State<AddEducation> {
                         ),
                         Row(
                           children: [
-                            Checkbox(
-                              checkColor: Colors.white,
-                              fillColor: MaterialStatePropertyAll(primaryColor),
-                              value: currentlyEnrolled,
-                              onChanged: (value) {
-                                setState(() {
-                                  currentlyEnrolled = value ?? false;
-                                  if (currentlyEnrolled) {
-                                    endDate =
-                                        null; // Reset end date when currently enrolled is selected
-                                  }
-                                });
-                              },
+                            Transform.scale(
+                              alignment: Alignment.center,
+                              scale: 1.r,
+                              child: Checkbox(
+                                checkColor: Colors.white,
+                                value: currentlyEnrolled,
+                                onChanged: (value) {
+                                  setState(
+                                    () {
+                                      currentlyEnrolled = value ?? false;
+                                      if (currentlyEnrolled) {
+                                        endDate =
+                                            null; // Reset end date when currently enrolled is selected
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
                             ),
-                            Text("Currently Enrolled"),
+                            Text(
+                              "Currently Enrolled",
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                              ),
+                            ),
                           ],
                         ),
                         SizedBox(
@@ -287,15 +331,16 @@ class _AddEducationState extends State<AddEducation> {
                         MyButton(
                           buttonText: 'Add Education',
                           buttonColor: primaryColor,
-                          buttonWidth: 350,
-                          buttonHeight: 50,
+                          buttonWidth: double.infinity,
+                          buttonHeight: 45.h,
                           onTap: () {
                             if (institutionController.text.isEmpty ||
                                 courseController.text.isEmpty ||
                                 startDate == null ||
                                 (!currentlyEnrolled && endDate == null)) {
-                              // Show an error message or prevent further action
-                              print("Please fill in all the fields");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                customSnackBar('Please fill in all the fields'),
+                              );
                             } else {
                               // All fields are filled, proceed with confirmation
                               FreelancerProfileProvider provider =

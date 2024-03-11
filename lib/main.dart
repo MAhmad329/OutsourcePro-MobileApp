@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
-import 'package:outsourcepro/screens/addEducation.dart';
-import 'package:outsourcepro/screens/addExperience.dart';
-import 'package:outsourcepro/screens/editAboutMe.dart';
-import 'package:outsourcepro/screens/loginScreen.dart';
+import 'package:outsourcepro/screens/add_education.dart';
+import 'package:outsourcepro/screens/add_experience.dart';
+import 'package:outsourcepro/screens/edit_aboutme.dart';
+import 'package:outsourcepro/screens/login_screen.dart';
 import 'package:outsourcepro/screens/homepage.dart';
-import 'package:outsourcepro/screens/homepageFreelancer.dart';
-import 'package:outsourcepro/screens/landingPage.dart';
+import 'package:outsourcepro/screens/homepage_freelancer.dart';
+import 'package:outsourcepro/screens/landing_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:outsourcepro/screens/profileScreen.dart';
-import 'package:outsourcepro/screens/selectionScreen.dart';
+import 'package:outsourcepro/screens/profile_screen.dart';
+import 'package:outsourcepro/screens/selection_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
         splitScreenMode: true,
         builder: (context, child) {
           return MaterialApp(
+            theme: ThemeData(fontFamily: 'Poppins'),
             debugShowCheckedModeBanner: false,
             initialRoute: 'landing_screen',
             routes: {
@@ -80,5 +81,5 @@ class AuthenticationProvider extends ChangeNotifier {
 }
 
 class IPAddressProvider extends ChangeNotifier {
-  String ipaddress = '192.168.0.120';
+  String ipaddress = '192.168.0.113';
 }
