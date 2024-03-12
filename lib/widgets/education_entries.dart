@@ -5,7 +5,7 @@ import 'package:outsourcepro/constants.dart';
 import 'package:provider/provider.dart';
 
 import '../models/education_entry.dart';
-import '../models/freelancer.dart';
+import '../screens/add_education.dart';
 
 class EducationEntries extends StatelessWidget {
   const EducationEntries({
@@ -67,7 +67,6 @@ class EducationEntries extends StatelessWidget {
           itemBuilder: (context, index) {
             return Container(
               width: double.infinity,
-              // Make the container go full width
               padding: EdgeInsets.symmetric(
                 horizontal: 16.0.w,
                 vertical: 12.0.h,
@@ -75,7 +74,6 @@ class EducationEntries extends StatelessWidget {
               margin: EdgeInsets.only(
                 bottom: 16.0.h,
               ),
-              // Add bottom margin
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(
@@ -86,54 +84,81 @@ class EducationEntries extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Institution: ',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            Text(
+                              'Institution: ',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              entries[index].institution,
+                              style: TextStyle(fontSize: 12.sp),
+                            ),
+                            SizedBox(
+                              height: 8.h,
+                            ),
+                            Text(
+                              'Course: ',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              entries[index].course,
+                              style: TextStyle(fontSize: 12.sp),
+                            ),
+                            SizedBox(
+                              height: 8.h,
+                            ),
+                            Text(
+                              'Duration: ',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Stack(
+                              children: [
+                                Text(
+                                  '${entries[index].startDate}  ---  ${entries[index].endDate}',
+                                  style: TextStyle(fontSize: 12.sp),
+                                ),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      // Navigate to AddEducation screen with the selected entry for editing
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => AddEducation(
+                                              educationEntry: entries[index]),
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: primaryColor,
+                                      size: 20.r,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      Text(
-                        entries[index].institution,
-                        style: TextStyle(fontSize: 12.sp),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 8.h,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Course: ',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        entries[index].course,
-                        style: TextStyle(fontSize: 12.sp),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 8.h,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Duration: ',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        '${entries[index].startDate}  ---  ${entries[index].endDate}',
-                        style: TextStyle(fontSize: 12.sp),
-                      )
                     ],
                   ),
                 ],
@@ -141,6 +166,7 @@ class EducationEntries extends StatelessWidget {
             );
           },
         ),
+
         SizedBox(
           height: 16.0.h,
         ),

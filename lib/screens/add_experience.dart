@@ -5,13 +5,13 @@ import 'package:provider/provider.dart';
 
 import '../Providers/freelance_profile_provider.dart';
 import '../constants.dart';
-import '../models/freelancer.dart';
 import '../models/experience_entry.dart';
 import '../widgets/button.dart';
 import '../widgets/custom_snackbar.dart';
 
 class AddExperience extends StatefulWidget {
-  const AddExperience({Key? key}) : super(key: key);
+  final ExperienceEntry? experienceEntry;
+  const AddExperience({super.key, this.experienceEntry});
 
   @override
   State<AddExperience> createState() => _AddExperienceState();
@@ -98,6 +98,21 @@ class _AddExperienceState extends State<AddExperience> {
     ];
 
     return educationDetails;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.experienceEntry != null) {
+      jobTitleController.text = widget.experienceEntry!.jobtitle;
+      companyController.text = widget.experienceEntry!.company;
+      startDate =
+          DateFormat('yyyy-MM-dd').parse(widget.experienceEntry!.startDate);
+      endDate = widget.experienceEntry!.endDate != 'Currently Working'
+          ? DateFormat('yyyy-MM-dd').parse(widget.experienceEntry!.endDate)
+          : null;
+      currentlyWorking = widget.experienceEntry!.endDate == 'Currently Working';
+    }
   }
 
   @override
@@ -257,8 +272,9 @@ class _AddExperienceState extends State<AddExperience> {
                                   if (startDate != null) {
                                     _selectDate(context, false);
                                   } else {
-                                    customSnackBar(
-                                      'Select Start Date First',
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      customSnackBar(
+                                          'Please Select Start Date First'),
                                     );
                                   }
                                 },
@@ -350,14 +366,12 @@ class _AddExperienceState extends State<AddExperience> {
                                 customSnackBar('Please fill in all the fields'),
                               );
                             } else {
-                              // All fields are filled, proceed with confirmation
                               FreelancerProfileProvider provider =
                                   Provider.of<FreelancerProfileProvider>(
                                       context,
                                       listen: false);
 
-                              getExperienceDetails();
-                              ExperienceEntry newExp = ExperienceEntry(
+                              ExperienceEntry newExperience = ExperienceEntry(
                                 jobtitle: jobTitleController.text,
                                 company: companyController.text,
                                 startDate: startDate != null
@@ -371,9 +385,17 @@ class _AddExperienceState extends State<AddExperience> {
                                         : 'N/A',
                               );
 
-                              provider.addExperienceEntry(newExp);
+                              if (widget.experienceEntry != null) {
+                                // Update the existing entry
+                                int index = provider.profile.experienceEntries
+                                    .indexOf(widget.experienceEntry!);
+                                provider.updateExperienceEntry(
+                                    index, newExperience);
+                              } else {
+                                // Add a new entry
+                                provider.addExperienceEntry(newExperience);
+                              }
 
-                              // Do something with the experienceDetails list, such as print or save to a database
                               Navigator.pop(context);
                             }
                           },

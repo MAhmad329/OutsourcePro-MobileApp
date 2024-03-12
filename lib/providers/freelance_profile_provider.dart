@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/freelancer.dart';
 import '../models/education_entry.dart';
 import '../models/experience_entry.dart';
+import '../models/freelancer.dart';
 
 class FreelancerProfileProvider extends ChangeNotifier {
   FreelancerProfile _profile = FreelancerProfile();
@@ -163,8 +163,19 @@ class FreelancerProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateEducationEntry(int index, EducationEntry updatedEntry) {
+    _profile.educationEntries[index] = updatedEntry;
+    updateFreelancerDetails();
+    notifyListeners();
+  }
+
   void updateExperienceEntries(List<ExperienceEntry> experienceEntries) {
     _profile.experienceEntries = experienceEntries;
+    notifyListeners();
+  }
+
+  void updateExperienceEntry(int index, ExperienceEntry updatedEntry) {
+    _profile.experienceEntries[index] = updatedEntry;
     notifyListeners();
   }
 

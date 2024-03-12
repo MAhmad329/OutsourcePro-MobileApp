@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/screens/add_education.dart';
 import 'package:outsourcepro/screens/add_experience.dart';
 import 'package:outsourcepro/screens/edit_aboutme.dart';
-import 'package:outsourcepro/screens/login_screen.dart';
 import 'package:outsourcepro/screens/homepage.dart';
 import 'package:outsourcepro/screens/homepage_freelancer.dart';
 import 'package:outsourcepro/screens/landing_page.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:outsourcepro/screens/login_screen.dart';
 import 'package:outsourcepro/screens/profile_screen.dart';
 import 'package:outsourcepro/screens/selection_screen.dart';
 import 'package:provider/provider.dart';

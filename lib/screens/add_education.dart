@@ -6,12 +6,13 @@ import 'package:outsourcepro/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
 import '../Providers/freelance_profile_provider.dart';
-import '../models/freelancer.dart';
 import '../models/education_entry.dart';
 import '../widgets/button.dart';
 
 class AddEducation extends StatefulWidget {
-  const AddEducation({super.key});
+  final EducationEntry? educationEntry;
+
+  const AddEducation({super.key, this.educationEntry});
 
   @override
   State<AddEducation> createState() => _AddEducationState();
@@ -76,6 +77,22 @@ class _AddEducationState extends State<AddEducation> {
           endDate = picked;
         }
       });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.educationEntry != null) {
+      institutionController.text = widget.educationEntry!.institution;
+      courseController.text = widget.educationEntry!.course;
+      startDate =
+          DateFormat('yyyy-MM-dd').parse(widget.educationEntry!.startDate);
+      endDate = widget.educationEntry!.endDate != 'Currently Enrolled'
+          ? DateFormat('yyyy-MM-dd').parse(widget.educationEntry!.endDate)
+          : null;
+      currentlyEnrolled =
+          widget.educationEntry!.endDate == 'Currently Enrolled';
     }
   }
 
@@ -246,8 +263,9 @@ class _AddEducationState extends State<AddEducation> {
                                       false,
                                     );
                                   } else {
-                                    customSnackBar(
-                                      'Select Start Date First',
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      customSnackBar(
+                                          'Please Select Start Date First'),
                                     );
                                   }
                                 },
@@ -342,7 +360,6 @@ class _AddEducationState extends State<AddEducation> {
                                 customSnackBar('Please fill in all the fields'),
                               );
                             } else {
-                              // All fields are filled, proceed with confirmation
                               FreelancerProfileProvider provider =
                                   Provider.of<FreelancerProfileProvider>(
                                       context,
@@ -362,9 +379,17 @@ class _AddEducationState extends State<AddEducation> {
                                         : 'N/A',
                               );
 
-                              provider.addEducationEntry(newEducation);
+                              if (widget.educationEntry != null) {
+                                // Update the existing entry
+                                int index = provider.profile.educationEntries
+                                    .indexOf(widget.educationEntry!);
+                                provider.updateEducationEntry(
+                                    index, newEducation);
+                              } else {
+                                // Add a new entry
+                                provider.addEducationEntry(newEducation);
+                              }
 
-                              // Do something with the educationDetails list, such as print or save to a database
                               Navigator.pop(context);
                             }
                           },
