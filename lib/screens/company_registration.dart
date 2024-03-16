@@ -152,6 +152,7 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextField(
+                            style: TextStyle(fontSize: 14.sp),
                             controller: companyNameController,
                             cursorColor: primaryColor,
                             decoration: kTextFieldDecoration.copyWith(
@@ -166,6 +167,7 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
                             height: 12.h,
                           ),
                           TextField(
+                            style: TextStyle(fontSize: 14.sp),
                             controller: businessAddressController,
                             cursorColor: primaryColor,
                             decoration: kTextFieldDecoration.copyWith(
@@ -180,6 +182,7 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
                             height: 12.h,
                           ),
                           TextField(
+                            style: TextStyle(fontSize: 14.sp),
                             controller: focalPersonNameController,
                             cursorColor: primaryColor,
                             decoration: kTextFieldDecoration.copyWith(
@@ -194,6 +197,7 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
                             height: 12.h,
                           ),
                           TextField(
+                            style: TextStyle(fontSize: 14.sp),
                             controller: emailController,
                             cursorColor: primaryColor,
                             decoration: kTextFieldDecoration.copyWith(
@@ -208,6 +212,7 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
                             height: 12.h,
                           ),
                           TextFormField(
+                            style: TextStyle(fontSize: 14.sp),
                             controller: passwordController,
                             cursorColor: primaryColor,
                             obscureText: !_isObscure,
@@ -234,14 +239,15 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
                             height: 12.h,
                           ),
                           TextFormField(
+                            style: TextStyle(fontSize: 14.sp),
                             controller: confirmPasswordController,
                             cursorColor: primaryColor,
                             obscureText: !_isObscure,
                             decoration: kTextFieldDecoration.copyWith(
                               hintStyle: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 14.sp,
-                                  fontFamily: 'Poppins'),
+                                color: Colors.grey.shade600,
+                                fontSize: 14.sp,
+                              ),
                               hintText: 'Confirm Password',
                               suffixIcon: IconButton(
                                 splashColor: Colors.transparent,

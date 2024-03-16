@@ -35,7 +35,9 @@ class ProfileScreen extends StatelessWidget {
         elevation: 0,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, 'edit_personal_info');
+            },
             icon: const Icon(
               Icons.edit,
             ),
@@ -67,7 +69,9 @@ class ProfileScreen extends StatelessWidget {
                           'assets/background.png',
                         ),
                       ),
-                      borderRadius: BorderRadius.circular(10.0.r),
+                      borderRadius: BorderRadius.circular(
+                        10.0.r,
+                      ),
                     ),
                     child: Column(
                       children: [

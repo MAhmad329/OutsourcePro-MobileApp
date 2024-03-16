@@ -152,6 +152,7 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextField(
+                            style: TextStyle(fontSize: 14.sp),
                             controller: firstNameController,
                             cursorColor: primaryColor,
                             decoration: kTextFieldDecoration.copyWith(
@@ -166,6 +167,7 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                             height: 12.h,
                           ),
                           TextField(
+                            style: TextStyle(fontSize: 14.sp),
                             controller: lastNameController,
                             cursorColor: primaryColor,
                             decoration: kTextFieldDecoration.copyWith(
@@ -180,6 +182,7 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                             height: 12.h,
                           ),
                           TextField(
+                            style: TextStyle(fontSize: 14.sp),
                             controller: userNameController,
                             cursorColor: primaryColor,
                             decoration: kTextFieldDecoration.copyWith(
@@ -194,6 +197,7 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                             height: 12.h,
                           ),
                           TextField(
+                            style: TextStyle(fontSize: 14.sp),
                             controller: emailController,
                             cursorColor: primaryColor,
                             decoration: kTextFieldDecoration.copyWith(
@@ -208,6 +212,7 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                             height: 12.h,
                           ),
                           TextFormField(
+                            style: TextStyle(fontSize: 14.sp),
                             controller: passwordController,
                             cursorColor: primaryColor,
                             obscureText: !_isObscure,
@@ -234,6 +239,7 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                             height: 12.h,
                           ),
                           TextFormField(
+                            style: TextStyle(fontSize: 14.sp),
                             controller: confirmPasswordController,
                             cursorColor: primaryColor,
                             obscureText: !_isObscure,

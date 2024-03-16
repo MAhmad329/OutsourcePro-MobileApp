@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
+import 'package:outsourcepro/providers/auth_provider.dart';
+import 'package:outsourcepro/providers/password_visibility_provider.dart';
+import 'package:outsourcepro/providers/project_provider.dart';
 import 'package:outsourcepro/screens/add_education.dart';
 import 'package:outsourcepro/screens/add_experience.dart';
 import 'package:outsourcepro/screens/edit_aboutme.dart';
+import 'package:outsourcepro/screens/edit_personal_info.dart';
 import 'package:outsourcepro/screens/homepage.dart';
 import 'package:outsourcepro/screens/homepage_freelancer.dart';
 import 'package:outsourcepro/screens/landing_page.dart';
@@ -23,9 +27,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AuthenticationProvider()),
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(
+            create: (context) => PasswordVisibilityProvider()),
+        ChangeNotifierProvider(create: (context) => CookieProvider()),
         ChangeNotifierProvider(create: (context) => IPAddressProvider()),
-        ChangeNotifierProxyProvider2<IPAddressProvider, AuthenticationProvider,
+        ChangeNotifierProxyProvider2<IPAddressProvider, CookieProvider,
                 FreelancerProfileProvider>(
             create: (_) => FreelancerProfileProvider(), // Initial empty values
             update: (_, ipAddressProvider, authProvider,
@@ -36,6 +43,14 @@ class MyApp extends StatelessWidget {
                   authProvider.cookie,
                 );
             }),
+        ChangeNotifierProxyProvider<IPAddressProvider, ProjectProvider>(
+          create: (_) => ProjectProvider(), // Initial empty values
+          update: (_, ipAddressProvider, projectProvider) {
+            return projectProvider!
+              ..updateDependencies(ipAddressProvider.ipaddress);
+          },
+        ),
+
         // Add more providers as needed
       ],
       child: ScreenUtilInit(
@@ -63,6 +78,8 @@ class MyApp extends StatelessWidget {
               'edit_about_me_screen': (context) => const EditAboutMe(),
               'add_education_screen': (context) => const AddEducation(),
               'add_experience_screen': (context) => const AddExperience(),
+              'edit_personal_info': (context) =>
+                  const EditPersonalInformation(),
             },
           );
         },
@@ -71,7 +88,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class AuthenticationProvider extends ChangeNotifier {
+class CookieProvider extends ChangeNotifier {
   String cookie = '';
 
   void setCookie(String value) {

@@ -108,19 +108,15 @@ class FreelancerProfileProvider extends ChangeNotifier {
     }
   }
 
-  void updateProfile(FreelancerProfile newProfile) {
-    _profile = newProfile;
-    notifyListeners();
-  }
+  // void updateProfile(FreelancerProfile newProfile) {
+  //   _profile = newProfile;
+  //   notifyListeners();
+  // }
 
-  void updateFirstname(String firstname) {
+  void updateName(String firstname, String lastname) {
     _profile.firstname = firstname;
-    updateFreelancerDetails();
-    notifyListeners();
-  }
-
-  void updateLastname(String lastname) {
     _profile.lastname = lastname;
+    updateFreelancerDetails();
     notifyListeners();
   }
 

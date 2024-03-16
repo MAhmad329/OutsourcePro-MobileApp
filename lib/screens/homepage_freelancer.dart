@@ -1,13 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
+import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/constants.dart';
 import 'package:provider/provider.dart';
 
 import '../main.dart';
 import '../models/project.dart';
+import '../providers/project_provider.dart';
 
 class HomepageFreelancer extends StatefulWidget {
   const HomepageFreelancer({Key? key}) : super(key: key);
@@ -18,39 +18,6 @@ class HomepageFreelancer extends StatefulWidget {
 
 class _HomepageFreelancerState extends State<HomepageFreelancer> {
   String ipaddress = '';
-
-  List<Project> projects = []; // List to hold project data
-
-  Future<void> _fetchProjects() async {
-    try {
-      ipaddress =
-          Provider.of<IPAddressProvider>(context, listen: false).ipaddress;
-      var request = http.Request('GET',
-          Uri.parse('http://$ipaddress:3000/api/v1/project/getProjects'));
-      request.body = '''''';
-
-      http.StreamedResponse response = await request.send();
-
-      if (response.statusCode == 200) {
-        // Decode the JSON response and update the projects list
-        Map<String, dynamic> responseData =
-            json.decode(await response.stream.bytesToString());
-
-        if (responseData['success'] == true) {
-          List<dynamic> projectsData = responseData['projects'];
-          projects =
-              projectsData.map((data) => Project.fromJson(data)).toList();
-        } else {
-          print('API request was not successful');
-        }
-      } else {
-        print(response.reasonPhrase);
-      }
-    } catch (error) {
-      print('Error fetching projects: $error');
-    }
-  }
-
   Future<void> _logout() async {
     ipaddress =
         Provider.of<IPAddressProvider>(context, listen: false).ipaddress;
@@ -75,111 +42,220 @@ class _HomepageFreelancerState extends State<HomepageFreelancer> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text(
-            'Projects',
-            style: TextStyle(fontSize: 20.sp),
-          ),
           centerTitle: true,
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
-          iconTheme: IconThemeData(
-            size: 30.0.r,
-            color: primaryColor,
-          ),
+          toolbarHeight: 20.h,
           elevation: 0,
-          leading: Padding(
-            padding: EdgeInsets.all(8.0.r),
-            child: InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, 'profile_screen');
-              },
-              child: CircleAvatar(
-                backgroundImage: AssetImage('assets/profilepic.png'),
-              ),
-            ),
-          ),
-          actions: [
-            InkWell(
-              onTap: () {
-                _logout();
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0.r),
-                child: const Text('Logout'),
-              ),
-            )
-          ],
+          automaticallyImplyLeading: false,
+          // actions: [
+          //   InkWell(
+          //     onTap: () {
+          //       _logout();
+          //     },
+          //     child: Padding(
+          //       padding: EdgeInsets.symmetric(horizontal: 20.0.r),
+          //       child: const Text('Logout'),
+          //     ),
+          //   )
+          // ],
         ),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0.w),
+          padding: EdgeInsets.symmetric(horizontal: 15.0.w),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                // Add padding around the search bar
-                padding: EdgeInsets.symmetric(horizontal: 8.0.w),
-                // Use a Material design search bar
-                child: TextField(
-                  cursorColor: Colors.black,
-                  decoration: kTextFieldDecoration.copyWith(
-                    hintStyle: kText3.copyWith(
-                        fontSize: 15.sp,
-                        color: const Color(0xffbdbdbd),
-                        fontWeight: FontWeight.w400),
-                    hintText: 'Search',
-                    prefixIcon: Icon(
-                      Icons.search_sharp,
-                      color: primaryColor,
+              Row(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, 'profile_screen');
+                    },
+                    child: CircleAvatar(
+                      radius: 35.r,
+                      backgroundColor: primaryColor.withOpacity(0.75),
+                      child: CircleAvatar(
+                        radius: 30.r,
+                        backgroundImage: AssetImage('assets/profilepic.png'),
+                      ),
                     ),
+                  ),
+                  SizedBox(
+                    width: 15.w,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Hello',
+                        style: TextStyle(fontSize: 25.sp),
+                      ),
+                      Text(
+                        '${Provider.of<FreelancerProfileProvider>(context).profile.firstname}.',
+                        style: TextStyle(fontSize: 25.sp),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 25.h,
+              ),
+              Text(
+                'Find Project here.',
+                style: TextStyle(fontSize: 24.sp),
+              ),
+              SizedBox(
+                height: 15.h,
+              ),
+              TextField(
+                style: TextStyle(fontSize: 14.sp),
+                cursorColor: Colors.black,
+                decoration: kTextFieldDecoration.copyWith(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: primaryColor.withOpacity(0.5), width: 2.0.w),
+                    borderRadius: BorderRadius.all(Radius.circular(10.0.r)),
+                  ),
+                  hintStyle: kText3.copyWith(
+                      fontSize: 15.sp,
+                      color: const Color(0xffbdbdbd),
+                      fontWeight: FontWeight.w400),
+                  hintText: 'Search',
+                  prefixIcon: Icon(
+                    size: 20.r,
+                    Icons.search_sharp,
+                    color: primaryColor,
                   ),
                 ),
               ),
+              SizedBox(
+                height: 10.h,
+              ),
               Expanded(
                 child: RefreshIndicator(
-                  onRefresh: _fetchProjects,
-                  child: FutureBuilder(
-                    future: _fetchProjects(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
+                  onRefresh: () {
+                    return Provider.of<ProjectProvider>(context, listen: false)
+                        .fetchProjects();
+                  },
+                  child: Consumer<ProjectProvider>(
+                    builder: (context, projectProvider, child) {
+                      List<Project> projects = projectProvider.projects;
+                      if (projects.isEmpty) {
                         return const Center(
                           child: CircularProgressIndicator(),
-                        ); // Loading indicator while fetching data
-                      } else if (snapshot.hasError) {
-                        return Center(
-                          child: Text('Error: ${snapshot.error}'),
-                        );
+                        ); // Show loading indicator while fetching data
                       } else {
                         return ListView.builder(
                           itemCount: projects.length,
                           itemBuilder: (context, index) {
                             return Card(
-                              elevation: 3.0,
+                              elevation: 5.0,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
+                                borderRadius: BorderRadius.circular(10.0.r),
                               ),
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 12.0),
-                              color: const Color(0XFFECE7F6),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
+                              margin: EdgeInsets.symmetric(
+                                vertical: 12.0.h,
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0.r),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      primaryColor.withOpacity(0.9),
+                                      primaryColor.withOpacity(0.1),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                ),
+                                padding: EdgeInsets.all(16.0.r),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       projects[index].title,
-                                      style: const TextStyle(
-                                        fontSize: 18.0,
+                                      style: TextStyle(
+                                        fontSize: 20.sp,
                                         fontWeight: FontWeight.bold,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                    SizedBox(height: 8.0),
-                                    Text(
-                                      projects[index].description,
-                                      style: TextStyle(fontSize: 16.0),
+                                    SizedBox(height: 8.h),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.attach_money,
+                                          color: Colors.white,
+                                          size: 20.r,
+                                        ),
+                                        SizedBox(width: 4.w),
+                                        Text(
+                                          'Budget: ${projects[index].budget}',
+                                          style: TextStyle(
+                                            fontSize: 14.sp,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(height: 8.0),
-                                    Text('Type: ${projects[index].type}'),
-                                    Text(
-                                        'Tech Stack: ${projects[index].technologyStack}'),
+                                    SizedBox(height: 8.h),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.category,
+                                          color: Colors.white,
+                                          size: 20.r,
+                                        ),
+                                        SizedBox(width: 4.w),
+                                        Text(
+                                          'Type: ${projects[index].type}',
+                                          style: TextStyle(
+                                            fontSize: 14.sp,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.code,
+                                          color: Colors.white,
+                                          size: 20.r,
+                                        ),
+                                        SizedBox(width: 4.w),
+                                        Expanded(
+                                          child: Text(
+                                            'Tech Stack: ${projects[index].technologyStack}',
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                              color: Colors.white,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.access_time,
+                                          color: Colors.white,
+                                          size: 20.r,
+                                        ),
+                                        SizedBox(width: 4.w),
+                                        Text(
+                                          'Posted: ${projects[index].timeElapsed()}',
+                                          style: TextStyle(
+                                            fontSize: 14.sp,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),
