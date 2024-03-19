@@ -3,11 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/constants.dart';
+import 'package:outsourcepro/screens/project_details_screen.dart';
+import 'package:outsourcepro/widgets/button.dart';
 import 'package:provider/provider.dart';
 
 import '../main.dart';
 import '../models/project.dart';
 import '../providers/project_provider.dart';
+import '../providers/search_provider.dart';
 
 class HomepageFreelancer extends StatefulWidget {
   const HomepageFreelancer({Key? key}) : super(key: key);
@@ -40,7 +43,7 @@ class _HomepageFreelancerState extends State<HomepageFreelancer> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFF9F9F9),
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Colors.white,
@@ -102,13 +105,17 @@ class _HomepageFreelancerState extends State<HomepageFreelancer> {
                 height: 25.h,
               ),
               Text(
-                'Find Project here.',
+                'Find Projects here.',
                 style: TextStyle(fontSize: 24.sp),
               ),
               SizedBox(
                 height: 15.h,
               ),
               TextField(
+                onChanged: (value) {
+                  Provider.of<SearchProvider>(context, listen: false)
+                      .updateSearchQuery(value);
+                },
                 style: TextStyle(fontSize: 14.sp),
                 cursorColor: Colors.black,
                 decoration: kTextFieldDecoration.copyWith(
@@ -132,139 +139,149 @@ class _HomepageFreelancerState extends State<HomepageFreelancer> {
               SizedBox(
                 height: 10.h,
               ),
+              MyButton(
+                  onTap: () {},
+                  borderColor: primaryColor,
+                  textColor: Colors.black,
+                  buttonText: 'Apply Filter',
+                  buttonColor: Colors.white,
+                  buttonWidth: double.infinity,
+                  buttonHeight: 40.h),
+              SizedBox(
+                height: 10.h,
+              ),
               Expanded(
                 child: RefreshIndicator(
+                  color: primaryColor,
                   onRefresh: () {
                     return Provider.of<ProjectProvider>(context, listen: false)
                         .fetchProjects();
                   },
-                  child: Consumer<ProjectProvider>(
-                    builder: (context, projectProvider, child) {
-                      List<Project> projects = projectProvider.projects;
-                      if (projects.isEmpty) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        ); // Show loading indicator while fetching data
-                      } else {
-                        return ListView.builder(
-                          itemCount: projects.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              elevation: 5.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0.r),
-                              ),
-                              margin: EdgeInsets.symmetric(
-                                vertical: 12.0.h,
-                              ),
-                              child: Container(
-                                decoration: BoxDecoration(
+                  child: Consumer<SearchProvider>(
+                      builder: (context, searchProvider, child) {
+                    return Consumer<ProjectProvider>(
+                      builder: (context, projectProvider, child) {
+                        List<Project> projects =
+                            searchProvider.searchQuery.isEmpty
+                                ? projectProvider.projects
+                                : projectProvider
+                                    .searchProjects(searchProvider.searchQuery);
+                        if (projects.isEmpty) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              color: primaryColor,
+                            ),
+                          );
+                        } else {
+                          return ListView.builder(
+                            itemCount: projects.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0.r),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      primaryColor.withOpacity(0.9),
-                                      primaryColor.withOpacity(0.1),
+                                ),
+                                margin: EdgeInsets.symmetric(
+                                  vertical: 12.0.h,
+                                  horizontal: 4.0.w,
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(
+                                            0.5), // Set the shadow color with some transparency
+                                        spreadRadius:
+                                            1, // Spread radius to extend the shadow
+                                        blurRadius:
+                                            10, // Blur radius to soften the shadow
+                                        offset: const Offset(
+                                            0, 3), // Position of the shadow
+                                      ),
                                     ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
+                                  ),
+                                  //color: Colors.white,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(15.0.r),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          maxLines: 3,
+                                          overflow:TextOverflow.ellipsis,
+                                          projects[index].title,
+                                          style: TextStyle(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        Text(
+                                          projects[index].timeElapsed(),
+                                          style: TextStyle(
+                                              fontSize: 12.sp,
+                                              color: Colors.grey),
+                                        ),
+                                        SizedBox(
+                                          height: 10.h,
+                                        ),
+                                        Text(
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          projects[index].description,
+                                          style: TextStyle(fontSize: 12.sp),
+                                        ),
+                                        SizedBox(height: 15.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Budget: ',
+                                              style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              projects[index].budget.toString(),
+                                              style: TextStyle(fontSize: 12.sp),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 15.h),
+                                        MyButton(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ProjectDetailsScreen(
+                                                  project: projects[index],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          buttonText: 'View Details',
+                                          buttonColor: Colors.white,
+                                          buttonWidth: double.infinity.w,
+                                          buttonHeight: 40.h,
+                                          textColor: Colors.black,
+                                          borderColor: primaryColor,
+                                          //borderRadius: .r,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                padding: EdgeInsets.all(16.0.r),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      projects[index].title,
-                                      style: TextStyle(
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.attach_money,
-                                          color: Colors.white,
-                                          size: 20.r,
-                                        ),
-                                        SizedBox(width: 4.w),
-                                        Text(
-                                          'Budget: ${projects[index].budget}',
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.category,
-                                          color: Colors.white,
-                                          size: 20.r,
-                                        ),
-                                        SizedBox(width: 4.w),
-                                        Text(
-                                          'Type: ${projects[index].type}',
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.code,
-                                          color: Colors.white,
-                                          size: 20.r,
-                                        ),
-                                        SizedBox(width: 4.w),
-                                        Expanded(
-                                          child: Text(
-                                            'Tech Stack: ${projects[index].technologyStack}',
-                                            style: TextStyle(
-                                              fontSize: 14.sp,
-                                              color: Colors.white,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.access_time,
-                                          color: Colors.white,
-                                          size: 20.r,
-                                        ),
-                                        SizedBox(width: 4.w),
-                                        Text(
-                                          'Posted: ${projects[index].timeElapsed()}',
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      }
-                    },
-                  ),
+                              );
+                            },
+                          );
+                        }
+                      },
+                    );
+                  }),
                 ),
               ),
             ],

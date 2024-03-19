@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/project.dart';
+import '../models/project_filter.dart';
 
 class ProjectProvider extends ChangeNotifier {
   List<Project> _projects = [];
@@ -16,6 +17,26 @@ class ProjectProvider extends ChangeNotifier {
   void updateDependencies(String ipAddress) {
     _ipAddress = ipAddress;
     fetchProjects();
+  }
+
+  List<Project> filterProjects(ProjectFilter filter) {
+    return _projects.where((project) {
+      bool matchesType = filter.type == null || filter.type == project.type;
+      bool matchesBudget =
+          (filter.minBudget == null || project.budget >= filter.minBudget!) &&
+              (filter.maxBudget == null || project.budget <= filter.maxBudget!);
+      bool matchesTechnology = filter.technology == null ||
+          project.technologyStack.contains(filter.technology!);
+      return matchesType && matchesBudget && matchesTechnology;
+    }).toList();
+  }
+
+  List<Project> searchProjects(String query) {
+    return _projects.where((project) {
+      final titleLower = project.title.toLowerCase();
+      final queryLower = query.toLowerCase();
+      return titleLower.contains(queryLower);
+    }).toList();
   }
 
   Future<void> fetchProjects() async {

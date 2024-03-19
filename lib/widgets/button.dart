@@ -10,8 +10,10 @@ class MyButton extends StatelessWidget {
     required this.buttonHeight,
     this.textColor = Colors.white,
     this.borderColor = Colors.transparent,
+    this.borderRadius = 8.0,
     this.onTap,
-    this.child, // Add this line
+    this.child,
+    // Add this line
   });
 
   final String? buttonText; // Make this nullable
@@ -20,6 +22,7 @@ class MyButton extends StatelessWidget {
   final double buttonWidth;
   final Color textColor;
   final Color borderColor;
+  final double borderRadius;
   final Function()? onTap;
   final Widget? child; // Add this line
 
@@ -31,8 +34,8 @@ class MyButton extends StatelessWidget {
         height: buttonHeight,
         width: buttonWidth,
         decoration: BoxDecoration(
-          border: Border.all(color: borderColor),
-          borderRadius: BorderRadius.circular(8.0.r),
+          border: Border.all(color: borderColor, width: 2.w),
+          borderRadius: BorderRadius.circular(borderRadius.r),
           color: buttonColor,
         ),
         child: Center(
@@ -43,10 +46,10 @@ class MyButton extends StatelessWidget {
                 buttonText ?? '', // Use empty string if buttonText is null
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 16.sp,
-                    color: textColor,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Poppins'),
+                  fontSize: 16,
+                  color: textColor,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
         ),
       ),

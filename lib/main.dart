@@ -4,6 +4,7 @@ import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/providers/auth_provider.dart';
 import 'package:outsourcepro/providers/password_visibility_provider.dart';
 import 'package:outsourcepro/providers/project_provider.dart';
+import 'package:outsourcepro/providers/search_provider.dart';
 import 'package:outsourcepro/screens/add_education.dart';
 import 'package:outsourcepro/screens/add_experience.dart';
 import 'package:outsourcepro/screens/edit_aboutme.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => IPAddressProvider()),
         ChangeNotifierProxyProvider2<IPAddressProvider, CookieProvider,
                 FreelancerProfileProvider>(
-            create: (_) => FreelancerProfileProvider(), // Initial empty values
+            create: (_) => FreelancerProfileProvider(),
             update: (_, ipAddressProvider, authProvider,
                 freelancerProfileProvider) {
               return freelancerProfileProvider!
@@ -44,14 +45,13 @@ class MyApp extends StatelessWidget {
                 );
             }),
         ChangeNotifierProxyProvider<IPAddressProvider, ProjectProvider>(
-          create: (_) => ProjectProvider(), // Initial empty values
+          create: (_) => ProjectProvider(),
           update: (_, ipAddressProvider, projectProvider) {
             return projectProvider!
               ..updateDependencies(ipAddressProvider.ipaddress);
           },
         ),
-
-        // Add more providers as needed
+        ChangeNotifierProvider(create: (context) => SearchProvider()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 690),
@@ -98,5 +98,5 @@ class CookieProvider extends ChangeNotifier {
 }
 
 class IPAddressProvider extends ChangeNotifier {
-  String ipaddress = '192.168.0.113';
+  String ipaddress = '192.168.66.128';
 }
