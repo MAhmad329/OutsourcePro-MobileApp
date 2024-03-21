@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-SnackBar customSnackBar(String snackBarText) {
+SnackBar customSnackBar(String snackBarText, Color color) {
   return SnackBar(
     content: Center(
       child: Text(
@@ -10,7 +10,7 @@ SnackBar customSnackBar(String snackBarText) {
             color: Colors.white, fontSize: 14.sp), // Customize text style
       ),
     ),
-    backgroundColor: Colors.red, // Change background color
+    backgroundColor: color, // Change background color
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10), // Add rounded corners
     ),

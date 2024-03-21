@@ -5,6 +5,10 @@ class Project {
   final String type;
   final String technologyStack;
   final int budget;
+  final List<dynamic> freelancerApplicants;
+  final List<dynamic> teamApplicants;
+  final bool requiresTeam;
+  final String? selectedApplicant;
   final DateTime createdAt;
 
   Project({
@@ -14,6 +18,10 @@ class Project {
     required this.type,
     required this.technologyStack,
     required this.budget,
+    required this.freelancerApplicants,
+    required this.teamApplicants,
+    required this.requiresTeam,
+    this.selectedApplicant,
     required this.createdAt,
   });
 
@@ -25,6 +33,11 @@ class Project {
       type: json['type'],
       technologyStack: json['technologystack'],
       budget: json['budget'],
+      freelancerApplicants:
+          List<dynamic>.from(json['freelancerApplicants'] ?? []),
+      teamApplicants: List<dynamic>.from(json['teamApplicants'] ?? []),
+      requiresTeam: json['requiresTeam'] ?? false,
+      selectedApplicant: json['selectedApplicant'],
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'])
           : DateTime.now(),

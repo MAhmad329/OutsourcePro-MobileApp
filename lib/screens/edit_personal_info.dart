@@ -66,8 +66,39 @@ class _EditPersonalInformationState extends State<EditPersonalInformation> {
               ),
               Center(
                 child: CircleAvatar(
+                  backgroundImage: const AssetImage(
+                    'assets/defaultpic.jpg',
+                  ),
                   radius: 75.r,
-                  child: GestureDetector(),
+                  child: GestureDetector(
+                    onTap: () {
+                      Provider.of<FreelancerProfileProvider>(context,
+                              listen: false)
+                          .uploadProfilePicture();
+                    },
+                    child: Consumer<FreelancerProfileProvider>(
+                        builder: (_, provider, child) {
+                      return provider.isUploading
+                          ? CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : provider.profile.pfp != ''
+                              ? CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage: NetworkImage(
+                                    provider.profile.pfp,
+                                  ),
+                                  radius: 75.r,
+                                )
+                              : CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage: const AssetImage(
+                                    'assets/defaultpic.jpg',
+                                  ),
+                                  radius: 50.r,
+                                );
+                    }),
+                  ),
                 ),
               ),
               SizedBox(

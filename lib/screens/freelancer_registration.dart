@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
+import 'package:outsourcepro/providers/token_provider.dart';
 import 'package:outsourcepro/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
-import '../main.dart';
+import '../providers/password_visibility_provider.dart';
 import '../widgets/button.dart';
 import '../widgets/custom_richtext.dart';
 
@@ -46,8 +47,7 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
     setState(() {
       isLoading = true; // Set loading to true
     });
-    ipaddress =
-        Provider.of<IPAddressProvider>(context, listen: false).ipaddress;
+    ipaddress = Provider.of<TokenProvider>(context, listen: false).ipaddress;
     var headers = {
       'Content-Type': 'application/json',
     };
@@ -90,9 +90,7 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        customSnackBar(
-          errorMessage,
-        ),
+        customSnackBar(errorMessage, Colors.red),
       );
     }
     setState(() {
@@ -211,56 +209,66 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                           SizedBox(
                             height: 12.h,
                           ),
-                          TextFormField(
-                            style: TextStyle(fontSize: 14.sp),
-                            controller: passwordController,
-                            cursorColor: primaryColor,
-                            obscureText: !_isObscure,
-                            decoration: kTextFieldDecoration.copyWith(
-                              hintStyle: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 14.sp,
-                                  fontFamily: 'Poppins'),
-                              hintText: 'Password',
-                              suffixIcon: IconButton(
-                                splashColor: Colors.transparent,
-                                color: Colors.grey.shade500,
-                                icon: Icon(
-                                  size: 20.r,
-                                  _isObscure
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
+                          Consumer<PasswordVisibilityProvider>(
+                            builder: (context, provider, child) {
+                              return TextFormField(
+                                style: TextStyle(fontSize: 14.sp),
+                                controller: passwordController,
+                                cursorColor: primaryColor,
+                                obscureText: provider.isObscure,
+                                decoration: kTextFieldDecoration.copyWith(
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 14.sp,
+                                  ),
+                                  hintText: 'Password',
+                                  suffixIcon: IconButton(
+                                      splashColor: Colors.transparent,
+                                      color: Colors.grey.shade500,
+                                      icon: Icon(
+                                        size: 20.r,
+                                        provider.isObscure
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                      ),
+                                      onPressed: () {
+                                        provider.toggleVisibility();
+                                      }),
                                 ),
-                                onPressed: _togglePasswordVisibility,
-                              ),
-                            ),
+                              );
+                            },
                           ),
                           SizedBox(
                             height: 12.h,
                           ),
-                          TextFormField(
-                            style: TextStyle(fontSize: 14.sp),
-                            controller: confirmPasswordController,
-                            cursorColor: primaryColor,
-                            obscureText: !_isObscure,
-                            decoration: kTextFieldDecoration.copyWith(
-                              hintStyle: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 14.sp,
-                                  fontFamily: 'Poppins'),
-                              hintText: 'Confirm Password',
-                              suffixIcon: IconButton(
-                                splashColor: Colors.transparent,
-                                color: Colors.grey.shade500,
-                                icon: Icon(
-                                  size: 20.r,
-                                  _isObscure
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
+                          Consumer<PasswordVisibilityProvider>(
+                            builder: (context, provider, child) {
+                              return TextFormField(
+                                style: TextStyle(fontSize: 14.sp),
+                                controller: confirmPasswordController,
+                                cursorColor: primaryColor,
+                                obscureText: provider.isObscure,
+                                decoration: kTextFieldDecoration.copyWith(
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 14.sp,
+                                  ),
+                                  hintText: 'Confirm Password',
+                                  suffixIcon: IconButton(
+                                      splashColor: Colors.transparent,
+                                      color: Colors.grey.shade500,
+                                      icon: Icon(
+                                        size: 20.r,
+                                        provider.isObscure
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                      ),
+                                      onPressed: () {
+                                        provider.toggleVisibility();
+                                      }),
                                 ),
-                                onPressed: _togglePasswordVisibility,
-                              ),
-                            ),
+                              );
+                            },
                           ),
                           SizedBox(
                             height: 20.h,
@@ -278,8 +286,7 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         customSnackBar(
-                                          'Email is not valid!',
-                                        ),
+                                            'Email is not valid!', Colors.red),
                                       );
                                     } else if (passwordController.text ==
                                             confirmPasswordController.text &&
@@ -290,15 +297,15 @@ class _FreelancerRegistrationState extends State<FreelancerRegistration> {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         customSnackBar(
-                                          'Passwords do not match!',
-                                        ),
+                                            'Passwords do not match!',
+                                            Colors.red),
                                       );
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         customSnackBar(
-                                          'Please fill all the fields!',
-                                        ),
+                                            'Please fill all the fields!',
+                                            Colors.red),
                                       );
                                     }
                                   },

@@ -274,7 +274,8 @@ class _AddExperienceState extends State<AddExperience> {
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       customSnackBar(
-                                          'Please Select Start Date First'),
+                                          'Please Select Start Date First',
+                                          Colors.red),
                                     );
                                   }
                                 },
@@ -363,7 +364,8 @@ class _AddExperienceState extends State<AddExperience> {
                                 startDate == null ||
                                 (!currentlyWorking && endDate == null)) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                customSnackBar('Please fill in all the fields'),
+                                customSnackBar('Please fill in all the fields',
+                                    Colors.red),
                               );
                             } else {
                               FreelancerProfileProvider provider =

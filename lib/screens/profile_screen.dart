@@ -78,13 +78,24 @@ class ProfileScreen extends StatelessWidget {
                         SizedBox(
                           height: 15.0.h,
                         ),
-                        CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          backgroundImage: const AssetImage(
-                            'assets/profilepic.png',
-                          ),
-                          radius: 50.r,
-                        ),
+                        Consumer<FreelancerProfileProvider>(
+                            builder: (_, provider, child) {
+                          return provider.profile.pfp != ''
+                              ? CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage: NetworkImage(
+                                    provider.profile.pfp,
+                                  ),
+                                  radius: 50.r,
+                                )
+                              : CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage: const AssetImage(
+                                    'assets/defaultpic.jpg',
+                                  ),
+                                  radius: 50.r,
+                                );
+                        }),
                         SizedBox(
                           height: 10.h,
                         ),

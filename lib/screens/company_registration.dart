@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
+import 'package:outsourcepro/providers/token_provider.dart';
 import 'package:outsourcepro/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
-import '../main.dart';
 import '../widgets/button.dart';
 import '../widgets/custom_richtext.dart';
 
@@ -46,8 +46,7 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
     setState(() {
       isLoading = true; // Set loading to true
     });
-    ipaddress =
-        Provider.of<IPAddressProvider>(context, listen: false).ipaddress;
+    ipaddress = Provider.of<TokenProvider>(context, listen: false).ipaddress;
     var headers = {
       'Content-Type': 'application/json',
     };
@@ -90,9 +89,7 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        customSnackBar(
-          errorMessage,
-        ),
+        customSnackBar(errorMessage, Colors.red),
       );
     }
     setState(() {
@@ -278,8 +275,7 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         customSnackBar(
-                                          'Email is not valid!',
-                                        ),
+                                            'Email is not valid!', Colors.red),
                                       );
                                     } else if (passwordController.text ==
                                             confirmPasswordController.text &&
@@ -290,15 +286,15 @@ class _CompanyRegistrationState extends State<CompanyRegistration> {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         customSnackBar(
-                                          'Passwords do not match!',
-                                        ),
+                                            'Passwords do not match!',
+                                            Colors.red),
                                       );
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         customSnackBar(
-                                          'Please fill all the fields!',
-                                        ),
+                                            'Please fill all the fields!',
+                                            Colors.red),
                                       );
                                     }
                                   },

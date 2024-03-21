@@ -3,10 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:outsourcepro/providers/token_provider.dart';
 import 'package:outsourcepro/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
-
-import '../main.dart';
 
 class AuthProvider with ChangeNotifier {
   bool _isLoading = false;
@@ -23,7 +22,7 @@ class AuthProvider with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final ipaddress = context.read<IPAddressProvider>().ipaddress;
+    final ipaddress = context.read<TokenProvider>().ipaddress;
 
     var headers = {
       'Content-Type': 'application/json',
@@ -40,14 +39,11 @@ class AuthProvider with ChangeNotifier {
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        Provider.of<CookieProvider>(context, listen: false)
+        Provider.of<TokenProvider>(context, listen: false)
             .setCookie(response.headers['set-cookie']!);
 
-        Navigator.pushReplacementNamed(
-            context,
-            type == 'freelancer'
-                ? 'homepage_freelancer_screen'
-                : 'homepage_screen');
+        Navigator.pushReplacementNamed(context,
+            type == 'freelancer' ? 'homepage_screen' : 'homepage_screen');
       } else {
         String errorMessage = 'Login failed.';
         Map<String, dynamic> errorResponse =
@@ -59,16 +55,12 @@ class AuthProvider with ChangeNotifier {
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
-          customSnackBar(
-            errorMessage,
-          ),
+          customSnackBar(errorMessage, Colors.red),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        customSnackBar(
-          "Failed to sign in: ${e.toString()}",
-        ),
+        customSnackBar("Failed to sign in: ${e.toString()}", Colors.red),
       );
     } finally {
       _isLoading = false;

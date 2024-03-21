@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:outsourcepro/providers/project_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import '../models/project.dart';
@@ -15,7 +17,10 @@ class ProjectDetailsScreen extends StatelessWidget {
       child: Scaffold(
         bottomNavigationBar: SizedBox(
           child: MyButton(
-            onTap: () {},
+            onTap: () {
+              Provider.of<ProjectProvider>(context, listen: false)
+                  .applyToProject(project.id, context);
+            },
             buttonText: 'Apply',
             buttonColor: primaryColor,
             buttonWidth: double.infinity.w,
@@ -140,6 +145,61 @@ class ProjectDetailsScreen extends StatelessWidget {
                       project.technologyStack,
                       style: TextStyle(fontSize: 12.sp),
                     ),
+                  ],
+                ),
+                SizedBox(
+                  height: 25.h,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Requirement',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    Text(
+                      project.requiresTeam ? 'Team' : 'Freelancer',
+                      style: TextStyle(fontSize: 12.sp),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 25.h,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      project.requiresTeam
+                          ? 'No. of Team Applicants'
+                          : 'No. of Applicants',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    Consumer<ProjectProvider>(
+                      builder: (context, provider, child) {
+                        Project updatedProject = provider.projects
+                            .firstWhere((proj) => proj.id == project.id);
+                        return Text(
+                          updatedProject.requiresTeam
+                              ? updatedProject.teamApplicants.length.toString()
+                              : updatedProject.freelancerApplicants.length
+                                  .toString(),
+                          style: TextStyle(fontSize: 12.sp),
+                        );
+                      },
+                    )
                   ],
                 ),
                 SizedBox(

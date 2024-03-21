@@ -60,14 +60,14 @@ class SkillsSection extends StatelessWidget {
           height: 8.h,
         ),
         Wrap(
-          spacing: 8.0.r,
+          spacing: 6.0.r,
           runSpacing: 8.0.r,
           children: List.generate(
             provider.profile.skills.length,
             (index) => Container(
               padding: EdgeInsets.symmetric(
-                horizontal: 16.0.w,
-                vertical: 12.0.h,
+                horizontal: 10.0.w,
+                vertical: 8.0.h,
               ),
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
@@ -97,7 +97,7 @@ class SkillsSection extends StatelessWidget {
                     },
                     child: Icon(
                       Icons.cancel_outlined,
-                      size: 18.r,
+                      size: 16.r,
                       color: Colors.red,
                     ),
                   )

@@ -2,15 +2,19 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 import '../models/education_entry.dart';
 import '../models/experience_entry.dart';
 import '../models/freelancer.dart';
 
 class FreelancerProfileProvider extends ChangeNotifier {
-  FreelancerProfile _profile = FreelancerProfile();
+  final FreelancerProfile _profile = FreelancerProfile();
   String _ipAddress = '';
+  bool _isUploading = false;
+  bool get isUploading => _isUploading;
   String _cookie = '';
+
   FreelancerProfile get profile => _profile;
 
   FreelancerProfileProvider() {
@@ -43,6 +47,7 @@ class FreelancerProfileProvider extends ChangeNotifier {
       _profile.lastname = jsonResponse['freelancer']['lastname'] ?? '';
       _profile.username = jsonResponse['freelancer']['username'] ?? '';
       _profile.aboutMe = jsonResponse['freelancer']['aboutme'] ?? '';
+      _profile.pfp = jsonResponse['freelancer']['pfp'] ?? '';
       _profile.skills =
           List<String>.from(jsonResponse['freelancer']['skills'] ?? []);
       _profile.educationEntries =
@@ -64,6 +69,58 @@ class FreelancerProfileProvider extends ChangeNotifier {
                   ))
               .toList();
       notifyListeners();
+    }
+  }
+
+  Future<void> uploadProfilePicture() async {
+    if (_ipAddress.isEmpty || _cookie.isEmpty) {
+      return;
+    }
+
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 50,
+      );
+
+      if (pickedFile != null) {
+        _isUploading = true;
+        notifyListeners();
+        var headers = {
+          'Cookie': _cookie,
+        };
+        var request = http.MultipartRequest(
+            'POST', Uri.parse('http://$_ipAddress:3000/api/v1/uploadFile'));
+        request.files.add(
+            await http.MultipartFile.fromPath('filename', pickedFile.path));
+        request.headers.addAll(headers);
+
+        http.StreamedResponse response = await request.send();
+
+        if (response.statusCode == 200) {
+          String responseBody = await response.stream.bytesToString();
+          Map<String, dynamic> jsonResponse = json.decode(responseBody);
+          String imageUrl = jsonResponse['url'];
+          print(imageUrl);
+          _profile.pfp = imageUrl;
+          updateFreelancerDetails();
+          _isUploading = false;
+          notifyListeners();
+        } else {
+          _isUploading = false;
+          notifyListeners();
+          print('Failed to upload image: ${response.reasonPhrase}');
+        }
+      } else {
+        _isUploading = false;
+        notifyListeners();
+        print('No image selected.');
+      }
+    } catch (e) {
+      _isUploading = false;
+      notifyListeners();
+      print('Error uploading profile picture: $e');
     }
   }
 
@@ -93,6 +150,7 @@ class FreelancerProfileProvider extends ChangeNotifier {
       "skills": _profile.skills,
       "education": existingEducationEntries,
       "experience": existingExperienceEntries,
+      "pfp": _profile.pfp,
     });
 
     request.headers.addAll(headers);

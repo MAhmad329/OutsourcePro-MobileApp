@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/providers/auth_provider.dart';
+import 'package:outsourcepro/providers/navigation_provider.dart';
 import 'package:outsourcepro/providers/password_visibility_provider.dart';
 import 'package:outsourcepro/providers/project_provider.dart';
 import 'package:outsourcepro/providers/search_provider.dart';
+import 'package:outsourcepro/providers/token_provider.dart';
 import 'package:outsourcepro/screens/add_education.dart';
 import 'package:outsourcepro/screens/add_experience.dart';
 import 'package:outsourcepro/screens/edit_aboutme.dart';
 import 'package:outsourcepro/screens/edit_personal_info.dart';
 import 'package:outsourcepro/screens/homepage.dart';
-import 'package:outsourcepro/screens/homepage_freelancer.dart';
 import 'package:outsourcepro/screens/landing_page.dart';
 import 'package:outsourcepro/screens/login_screen.dart';
 import 'package:outsourcepro/screens/profile_screen.dart';
+import 'package:outsourcepro/screens/projects_screen.dart';
 import 'package:outsourcepro/screens/selection_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -29,26 +31,45 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => NavigationProvider()),
         ChangeNotifierProvider(
             create: (context) => PasswordVisibilityProvider()),
-        ChangeNotifierProvider(create: (context) => CookieProvider()),
-        ChangeNotifierProvider(create: (context) => IPAddressProvider()),
-        ChangeNotifierProxyProvider2<IPAddressProvider, CookieProvider,
-                FreelancerProfileProvider>(
-            create: (_) => FreelancerProfileProvider(),
-            update: (_, ipAddressProvider, authProvider,
-                freelancerProfileProvider) {
-              return freelancerProfileProvider!
-                ..updateDependencies(
-                  ipAddressProvider.ipaddress,
-                  authProvider.cookie,
-                );
-            }),
-        ChangeNotifierProxyProvider<IPAddressProvider, ProjectProvider>(
+        ChangeNotifierProvider(create: (context) => TokenProvider()),
+        // ChangeNotifierProxyProvider2<TokenProvider, CookieProvider,
+        //         FreelancerProfileProvider>(
+        //     create: (_) => FreelancerProfileProvider(),
+        //     update: (_, ipAddressProvider, authProvider,
+        //         freelancerProfileProvider) {
+        //       return freelancerProfileProvider!
+        //         ..updateDependencies(
+        //           ipAddressProvider.ipaddress,
+        //           authProvider.cookie,
+        //         );
+        //     }),
+        // ChangeNotifierProxyProvider2<IPAddressProvider, CookieProvider,
+        //         ProjectProvider>(
+        //     create: (_) => ProjectProvider(),
+        //     update: (_, ipAddressProvider, cookieProvider, projectProvider) {
+        //       return projectProvider!
+        //         ..updateDependencies(
+        //           ipAddressProvider.ipaddress,
+        //           cookieProvider.cookie,
+        //         );
+        //     }),
+        ChangeNotifierProxyProvider<TokenProvider, FreelancerProfileProvider>(
+          create: (_) => FreelancerProfileProvider(),
+          update: (_, tokenProvider, freelanceProvider) {
+            return freelanceProvider!
+              ..updateDependencies(
+                  tokenProvider.ipaddress, tokenProvider.cookie);
+          },
+        ),
+        ChangeNotifierProxyProvider<TokenProvider, ProjectProvider>(
           create: (_) => ProjectProvider(),
-          update: (_, ipAddressProvider, projectProvider) {
+          update: (_, tokenProvider, projectProvider) {
             return projectProvider!
-              ..updateDependencies(ipAddressProvider.ipaddress);
+              ..updateDependencies(
+                  tokenProvider.ipaddress, tokenProvider.cookie);
           },
         ),
         ChangeNotifierProvider(create: (context) => SearchProvider()),
@@ -72,8 +93,7 @@ class MyApp extends StatelessWidget {
                     loginType: LoginType.company,
                   ),
               'homepage_screen': (context) => const HomePage(),
-              'homepage_freelancer_screen': (context) =>
-                  const HomepageFreelancer(),
+              'projects_screen': (context) => const ProjectsScreen(),
               'profile_screen': (context) => const ProfileScreen(),
               'edit_about_me_screen': (context) => const EditAboutMe(),
               'add_education_screen': (context) => const AddEducation(),
@@ -86,17 +106,4 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-}
-
-class CookieProvider extends ChangeNotifier {
-  String cookie = '';
-
-  void setCookie(String value) {
-    cookie = value;
-    notifyListeners();
-  }
-}
-
-class IPAddressProvider extends ChangeNotifier {
-  String ipaddress = '192.168.66.128';
 }

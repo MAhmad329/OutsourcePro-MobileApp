@@ -6,6 +6,7 @@ class FreelancerProfile {
   String lastname;
   String username;
   String aboutMe;
+  String pfp;
   List<String> skills;
   List<EducationEntry> educationEntries;
   List<ExperienceEntry> experienceEntries;
@@ -15,6 +16,7 @@ class FreelancerProfile {
     this.lastname = '',
     this.username = '',
     this.aboutMe = '',
+    this.pfp = '',
     this.skills = const [],
     this.educationEntries = const [],
     this.experienceEntries = const [],
