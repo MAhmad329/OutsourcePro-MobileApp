@@ -74,7 +74,7 @@ class _EditPersonalInformationState extends State<EditPersonalInformation> {
                     onTap: () {
                       Provider.of<FreelancerProfileProvider>(context,
                               listen: false)
-                          .uploadProfilePicture();
+                          .uploadProfilePicture(context);
                     },
                     child: Consumer<FreelancerProfileProvider>(
                         builder: (_, provider, child) {

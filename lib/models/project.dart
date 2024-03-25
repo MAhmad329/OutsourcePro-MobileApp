@@ -44,6 +44,22 @@ class Project {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'title': title,
+      'description': description,
+      'type': type,
+      'technologystack': technologyStack,
+      'budget': budget,
+      'freelancerApplicants': freelancerApplicants,
+      'teamApplicants': teamApplicants,
+      'requiresTeam': requiresTeam,
+      'selectedApplicant': selectedApplicant,
+      'createdAt': createdAt.toIso8601String(),
+    };
+  }
+
   String timeElapsed() {
     final duration = DateTime.now().difference(createdAt);
     if (duration.inDays > 365) {

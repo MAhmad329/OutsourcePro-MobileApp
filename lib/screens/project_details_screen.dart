@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/providers/project_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -8,26 +9,52 @@ import '../models/project.dart';
 import '../widgets/button.dart';
 
 class ProjectDetailsScreen extends StatelessWidget {
+  final VoidCallback? onActionCompleted;
   final Project project;
-  const ProjectDetailsScreen({super.key, required this.project});
+  const ProjectDetailsScreen(
+      {super.key, required this.project, this.onActionCompleted});
 
   @override
   Widget build(BuildContext context) {
+    FreelancerProfileProvider freelancerProvider =
+        Provider.of<FreelancerProfileProvider>(context, listen: false);
+
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: SizedBox(
-          child: MyButton(
-            onTap: () {
-              Provider.of<ProjectProvider>(context, listen: false)
-                  .applyToProject(project.id, context);
+          child: Consumer<ProjectProvider>(
+            builder: (_, provider, child) {
+              bool isApplied = provider.hasApplied(
+                  project.id, freelancerProvider.profile.id);
+              return MyButton(
+                onTap: () {
+                  if (isApplied) {
+                    provider.cancelApplication(
+                        project.id, freelancerProvider.profile.id, context,
+                        onSuccess: () {
+                      Provider.of<FreelancerProfileProvider>(context,
+                              listen: false)
+                          .fetchFreelancerDetails();
+                    });
+                  } else {
+                    provider.applyToProject(
+                        project.id, freelancerProvider.profile.id, context,
+                        onSuccess: () {
+                      Provider.of<FreelancerProfileProvider>(context,
+                              listen: false)
+                          .fetchFreelancerDetails();
+                    });
+                  }
+                },
+                buttonText: isApplied ? 'Cancel' : 'Apply',
+                buttonColor: isApplied ? Colors.red : primaryColor,
+                buttonWidth: double.infinity.w,
+                buttonHeight: 40.h,
+                textColor: Colors.white,
+                borderColor: isApplied ? Colors.red : primaryColor,
+                borderRadius: 0,
+              );
             },
-            buttonText: 'Apply',
-            buttonColor: primaryColor,
-            buttonWidth: double.infinity.w,
-            buttonHeight: 40.h,
-            textColor: Colors.white,
-            borderColor: primaryColor,
-            borderRadius: 0,
           ),
         ),
         appBar: AppBar(

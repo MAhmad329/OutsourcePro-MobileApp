@@ -24,6 +24,11 @@ class ProjectProvider extends ChangeNotifier {
     fetchProjects();
   }
 
+  bool hasApplied(String projectId, String freelancerId) {
+    Project project = projects.firstWhere((proj) => proj.id == projectId);
+    return project.freelancerApplicants.contains(freelancerId);
+  }
+
   List<Project> filterProjects(ProjectFilter filter) {
     return _projects.where((project) {
       bool matchesType = filter.type == null || filter.type == project.type;
@@ -71,13 +76,16 @@ class ProjectProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> applyToProject(String projectId, BuildContext context) async {
+  Future<void> applyToProject(
+      String projectId, String freelancerId, BuildContext context,
+      {Function? onSuccess}) async {
     try {
-      var headers = {'Cookie': _cookie};
+      var headers = {'Content-Type': 'application/json', 'Cookie': _cookie};
       var request = http.Request(
           'POST',
           Uri.parse(
-              'http://$_ipAddress:3000/api/v1/project/$projectId/applyToProject'));
+              'http://$_ipAddress:3000/api/v1/project/applyToProject/$projectId'));
+      request.body = json.encode({"freelancerID": freelancerId});
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
@@ -92,6 +100,9 @@ class ProjectProvider extends ChangeNotifier {
           ScaffoldMessenger.of(context).showSnackBar(
               customSnackBar('Project Applied Successfully', Colors.grey));
           fetchProjects();
+          if (onSuccess != null) {
+            onSuccess(); // Call the callback function
+          }
         } else {
           print('API request was not successful: ${responseData['message']}');
           ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
@@ -106,6 +117,50 @@ class ProjectProvider extends ChangeNotifier {
       print('Error applying to project: $error');
       ScaffoldMessenger.of(context).showSnackBar(
           customSnackBar('There was an error applying to project', Colors.red));
+    }
+  }
+
+  Future<void> cancelApplication(
+      String projectId, String freelancerId, BuildContext context,
+      {Function? onSuccess}) async {
+    try {
+      var headers = {'Content-Type': 'application/json', 'Cookie': _cookie};
+      var request = http.Request(
+          'PUT',
+          Uri.parse(
+              'http://$_ipAddress:3000/api/v1/project/cancelApply/$projectId'));
+      request.body = json.encode({"freelancerID": freelancerId});
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        // Decode the JSON response
+        Map<String, dynamic> responseData =
+            json.decode(await response.stream.bytesToString());
+        print(responseData);
+
+        if (responseData['success'] == true) {
+          ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
+              'Project Application Cancelled Successfully', Colors.grey));
+          fetchProjects();
+          if (onSuccess != null) {
+            onSuccess(); // Call the callback function
+          }
+        } else {
+          print('API request was not successful: ${responseData['message']}');
+          ScaffoldMessenger.of(context).showSnackBar(
+              customSnackBar('There was an error cancelling!', Colors.red));
+        }
+      } else {
+        print(response.reasonPhrase);
+        ScaffoldMessenger.of(context).showSnackBar(
+            customSnackBar('There was an error cancelling!', Colors.grey));
+      }
+    } catch (error) {
+      print('Error applying to project: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+          customSnackBar('There was an error cancelling!', Colors.red));
     }
   }
 

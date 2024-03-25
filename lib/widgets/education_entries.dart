@@ -143,7 +143,8 @@ class EducationEntries extends StatelessWidget {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => AddEducation(
-                                              educationEntry: entries[index]),
+                                              educationEntry: entries[index],
+                                              index: index),
                                         ),
                                       );
                                     },

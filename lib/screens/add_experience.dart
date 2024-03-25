@@ -11,7 +11,8 @@ import '../widgets/custom_snackbar.dart';
 
 class AddExperience extends StatefulWidget {
   final ExperienceEntry? experienceEntry;
-  const AddExperience({super.key, this.experienceEntry});
+  final int? index;
+  const AddExperience({super.key, this.experienceEntry, this.index});
 
   @override
   State<AddExperience> createState() => _AddExperienceState();
@@ -402,6 +403,22 @@ class _AddExperienceState extends State<AddExperience> {
                             }
                           },
                         ),
+                        SizedBox(
+                          height: 15.h,
+                        ),
+                        if (widget.experienceEntry != null)
+                          MyButton(
+                            onTap: () {
+                              Provider.of<FreelancerProfileProvider>(context,
+                                      listen: false)
+                                  .removeExperienceEntry(widget.index!);
+                              Navigator.pop(context);
+                            },
+                            buttonText: 'Delete',
+                            buttonColor: Colors.red,
+                            buttonWidth: double.infinity,
+                            buttonHeight: 45.h,
+                          )
                       ],
                     ),
                   ],

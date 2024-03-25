@@ -7,20 +7,12 @@ import 'package:outsourcepro/providers/password_visibility_provider.dart';
 import 'package:outsourcepro/providers/project_provider.dart';
 import 'package:outsourcepro/providers/search_provider.dart';
 import 'package:outsourcepro/providers/token_provider.dart';
-import 'package:outsourcepro/screens/add_education.dart';
-import 'package:outsourcepro/screens/add_experience.dart';
-import 'package:outsourcepro/screens/edit_aboutme.dart';
-import 'package:outsourcepro/screens/edit_personal_info.dart';
-import 'package:outsourcepro/screens/homepage.dart';
-import 'package:outsourcepro/screens/landing_page.dart';
-import 'package:outsourcepro/screens/login_screen.dart';
-import 'package:outsourcepro/screens/profile_screen.dart';
-import 'package:outsourcepro/screens/projects_screen.dart';
-import 'package:outsourcepro/screens/selection_screen.dart';
+import 'package:outsourcepro/router/app_router.dart';
 import 'package:provider/provider.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -80,27 +72,10 @@ class MyApp extends StatelessWidget {
         splitScreenMode: true,
         builder: (context, child) {
           return MaterialApp(
+            navigatorKey: navigatorKey,
             theme: ThemeData(fontFamily: 'Poppins'),
             debugShowCheckedModeBanner: false,
-            initialRoute: 'landing_screen',
-            routes: {
-              'landing_screen': (context) => const LandingPage(),
-              'selection_screen': (context) => const SelectionScreen(),
-              'freelancer_login_screen': (context) => const LoginScreen(
-                    loginType: LoginType.freelancer,
-                  ),
-              'company_login_screen': (context) => const LoginScreen(
-                    loginType: LoginType.company,
-                  ),
-              'homepage_screen': (context) => const HomePage(),
-              'projects_screen': (context) => const ProjectsScreen(),
-              'profile_screen': (context) => const ProfileScreen(),
-              'edit_about_me_screen': (context) => const EditAboutMe(),
-              'add_education_screen': (context) => const AddEducation(),
-              'add_experience_screen': (context) => const AddExperience(),
-              'edit_personal_info': (context) =>
-                  const EditPersonalInformation(),
-            },
+            onGenerateRoute: AppRouter().onGenerateRoute,
           );
         },
       ),

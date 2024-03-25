@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
-import 'package:outsourcepro/constants.dart';
 import 'package:outsourcepro/widgets/experience_entries.dart';
 import 'package:provider/provider.dart';
 
@@ -9,8 +8,18 @@ import '../widgets/aboutme_section.dart';
 import '../widgets/education_entries.dart';
 import '../widgets/skills_section.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,17 +30,11 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Profile Section',
-          style: TextStyle(
-            fontSize: 24.sp,
-          ),
+          style: TextStyle(fontSize: 16.sp, color: Colors.black),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        iconTheme: IconThemeData(
-          size: 30.0.r,
-          color: primaryColor,
-        ),
         elevation: 0,
         actions: [
           IconButton(

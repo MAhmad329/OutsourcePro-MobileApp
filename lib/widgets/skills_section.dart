@@ -147,31 +147,36 @@ void _showAddSkillEntryDialog(
           ),
         ),
         actions: [
-          MyButton(
-            buttonText: 'Cancel',
-            buttonColor: Colors.black26,
-            buttonWidth: 110.w,
-            buttonHeight: 40.h,
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          MyButton(
-            buttonText: 'Confirm',
-            buttonColor: primaryColor,
-            buttonWidth: 110.w,
-            buttonHeight: 40.h,
-            onTap: () {
-              String entryText = entryController.text.trim();
+          Row(
+            children: [
+              MyButton(
+                buttonText: 'Cancel',
+                buttonColor: Colors.black26,
+                buttonWidth: 110.w,
+                buttonHeight: 40.h,
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              SizedBox(width: 10.w),
+              MyButton(
+                buttonText: 'Confirm',
+                buttonColor: primaryColor,
+                buttonWidth: 110.w,
+                buttonHeight: 40.h,
+                onTap: () {
+                  String entryText = entryController.text.trim();
 
-              if (entryText.isNotEmpty) {
-                provider.addSkill(
-                  entryText,
-                );
+                  if (entryText.isNotEmpty) {
+                    provider.addSkill(
+                      entryText,
+                    );
 
-                Navigator.of(context).pop();
-              }
-            },
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+            ],
           ),
         ],
       );
@@ -202,28 +207,37 @@ void _showDeleteSkillDialog(
           ),
         ),
         actions: [
-          MyButton(
-            buttonText: 'Cancel',
-            buttonColor: Colors.black26,
-            buttonWidth: 110.w,
-            buttonHeight: 40.h,
-            onTap: () {
-              Navigator.of(context).pop();
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MyButton(
+                buttonText: 'Cancel',
+                buttonColor: Colors.black26,
+                buttonWidth: 120.w,
+                buttonHeight: 40.h,
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              SizedBox(
+                width: 10.w,
+              ),
+              MyButton(
+                buttonText: 'Confirm',
+                buttonColor: primaryColor,
+                buttonWidth: 120.w,
+                buttonHeight: 40.h,
+                onTap: () {
+                  provider.removeSkill(index);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
           ),
-          MyButton(
-            buttonText: 'Confirm',
-            buttonColor: primaryColor,
-            buttonWidth: 110.w,
-            buttonHeight: 40.h,
-            onTap: () {
-              provider.removeSkill(index);
-              Navigator.of(context).pop();
-            },
-          ),
-          SizedBox(
-            width: 20.w,
-          ),
+
+          // SizedBox(
+          //   width: 20.w,
+          // ),
         ],
       );
     },

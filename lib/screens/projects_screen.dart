@@ -110,7 +110,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
               TextField(
                 onChanged: (value) {
                   Provider.of<SearchProvider>(context, listen: false)
-                      .updateSearchQuery(value, projectProvider);
+                      .updateProjectSearchQuery(value, projectProvider);
                 },
                 style: TextStyle(fontSize: 14.sp),
                 cursorColor: Colors.black,
@@ -162,7 +162,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                           child: CircularProgressIndicator(color: primaryColor),
                         );
                       } else if (projectProvider.projects.isEmpty) {
-                        return Center(
+                        return const Center(
                           child: Text('No results found'),
                         );
                       } else {

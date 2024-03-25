@@ -1,29 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/constants.dart';
+import 'package:outsourcepro/screens/manage_projects.dart';
 import 'package:outsourcepro/screens/profile_screen.dart';
+import 'package:outsourcepro/screens/team_page.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/navigation_provider.dart';
 import 'projects_screen.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
-  final List<Widget> _screens = const [
-    ProjectsScreen(),
-    Scaffold(
-      body: Center(
-        child: Text('2nd screen'),
-      ),
-    ),
-    Scaffold(
-      body: Center(
-        child: Text('3rd screen'),
-      ),
-    ),
-    ProfileScreen(),
-    // Add more screens here
-  ];
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,24 +38,44 @@ class HomePage extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         if (navigationProvider.currentIndex != 0) {
-          navigationProvider.updateIndex(0); // Navigate to HomepageFreelancer
-          return false; // Prevent default back button behavior
+          navigationProvider.updateIndex(0);
+          _pageController.jumpToPage(0);
+          return false;
         }
-        return true; // Allow back button behavior if on HomepageFreelancer
+        return true;
       },
       child: Scaffold(
-        body: IndexedStack(
-          index: navigationProvider.currentIndex,
-          children: _screens,
+        body: PageView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: _pageController,
+          onPageChanged: (index) => navigationProvider.updateIndex(index),
+          children: const [
+            ProjectsScreen(),
+            ManageProjects(), TeamPage(),
+            Scaffold(
+              body: Center(
+                child: Text('4th screen'),
+              ),
+            ),
+            ProfileScreen(),
+            // Add more screens here
+          ],
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: navigationProvider.currentIndex,
-          onTap: (index) => navigationProvider.updateIndex(index),
+          onTap: (index) {
+            navigationProvider.updateIndex(index);
+            _pageController.jumpToPage(index);
+          },
           iconSize: 20.r,
           unselectedItemColor: Colors.grey,
           selectedItemColor: primaryColor,
           backgroundColor: Colors.white,
           items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
             BottomNavigationBarItem(
               icon: Icon(Icons.work),
               label: 'Projects',

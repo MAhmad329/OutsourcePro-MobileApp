@@ -140,7 +140,9 @@ class ExperienceEntries extends StatelessWidget {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => AddExperience(
-                                              experienceEntry: entries[index]),
+                                            experienceEntry: entries[index],
+                                            index: index,
+                                          ),
                                         ),
                                       );
                                     },

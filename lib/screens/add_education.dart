@@ -12,7 +12,9 @@ import '../widgets/button.dart';
 class AddEducation extends StatefulWidget {
   final EducationEntry? educationEntry;
 
-  const AddEducation({super.key, this.educationEntry});
+  final int? index;
+
+  const AddEducation({super.key, this.educationEntry, this.index});
 
   @override
   State<AddEducation> createState() => _AddEducationState();
@@ -348,7 +350,9 @@ class _AddEducationState extends State<AddEducation> {
                           height: 20.h,
                         ),
                         MyButton(
-                          buttonText: 'Add Education',
+                          buttonText: widget.educationEntry != null
+                              ? 'Save'
+                              : 'Add Education',
                           buttonColor: primaryColor,
                           buttonWidth: double.infinity,
                           buttonHeight: 45.h,
@@ -396,6 +400,22 @@ class _AddEducationState extends State<AddEducation> {
                             }
                           },
                         ),
+                        SizedBox(
+                          height: 15.h,
+                        ),
+                        if (widget.educationEntry != null)
+                          MyButton(
+                            onTap: () {
+                              Provider.of<FreelancerProfileProvider>(context,
+                                      listen: false)
+                                  .removeEducationEntry(widget.index!);
+                              Navigator.pop(context);
+                            },
+                            buttonText: 'Delete',
+                            buttonColor: Colors.red,
+                            buttonWidth: double.infinity,
+                            buttonHeight: 45.h,
+                          )
                       ],
                     ),
                   ],

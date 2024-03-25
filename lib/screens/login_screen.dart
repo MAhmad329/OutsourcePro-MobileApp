@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/constants.dart';
+import 'package:outsourcepro/screens/forgot_password.dart';
 import 'package:outsourcepro/widgets/button.dart';
 import 'package:provider/provider.dart';
 
@@ -130,12 +131,20 @@ class _LoginScreenState extends State<LoginScreen> {
                             alignment: Alignment.centerRight,
                             child: InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(
-                                      context, 'forget_password_screen');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ForgotPassword(
+                                        loginType: widget.loginType ==
+                                                LoginType.freelancer
+                                            ? LoginType.freelancer
+                                            : LoginType.company,
+                                      ),
+                                    ),
+                                  );
                                 },
                                 child: Text('Forgot Your Password?',
-                                    style:
-                                        kBasicText.copyWith(fontSize: 14.sp))),
+                                    style: kBasicText.copyWith(fontSize: 14))),
                           ),
                           SizedBox(
                             height: 25.h,
