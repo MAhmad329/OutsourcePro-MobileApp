@@ -41,8 +41,8 @@ class _EditPersonalInformationState extends State<EditPersonalInformation> {
         title: Text(
           'Personal Information',
           style: TextStyle(
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
-            fontSize: 20.sp,
           ),
         ),
         centerTitle: true,
@@ -53,6 +53,7 @@ class _EditPersonalInformationState extends State<EditPersonalInformation> {
           color: primaryColor,
         ),
         elevation: 0,
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -79,7 +80,7 @@ class _EditPersonalInformationState extends State<EditPersonalInformation> {
                     child: Consumer<FreelancerProfileProvider>(
                         builder: (_, provider, child) {
                       return provider.isUploading
-                          ? CircularProgressIndicator(
+                          ? const CircularProgressIndicator(
                               color: Colors.white,
                             )
                           : provider.profile.pfp != ''
@@ -111,13 +112,6 @@ class _EditPersonalInformationState extends State<EditPersonalInformation> {
                     children: [
                       Row(
                         children: [
-                          Icon(
-                            Icons.info,
-                            color: primaryColor,
-                          ),
-                          SizedBox(
-                            width: 8.0.w,
-                          ),
                           Text(
                             'First Name',
                             style: TextStyle(
@@ -128,7 +122,7 @@ class _EditPersonalInformationState extends State<EditPersonalInformation> {
                         ],
                       ),
                       SizedBox(
-                        height: 5.h,
+                        height: 10.h,
                       ),
                       TextField(
                         style: TextStyle(fontSize: 14.sp),
@@ -147,13 +141,6 @@ class _EditPersonalInformationState extends State<EditPersonalInformation> {
                       ),
                       Row(
                         children: [
-                          Icon(
-                            Icons.info,
-                            color: primaryColor,
-                          ),
-                          SizedBox(
-                            width: 8.0.w,
-                          ),
                           Text(
                             'Last Name',
                             style: TextStyle(
@@ -164,7 +151,7 @@ class _EditPersonalInformationState extends State<EditPersonalInformation> {
                         ],
                       ),
                       SizedBox(
-                        height: 5.h,
+                        height: 10.h,
                       ),
                       TextField(
                         style: TextStyle(fontSize: 14.sp),

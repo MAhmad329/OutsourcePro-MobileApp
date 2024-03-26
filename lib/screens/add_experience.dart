@@ -88,7 +88,7 @@ class _AddExperienceState extends State<AddExperience> {
     String endDateString = endDate != null
         ? "${endDate!.toLocal()}".split(' ')[0]
         : currentlyWorking
-            ? 'Currently Working'
+            ? 'Present'
             : 'N/A';
 
     List<String> educationDetails = [
@@ -109,10 +109,10 @@ class _AddExperienceState extends State<AddExperience> {
       companyController.text = widget.experienceEntry!.company;
       startDate =
           DateFormat('yyyy-MM-dd').parse(widget.experienceEntry!.startDate);
-      endDate = widget.experienceEntry!.endDate != 'Currently Working'
+      endDate = widget.experienceEntry!.endDate != 'Present'
           ? DateFormat('yyyy-MM-dd').parse(widget.experienceEntry!.endDate)
           : null;
-      currentlyWorking = widget.experienceEntry!.endDate == 'Currently Working';
+      currentlyWorking = widget.experienceEntry!.endDate == 'Present';
     }
   }
 
@@ -134,8 +134,8 @@ class _AddExperienceState extends State<AddExperience> {
         title: Text(
           'Add Experience',
           style: TextStyle(
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
-            fontSize: 20.sp,
           ),
         ),
         centerTitle: true,
@@ -355,7 +355,9 @@ class _AddExperienceState extends State<AddExperience> {
                           height: 20.h,
                         ),
                         MyButton(
-                          buttonText: 'Add Experience',
+                          buttonText: widget.experienceEntry != null
+                              ? 'Save'
+                              : 'Add Experience',
                           buttonColor: primaryColor,
                           buttonWidth: double.infinity,
                           buttonHeight: 45.h,
@@ -384,7 +386,7 @@ class _AddExperienceState extends State<AddExperience> {
                                 endDate: endDate != null
                                     ? DateFormat('yyyy-MM-dd').format(endDate!)
                                     : currentlyWorking
-                                        ? 'Currently Working'
+                                        ? 'Present'
                                         : 'N/A',
                               );
 

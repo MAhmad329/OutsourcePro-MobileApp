@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/constants.dart';
+import 'package:outsourcepro/screens/manage_skills.dart';
 import 'package:provider/provider.dart';
 
 import 'button.dart';
@@ -23,13 +24,6 @@ class SkillsSection extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.info,
-                  color: primaryColor,
-                ),
-                SizedBox(
-                  width: 8.0.w,
-                ),
                 Text(
                   'Skills',
                   style: TextStyle(
@@ -39,25 +33,50 @@ class SkillsSection extends StatelessWidget {
                 ),
               ],
             ),
-            IconButton(
-              onPressed: () {
-                _showAddSkillEntryDialog(
-                  'Skill',
-                  provider.profile.skills,
-                  context,
-                  provider,
-                );
-              },
-              icon: Icon(
-                Icons.add,
-                color: primaryColor,
-                size: 20.r,
-              ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ManageSkills(),
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.edit,
+                    color: primaryColor,
+                    size: 20.r,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    _showAddSkillEntryDialog(
+                      'Skill',
+                      provider.profile.skills,
+                      context,
+                      provider,
+                    );
+                  },
+                  icon: Icon(
+                    Icons.add,
+                    color: primaryColor,
+                    size: 24.r,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
         SizedBox(
-          height: 8.h,
+          height: 5.h,
+        ),
+        Divider(
+          thickness: 0.75.w,
+        ),
+        SizedBox(
+          height: 5.h,
         ),
         Wrap(
           spacing: 6.0.r,
@@ -84,23 +103,23 @@ class SkillsSection extends StatelessWidget {
                       fontSize: 12.sp,
                     ),
                   ),
-                  SizedBox(
-                    width: 10.w,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      _showDeleteSkillDialog(
-                        index,
-                        context,
-                        provider,
-                      );
-                    },
-                    child: Icon(
-                      Icons.cancel_outlined,
-                      size: 16.r,
-                      color: Colors.red,
-                    ),
-                  )
+                  // SizedBox(
+                  //   width: 10.w,
+                  // ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     _showDeleteSkillDialog(
+                  //       index,
+                  //       context,
+                  //       provider,
+                  //     );
+                  //   },
+                  //   child: Icon(
+                  //     Icons.cancel_outlined,
+                  //     size: 16.r,
+                  //     color: Colors.red,
+                  //   ),
+                  // )
                 ],
               ),
             ),
@@ -126,6 +145,7 @@ void _showAddSkillEntryDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
+        backgroundColor: Colors.white,
         title: Center(
             child: Text(
           'Add $title',
@@ -178,66 +198,6 @@ void _showAddSkillEntryDialog(
               ),
             ],
           ),
-        ],
-      );
-    },
-  );
-}
-
-void _showDeleteSkillDialog(
-    int index, BuildContext context, FreelancerProfileProvider provider) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Center(
-          child: Text(
-            'Delete Skill',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        content: Text(
-          textAlign: TextAlign.center,
-          'Are you sure you want to delete this skill?',
-          style: TextStyle(
-            fontSize: 14.sp,
-          ),
-        ),
-        actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              MyButton(
-                buttonText: 'Cancel',
-                buttonColor: Colors.black26,
-                buttonWidth: 120.w,
-                buttonHeight: 40.h,
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              SizedBox(
-                width: 10.w,
-              ),
-              MyButton(
-                buttonText: 'Confirm',
-                buttonColor: primaryColor,
-                buttonWidth: 120.w,
-                buttonHeight: 40.h,
-                onTap: () {
-                  provider.removeSkill(index);
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-
-          // SizedBox(
-          //   width: 20.w,
-          // ),
         ],
       );
     },

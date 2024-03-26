@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
+import 'package:outsourcepro/constants.dart';
 import 'package:outsourcepro/widgets/experience_entries.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +31,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: Text(
           'Profile Section',
-          style: TextStyle(fontSize: 16.sp, color: Colors.black),
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -41,8 +45,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               Navigator.pushNamed(context, 'edit_personal_info');
             },
-            icon: const Icon(
+            icon: Icon(
               Icons.edit,
+              color: primaryColor,
             ),
           ),
         ],

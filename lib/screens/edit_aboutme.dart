@@ -39,22 +39,14 @@ class _EditAboutMeState extends State<EditAboutMe> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              size: 24.r,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
           title: Text(
             'About Me ',
             style: TextStyle(
-              fontSize: 20.sp,
+              fontSize: 16.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
+          automaticallyImplyLeading: false,
           centerTitle: true,
           foregroundColor: Colors.black,
           backgroundColor: Colors.white,

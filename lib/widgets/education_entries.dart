@@ -25,13 +25,6 @@ class EducationEntries extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.info,
-                  color: primaryColor,
-                ),
-                SizedBox(
-                  width: 8.0.w,
-                ),
                 Text(
                   'Education',
                   style: TextStyle(
@@ -51,13 +44,13 @@ class EducationEntries extends StatelessWidget {
               icon: Icon(
                 Icons.add,
                 color: primaryColor,
-                size: 20.r,
+                size: 24.r,
               ),
             ),
           ],
         ),
         SizedBox(
-          height: 8.h,
+          height: 5.h,
         ),
         // Use ListView to allow scrolling if there are many entries
         ListView.builder(
@@ -65,105 +58,86 @@ class EducationEntries extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: entries.length,
           itemBuilder: (context, index) {
-            return Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.0.w,
-                vertical: 12.0.h,
-              ),
-              margin: EdgeInsets.only(
-                bottom: 16.0.h,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(
-                  8.0,
+            return Column(
+              children: [
+                Divider(
+                  thickness: 0.75.w,
                 ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Container(
+                  width: double.infinity,
+                  // margin: EdgeInsets.only(
+                  //   bottom: 16.0.h,
+                  // ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            Text(
-                              'Institution: ',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              entries[index].institution,
-                              style: TextStyle(fontSize: 12.sp),
-                            ),
-                            SizedBox(
-                              height: 8.h,
-                            ),
-                            Text(
-                              'Course: ',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              entries[index].course,
-                              style: TextStyle(fontSize: 12.sp),
-                            ),
-                            SizedBox(
-                              height: 8.h,
-                            ),
-                            Text(
-                              'Duration: ',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Stack(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                SizedBox(
+                                  height: 5.h,
+                                ),
                                 Text(
-                                  '${entries[index].startDate}  ---  ${entries[index].endDate}',
+                                  entries[index].institution,
+                                  style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: 2.h,
+                                ),
+                                Text(
+                                  entries[index].course,
                                   style: TextStyle(fontSize: 12.sp),
                                 ),
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      // Navigate to AddEducation screen with the selected entry for editing
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => AddEducation(
-                                              educationEntry: entries[index],
-                                              index: index),
-                                        ),
-                                      );
-                                    },
-                                    icon: Icon(
-                                      Icons.edit,
-                                      color: primaryColor,
-                                      size: 20.r,
+                                SizedBox(
+                                  height: 2.h,
+                                ),
+                                Stack(
+                                  children: [
+                                    Text(
+                                      '${entries[index].startDate} - ${entries[index].endDate}',
+                                      style: TextStyle(
+                                          fontSize: 12.sp, color: Colors.grey),
                                     ),
-                                  ),
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          // Navigate to AddEducation screen with the selected entry for editing
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddEducation(
+                                                      educationEntry:
+                                                          entries[index],
+                                                      index: index),
+                                            ),
+                                          );
+                                        },
+                                        icon: Icon(
+                                          Icons.edit,
+                                          color: primaryColor,
+                                          size: 15.r,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           },
         ),

@@ -90,11 +90,10 @@ class _AddEducationState extends State<AddEducation> {
       courseController.text = widget.educationEntry!.course;
       startDate =
           DateFormat('yyyy-MM-dd').parse(widget.educationEntry!.startDate);
-      endDate = widget.educationEntry!.endDate != 'Currently Enrolled'
+      endDate = widget.educationEntry!.endDate != 'Present'
           ? DateFormat('yyyy-MM-dd').parse(widget.educationEntry!.endDate)
           : null;
-      currentlyEnrolled =
-          widget.educationEntry!.endDate == 'Currently Enrolled';
+      currentlyEnrolled = widget.educationEntry!.endDate == 'Present';
     }
   }
 
@@ -116,8 +115,8 @@ class _AddEducationState extends State<AddEducation> {
         title: Text(
           'Add Education',
           style: TextStyle(
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
-            fontSize: 20.sp,
           ),
         ),
         centerTitle: true,
@@ -381,7 +380,7 @@ class _AddEducationState extends State<AddEducation> {
                                 endDate: endDate != null
                                     ? DateFormat('yyyy-MM-dd').format(endDate!)
                                     : currentlyEnrolled
-                                        ? 'Currently Enrolled'
+                                        ? 'Present'
                                         : 'N/A',
                               );
 
