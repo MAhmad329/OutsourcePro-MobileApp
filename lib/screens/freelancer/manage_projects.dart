@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
-import 'package:outsourcepro/screens/project_details_screen.dart';
+import 'package:outsourcepro/screens/freelancer/project_details_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../constants.dart';
-import '../models/project.dart';
+import '../../constants.dart';
+import '../../models/project.dart';
 
 class ManageProjects extends StatefulWidget {
   const ManageProjects({super.key});
@@ -64,65 +64,56 @@ class _ManageProjectsState extends State<ManageProjects> {
                           const NeverScrollableScrollPhysics(), // Add this line
                       itemCount: projects.length,
                       itemBuilder: (context, index) {
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0.r),
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
                           ),
-                          margin: EdgeInsets.symmetric(
-                            vertical: 6.0.h,
-                            horizontal: 4.0.w,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.r),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(10.0.r),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          projects[index].title,
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            color: Colors.black,
-                                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(10.0.r),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        projects[index].title,
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          color: Colors.black,
                                         ),
                                       ),
-                                      IconButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ProjectDetailsScreen(
-                                                  project: projects[index],
-                                                ),
+                                    ),
+                                    IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProjectDetailsScreen(
+                                                project: projects[index],
                                               ),
-                                            );
-                                          },
-                                          icon: Icon(
-                                            Icons.chevron_right,
-                                            size: 24.r,
-                                          ))
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                            ),
+                                          );
+                                        },
+                                        icon: Icon(
+                                          Icons.chevron_right,
+                                          size: 24.r,
+                                        ))
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         );

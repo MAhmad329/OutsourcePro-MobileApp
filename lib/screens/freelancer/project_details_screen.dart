@@ -4,9 +4,9 @@ import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/providers/project_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../constants.dart';
-import '../models/project.dart';
-import '../widgets/button.dart';
+import '../../constants.dart';
+import '../../models/project.dart';
+import '../../widgets/button.dart';
 
 class ProjectDetailsScreen extends StatelessWidget {
   final VoidCallback? onActionCompleted;
@@ -60,7 +60,10 @@ class ProjectDetailsScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             'Project Details',
-            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           centerTitle: true,
         ),
@@ -71,7 +74,7 @@ class ProjectDetailsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 25.h,
+                  height: 10.h,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,6 +140,54 @@ class ProjectDetailsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
+                      'Required Members',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    Wrap(
+                      spacing: 6.0.r,
+                      runSpacing: 8.0.r,
+                      children: List.generate(
+                        project.requiredMembers.length,
+                        (index) => Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.0.w,
+                            vertical: 8.0.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(
+                              8.0.r,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                project.requiredMembers[index],
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 25.h,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
                       'Type',
                       style: TextStyle(
                         fontSize: 16.sp,
@@ -148,28 +199,6 @@ class ProjectDetailsScreen extends StatelessWidget {
                     ),
                     Text(
                       project.type,
-                      style: TextStyle(fontSize: 12.sp),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 25.h,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Technology Stack',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5.h,
-                    ),
-                    Text(
-                      project.technologyStack,
                       style: TextStyle(fontSize: 12.sp),
                     ),
                   ],

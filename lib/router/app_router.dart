@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:outsourcepro/screens/company/homepage_company.dart';
 
-import '../../screens/add_education.dart';
-import '../../screens/add_experience.dart';
-import '../../screens/edit_aboutme.dart';
-import '../../screens/edit_personal_info.dart';
-import '../../screens/homepage.dart';
-import '../../screens/landing_page.dart';
-import '../../screens/login_screen.dart';
-import '../../screens/new_password_screen.dart';
-import '../../screens/profile_screen.dart';
-import '../../screens/projects_screen.dart';
-import '../../screens/reset_code_screen.dart';
-import '../../screens/selection_screen.dart';
+import '../screens/common/landing_page.dart';
+import '../screens/common/login_screen.dart';
+import '../screens/common/new_password_screen.dart';
+import '../screens/common/reset_code_screen.dart';
+import '../screens/common/selection_screen.dart';
+import '../screens/freelancer/add_education.dart';
+import '../screens/freelancer/add_experience.dart';
+import '../screens/freelancer/edit_aboutme.dart';
+import '../screens/freelancer/edit_personal_info.dart';
+import '../screens/freelancer/homepage_freelancer.dart';
+import '../screens/freelancer/profile_screen.dart';
+import '../screens/freelancer/projects_screen.dart';
 
 class AppRouter {
   Route? onGenerateRoute(RouteSettings routeSettings) {
@@ -26,8 +27,10 @@ class AppRouter {
       case 'company_login_screen':
         return MaterialPageRoute(
             builder: (_) => const LoginScreen(loginType: LoginType.company));
-      case 'homepage_screen':
-        return MaterialPageRoute(builder: (_) => HomePage());
+      case 'homepage_freelancer_screen':
+        return MaterialPageRoute(builder: (_) => const HomePageFreelancer());
+      case 'homepage_company_screen':
+        return MaterialPageRoute(builder: (_) => const HomePageCompany());
       case 'projects_screen':
         return MaterialPageRoute(builder: (_) => const ProjectsScreen());
       case 'profile_screen':

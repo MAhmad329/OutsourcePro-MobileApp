@@ -3,7 +3,8 @@ class Project {
   final String title;
   final String description;
   final String type;
-  final String technologyStack;
+
+  final List<String> requiredMembers;
   final int budget;
   final List<dynamic> freelancerApplicants;
   final List<dynamic> teamApplicants;
@@ -16,8 +17,8 @@ class Project {
     required this.title,
     required this.description,
     required this.type,
-    required this.technologyStack,
     required this.budget,
+    required this.requiredMembers,
     required this.freelancerApplicants,
     required this.teamApplicants,
     required this.requiresTeam,
@@ -31,8 +32,8 @@ class Project {
       title: json['title'],
       description: json['description'],
       type: json['type'],
-      technologyStack: json['technologystack'],
       budget: json['budget'],
+      requiredMembers: List<String>.from(json['requiredMembers'] ?? []),
       freelancerApplicants:
           List<dynamic>.from(json['freelancerApplicants'] ?? []),
       teamApplicants: List<dynamic>.from(json['teamApplicants'] ?? []),
@@ -50,7 +51,7 @@ class Project {
       'title': title,
       'description': description,
       'type': type,
-      'technologystack': technologyStack,
+      'requiredMembers': requiredMembers,
       'budget': budget,
       'freelancerApplicants': freelancerApplicants,
       'teamApplicants': teamApplicants,

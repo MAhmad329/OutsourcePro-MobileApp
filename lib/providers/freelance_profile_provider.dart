@@ -109,40 +109,48 @@ class FreelancerProfileProvider extends ChangeNotifier {
         _profile.skills =
             List<String>.from(jsonResponse['freelancer']['skills'] ?? []);
         _profile.educationEntries =
-            (jsonResponse['freelancer']['education'] ?? [])
-                .map<EducationEntry>((entry) => EducationEntry(
-                      institution: entry['institution'] ?? '',
-                      course: entry['course'] ?? '',
-                      startDate: entry['startDate'] ?? '',
-                      endDate: entry['endDate'] ?? '',
-                    ))
+            (jsonResponse['freelancer']['education'] as List<dynamic>? ?? [])
+                .map<EducationEntry?>((entry) {
+                  try {
+                    return EducationEntry.fromJson(
+                        entry as Map<String, dynamic>);
+                  } catch (e) {
+                    print("Error parsing education entry: $e");
+                    return null;
+                  }
+                })
+                .where((entry) => entry != null)
+                .cast<EducationEntry>()
                 .toList();
+
         _profile.experienceEntries =
-            (jsonResponse['freelancer']['experience'] ?? [])
-                .map<ExperienceEntry>((entry) => ExperienceEntry(
-                      jobtitle: entry['jobtitle'] ?? '',
-                      company: entry['company'] ?? '',
-                      startDate: entry['startDate'] ?? '',
-                      endDate: entry['endDate'] ?? '',
-                    ))
+            (jsonResponse['freelancer']['experience'] as List<dynamic>? ?? [])
+                .map<ExperienceEntry?>((entry) {
+                  try {
+                    return ExperienceEntry.fromJson(
+                        entry as Map<String, dynamic>);
+                  } catch (e) {
+                    print("Error parsing experience entry: $e");
+                    return null;
+                  }
+                })
+                .where((entry) => entry != null)
+                .cast<ExperienceEntry>()
                 .toList();
+
         _profile.appliedProjects =
-            (jsonResponse['freelancer']['appliedProjects'] ?? [])
-                .map<Project>((entry) => Project(
-                      id: entry['_id'] ?? '',
-                      title: entry['title'] ?? '',
-                      description: entry['description'] ?? '',
-                      type: entry['type'] ?? '',
-                      technologyStack: entry['technologystack'] ?? '',
-                      budget: entry['budget'] ?? 0,
-                      freelancerApplicants: entry['freelancerApplicants'] ?? [],
-                      teamApplicants: entry['teamApplicants'] ?? [],
-                      requiresTeam: entry['requiresTeam'] ?? false,
-                      selectedApplicant: entry['selectedApplicant'] ?? '',
-                      createdAt: entry['createdAt'] != null
-                          ? DateTime.parse(entry['createdAt'])
-                          : DateTime.now(),
-                    ))
+            (jsonResponse['freelancer']['appliedProjects'] as List<dynamic>? ??
+                    [])
+                .map<Project?>((entry) {
+                  try {
+                    return Project.fromJson(entry as Map<String, dynamic>);
+                  } catch (e) {
+                    print("Error parsing project: $e");
+                    return null;
+                  }
+                })
+                .where((project) => project != null)
+                .cast<Project>()
                 .toList();
 
         notifyListeners();

@@ -51,8 +51,9 @@ class AuthProvider with ChangeNotifier {
       if (response.statusCode == 200) {
         Provider.of<TokenProvider>(context, listen: false)
             .setCookie(response.headers['set-cookie']!);
-        navigatorKey.currentState?.pushReplacementNamed(
-            type == 'freelancer' ? 'homepage_screen' : 'homepage_screen');
+        navigatorKey.currentState?.pushReplacementNamed(type == 'freelancer'
+            ? 'homepage_freelancer_screen'
+            : 'homepage_company_screen');
       } else {
         String errorMessage = 'Login failed.';
         Map<String, dynamic> errorResponse =

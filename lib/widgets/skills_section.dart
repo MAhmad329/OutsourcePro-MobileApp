@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/constants.dart';
-import 'package:outsourcepro/screens/manage_skills.dart';
+import 'package:outsourcepro/screens/freelancer/manage_skills.dart';
 import 'package:provider/provider.dart';
 
+import '../models/freelancer.dart';
 import 'button.dart';
 
 class SkillsSection extends StatelessWidget {
+  final FreelancerProfile profile;
+  final bool isEditable;
+
   const SkillsSection({
-    super.key,
-  });
+    Key? key,
+    required this.profile,
+    this.isEditable = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,47 +39,45 @@ class SkillsSection extends StatelessWidget {
                 ),
               ],
             ),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ManageSkills(),
-                      ),
-                    );
-                  },
-                  icon: Icon(
-                    Icons.edit,
-                    color: primaryColor,
-                    size: 20.r,
+            if (isEditable)
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ManageSkills(),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.edit,
+                      color: primaryColor,
+                      size: 20.r,
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    _showAddSkillEntryDialog(
-                      'Skill',
-                      provider.profile.skills,
-                      context,
-                      provider,
-                    );
-                  },
-                  icon: Icon(
-                    Icons.add,
-                    color: primaryColor,
-                    size: 24.r,
+                  IconButton(
+                    onPressed: () {
+                      _showAddSkillEntryDialog(
+                        'Skill',
+                        provider.profile.skills,
+                        context,
+                        provider,
+                      );
+                    },
+                    icon: Icon(
+                      Icons.add,
+                      color: primaryColor,
+                      size: 24.r,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
           ],
         ),
         SizedBox(
           height: 5.h,
-        ),
-        Divider(
-          thickness: 0.75.w,
         ),
         SizedBox(
           height: 5.h,
@@ -82,7 +86,7 @@ class SkillsSection extends StatelessWidget {
           spacing: 6.0.r,
           runSpacing: 8.0.r,
           children: List.generate(
-            provider.profile.skills.length,
+            profile.skills.length,
             (index) => Container(
               padding: EdgeInsets.symmetric(
                 horizontal: 10.0.w,
@@ -98,28 +102,11 @@ class SkillsSection extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    provider.profile.skills[index],
+                    profile.skills[index],
                     style: TextStyle(
                       fontSize: 12.sp,
                     ),
                   ),
-                  // SizedBox(
-                  //   width: 10.w,
-                  // ),
-                  // InkWell(
-                  //   onTap: () {
-                  //     _showDeleteSkillDialog(
-                  //       index,
-                  //       context,
-                  //       provider,
-                  //     );
-                  //   },
-                  //   child: Icon(
-                  //     Icons.cancel_outlined,
-                  //     size: 16.r,
-                  //     color: Colors.red,
-                  //   ),
-                  // )
                 ],
               ),
             ),

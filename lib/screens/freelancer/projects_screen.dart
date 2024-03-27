@@ -4,13 +4,13 @@ import 'package:http/http.dart' as http;
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/constants.dart';
 import 'package:outsourcepro/providers/token_provider.dart';
-import 'package:outsourcepro/screens/project_details_screen.dart';
+import 'package:outsourcepro/screens/freelancer/project_details_screen.dart';
 import 'package:outsourcepro/widgets/button.dart';
 import 'package:provider/provider.dart';
 
-import '../models/project.dart';
-import '../providers/project_provider.dart';
-import '../providers/search_provider.dart';
+import '../../models/project.dart';
+import '../../providers/project_provider.dart';
+import '../../providers/search_provider.dart';
 
 class ProjectsScreen extends StatefulWidget {
   const ProjectsScreen({Key? key}) : super(key: key);
@@ -43,107 +43,104 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: const Color(0xFFF9F9F9),
+        backgroundColor: const Color(0xFFFFFFFF),
+        appBar: AppBar(
+          elevation: 0.5,
+          shadowColor: Colors.black,
+          backgroundColor: const Color(0xFFFFFFFF),
+          title: Text(
+            'Projects',
+            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          leading: Row(
+            children: [
+              SizedBox(
+                width: 10.w,
+              ),
+              Consumer<FreelancerProfileProvider>(
+                builder: (_, provider, child) {
+                  return provider.profile.pfp != ''
+                      ? CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          backgroundImage: NetworkImage(
+                            provider.profile.pfp,
+                          ),
+                          radius: 13.r,
+                        )
+                      : CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          backgroundImage: const AssetImage(
+                            'assets/defaultpic.jpg',
+                          ),
+                          radius: 13.r,
+                        );
+                },
+              ),
+            ],
+          ),
+        ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.0.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 33.r,
-                    backgroundColor: primaryColor.withOpacity(0.75),
-                    child: CircleAvatar(
-                        radius: 30.r,
-                        backgroundImage: AssetImage(
-                          'assets/defaultpic.jpg',
-                        ),
-                        backgroundColor: primaryColor.withOpacity(0.75),
-                        child: Consumer<FreelancerProfileProvider>(
-                            builder: (_, provider, child) {
-                          return provider.profile.pfp != ''
-                              ? CircleAvatar(
-                                  backgroundColor: Colors.transparent,
-                                  backgroundImage: NetworkImage(
-                                    provider.profile.pfp,
-                                  ),
-                                  radius: 30.r,
-                                )
-                              : CircleAvatar(
-                                  backgroundColor: Colors.transparent,
-                                  backgroundImage: const AssetImage(
-                                    'assets/defaultpic.jpg',
-                                  ),
-                                  radius: 30.r,
-                                );
-                        })),
-                  ),
-                  SizedBox(
-                    width: 15.w,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hello',
-                        style: TextStyle(fontSize: 25.sp),
-                      ),
-                      Text(
-                        '${Provider.of<FreelancerProfileProvider>(context).profile.firstname}.',
-                        style: TextStyle(fontSize: 25.sp),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 25.h,
-              ),
-              Text(
-                'Find Projects here.',
-                style: TextStyle(fontSize: 24.sp),
-              ),
               SizedBox(
                 height: 15.h,
               ),
-              TextField(
-                onChanged: (value) {
-                  Provider.of<SearchProvider>(context, listen: false)
-                      .updateProjectSearchQuery(value, projectProvider);
-                },
-                style: TextStyle(fontSize: 14.sp),
-                cursorColor: Colors.black,
-                decoration: kTextFieldDecoration.copyWith(
-                  fillColor: Colors.white,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: primaryColor.withOpacity(0.5), width: 2.0.w),
-                    borderRadius: BorderRadius.all(Radius.circular(10.0.r)),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        Provider.of<SearchProvider>(context, listen: false)
+                            .updateProjectSearchQuery(value, projectProvider);
+                      },
+                      style: TextStyle(fontSize: 14.sp),
+                      cursorColor: Colors.black,
+                      decoration: kTextFieldDecoration.copyWith(
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 8.0.h, horizontal: 10.0.w),
+                        fillColor: Colors.white,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: primaryColor.withOpacity(0.5),
+                              width: 2.0.w),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0.r)),
+                        ),
+                        hintStyle: kText3.copyWith(
+                            fontSize: 15.sp,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w400),
+                        hintText: 'Search for projects',
+                        prefixIcon: Icon(
+                          size: 20.r,
+                          Icons.search_sharp,
+                          color: primaryColor.withOpacity(0.5),
+                        ),
+                      ),
+                    ),
                   ),
-                  hintStyle: kText3.copyWith(
-                      fontSize: 15.sp,
-                      color: const Color(0xffbdbdbd),
-                      fontWeight: FontWeight.w400),
-                  hintText: 'Search',
-                  prefixIcon: Icon(
-                    size: 20.r,
-                    Icons.search_sharp,
-                    color: primaryColor,
+                  SizedBox(
+                    width: 10.w,
                   ),
-                ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.fromBorderSide(
+                          BorderSide(width: 2.w, color: primaryColor)),
+                      borderRadius: BorderRadius.circular(5.0.r),
+                    ),
+                    height: 35.h,
+                    width: 35.w,
+                    child: const Icon(
+                      Icons.tune,
+                      color: Colors.grey,
+                    ),
+                  )
+                ],
               ),
-              SizedBox(
-                height: 10.h,
-              ),
-              MyButton(
-                  onTap: () {},
-                  borderColor: primaryColor,
-                  textColor: Colors.black,
-                  buttonText: 'Apply Filter',
-                  buttonColor: Colors.white,
-                  buttonWidth: double.infinity,
-                  buttonHeight: 40.h),
               SizedBox(
                 height: 10.h,
               ),
@@ -201,7 +198,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                          fontSize: 20.sp,
+                                          fontSize: 14.sp,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                         ),
@@ -209,7 +206,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                       Text(
                                         projects[index].timeElapsed(),
                                         style: TextStyle(
-                                            fontSize: 12.sp,
+                                            fontSize: 11.sp,
                                             color: Colors.grey),
                                       ),
                                       SizedBox(height: 10.h),
@@ -218,6 +215,61 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(fontSize: 12.sp),
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Container(
+                                                height: 30
+                                                    .h, // Adjust the height as needed
+                                                child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount: projects[index]
+                                                      .requiredMembers
+                                                      .length,
+                                                  itemBuilder:
+                                                      (context, memberIndex) {
+                                                    return Container(
+                                                      margin: EdgeInsets.only(
+                                                          right: 6.0
+                                                              .w), // Spacing between items
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                        horizontal: 10.0.w,
+                                                        vertical: 8.0.h,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    8.0.r),
+                                                      ),
+                                                      child: Center(
+                                                        child: Text(
+                                                          projects[index]
+                                                                  .requiredMembers[
+                                                              memberIndex],
+                                                          style: TextStyle(
+                                                            fontSize: 12.sp,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       SizedBox(height: 15.h),
                                       Row(
@@ -252,7 +304,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                         buttonText: 'View Details',
                                         buttonColor: Colors.white,
                                         buttonWidth: double.infinity.w,
-                                        buttonHeight: 40.h,
+                                        buttonHeight: 35.h,
                                         textColor: Colors.black,
                                         borderColor: primaryColor,
                                       ),

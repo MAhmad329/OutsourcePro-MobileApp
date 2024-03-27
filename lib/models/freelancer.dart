@@ -33,7 +33,7 @@ class FreelancerProfile {
       firstname: json['firstname'] ?? '',
       lastname: json['lastname'] ?? '',
       username: json['username'] ?? '',
-      aboutMe: json['aboutMe'] ?? '',
+      aboutMe: json['aboutme'] ?? '',
       pfp: json['pfp'] ?? '',
       skills: List<String>.from(json['skills'] ?? []),
       educationEntries: (json['education'] as List? ?? [])

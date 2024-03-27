@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../constants.dart';
-import '../widgets/button.dart';
+import '../../constants.dart';
+import '../../widgets/button.dart';
 
 class ManageSkills extends StatefulWidget {
   const ManageSkills({super.key});
@@ -18,7 +18,10 @@ class _ManageSkillsState extends State<ManageSkills> {
   Widget build(BuildContext context) {
     final provider = Provider.of<FreelancerProfileProvider>(context);
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: 15.0.w,

@@ -36,7 +36,7 @@ class ProjectProvider extends ChangeNotifier {
           (filter.minBudget == null || project.budget >= filter.minBudget!) &&
               (filter.maxBudget == null || project.budget <= filter.maxBudget!);
       bool matchesTechnology = filter.technology == null ||
-          project.technologyStack.contains(filter.technology!);
+          project.requiredMembers.contains(filter.technology!);
       return matchesType && matchesBudget && matchesTechnology;
     }).toList();
   }

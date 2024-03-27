@@ -5,9 +5,9 @@ import 'package:outsourcepro/constants.dart';
 import 'package:outsourcepro/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
-import '../Providers/freelance_profile_provider.dart';
-import '../models/education_entry.dart';
-import '../widgets/button.dart';
+import '../../Providers/freelance_profile_provider.dart';
+import '../../models/education_entry.dart';
+import '../../widgets/button.dart';
 
 class AddEducation extends StatefulWidget {
   final EducationEntry? educationEntry;

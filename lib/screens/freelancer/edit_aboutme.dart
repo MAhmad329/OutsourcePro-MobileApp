@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../Providers/freelance_profile_provider.dart';
-import '../constants.dart';
-import '../widgets/button.dart';
+import '../../Providers/freelance_profile_provider.dart';
+import '../../constants.dart';
+import '../../widgets/button.dart';
 
 class EditAboutMe extends StatefulWidget {
   const EditAboutMe({super.key});

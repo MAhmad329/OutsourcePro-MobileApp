@@ -2,9 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/constants.dart';
-import 'package:outsourcepro/screens/company_registration.dart';
-import 'package:outsourcepro/screens/login_screen.dart';
-import 'package:outsourcepro/screens/freelancer_registration.dart';
+import 'package:outsourcepro/screens/common/login_screen.dart';
+import 'package:outsourcepro/screens/company/company_registration.dart';
+import 'package:outsourcepro/screens/freelancer/freelancer_registration.dart';
 
 class CustomRichText extends StatelessWidget {
   const CustomRichText({

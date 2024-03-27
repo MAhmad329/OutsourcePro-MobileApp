@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../Providers/freelance_profile_provider.dart';
-import '../constants.dart';
-import '../models/experience_entry.dart';
-import '../widgets/button.dart';
-import '../widgets/custom_snackbar.dart';
+import '../../Providers/freelance_profile_provider.dart';
+import '../../constants.dart';
+import '../../models/experience_entry.dart';
+import '../../widgets/button.dart';
+import '../../widgets/custom_snackbar.dart';
 
 class AddExperience extends StatefulWidget {
   final ExperienceEntry? experienceEntry;

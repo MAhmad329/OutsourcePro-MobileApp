@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/constants.dart';
-import 'package:provider/provider.dart';
 
-import '../models/education_entry.dart';
-import '../screens/add_education.dart';
+import '../models/freelancer.dart';
+import '../screens/freelancer/add_education.dart';
 
 class EducationEntries extends StatelessWidget {
+  final FreelancerProfile profile;
+  final bool isEditable;
+
   const EducationEntries({
     super.key,
+    required this.profile,
+    this.isEditable = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    FreelancerProfileProvider provider =
-        Provider.of<FreelancerProfileProvider>(context);
-    List<EducationEntry> entries = provider.profile.educationEntries;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -34,19 +34,20 @@ class EducationEntries extends StatelessWidget {
                 ),
               ],
             ),
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  'add_education_screen',
-                );
-              },
-              icon: Icon(
-                Icons.add,
-                color: primaryColor,
-                size: 24.r,
+            if (isEditable)
+              IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    'add_education_screen',
+                  );
+                },
+                icon: Icon(
+                  Icons.add,
+                  color: primaryColor,
+                  size: 24.r,
+                ),
               ),
-            ),
           ],
         ),
         SizedBox(
@@ -56,18 +57,15 @@ class EducationEntries extends StatelessWidget {
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: entries.length,
+          itemCount: profile.educationEntries.length,
           itemBuilder: (context, index) {
             return Column(
               children: [
                 Divider(
                   thickness: 0.75.w,
                 ),
-                Container(
+                SizedBox(
                   width: double.infinity,
-                  // margin: EdgeInsets.only(
-                  //   bottom: 16.0.h,
-                  // ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -82,7 +80,7 @@ class EducationEntries extends StatelessWidget {
                                   height: 5.h,
                                 ),
                                 Text(
-                                  entries[index].institution,
+                                  profile.educationEntries[index].institution,
                                   style: TextStyle(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.bold),
@@ -91,7 +89,7 @@ class EducationEntries extends StatelessWidget {
                                   height: 2.h,
                                 ),
                                 Text(
-                                  entries[index].course,
+                                  profile.educationEntries[index].course,
                                   style: TextStyle(fontSize: 12.sp),
                                 ),
                                 SizedBox(
@@ -100,33 +98,35 @@ class EducationEntries extends StatelessWidget {
                                 Stack(
                                   children: [
                                     Text(
-                                      '${entries[index].startDate} - ${entries[index].endDate}',
+                                      '${profile.educationEntries[index].startDate}  -  ${profile.educationEntries[index].endDate}',
                                       style: TextStyle(
                                           fontSize: 12.sp, color: Colors.grey),
                                     ),
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          // Navigate to AddEducation screen with the selected entry for editing
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AddEducation(
-                                                      educationEntry:
-                                                          entries[index],
-                                                      index: index),
-                                            ),
-                                          );
-                                        },
-                                        icon: Icon(
-                                          Icons.edit,
-                                          color: primaryColor,
-                                          size: 15.r,
+                                    if (isEditable)
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            // Navigate to AddEducation screen with the selected entry for editing
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddEducation(
+                                                        educationEntry: profile
+                                                                .educationEntries[
+                                                            index],
+                                                        index: index),
+                                              ),
+                                            );
+                                          },
+                                          icon: Icon(
+                                            Icons.edit,
+                                            color: primaryColor,
+                                            size: 15.r,
+                                          ),
                                         ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               ],

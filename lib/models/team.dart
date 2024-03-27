@@ -4,31 +4,41 @@ import 'package:outsourcepro/models/project.dart';
 class Team {
   final String id;
   final String name;
+  final FreelancerProfile owner;
   final List<FreelancerProfile> members;
   final List<Project> projects;
 
   Team({
     required this.id,
     required this.name,
+    required this.owner,
     required this.members,
     required this.projects,
   });
 
-  // Factory method to create a Team object from a JSON map
   factory Team.fromJson(Map<String, dynamic> json) {
+    print('Owner type: ${json['owner'].runtimeType}');
+    print('Members type: ${json['members'].runtimeType}');
+
     return Team(
       id: json['_id'],
       name: json['name'],
-      members: List<FreelancerProfile>.from(json['members']),
-      projects: List<Project>.from(json['projects']),
+      owner: json['owner'] is Map<String, dynamic>
+          ? FreelancerProfile.fromJson(json['owner'])
+          : FreelancerProfile(
+              id: json['owner']), // Handle the case where owner is a String
+      members: List<FreelancerProfile>.from(
+          json['members'].map((member) => FreelancerProfile.fromJson(member))),
+      projects: List<Project>.from(
+          json['projects'].map((project) => Project.fromJson(project))),
     );
   }
 
-  // Method to convert a Team object to a JSON map
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
       'name': name,
+      'owner': owner.toJson(),
       'members': members,
       'projects': projects,
     };

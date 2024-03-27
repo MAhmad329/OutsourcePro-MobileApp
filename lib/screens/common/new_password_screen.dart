@@ -6,8 +6,8 @@ import 'package:outsourcepro/widgets/button.dart';
 import 'package:outsourcepro/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
-import '../constants.dart';
-import '../providers/password_visibility_provider.dart';
+import '../../constants.dart';
+import '../../providers/password_visibility_provider.dart';
 import 'login_screen.dart';
 
 class NewPasswordScreen extends StatefulWidget {

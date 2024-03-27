@@ -4,9 +4,9 @@ import 'package:outsourcepro/providers/auth_provider.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
-import '../constants.dart';
-import '../providers/token_provider.dart';
-import '../widgets/button.dart';
+import '../../constants.dart';
+import '../../providers/token_provider.dart';
+import '../../widgets/button.dart';
 import 'login_screen.dart';
 
 class ResetCodeScreen extends StatefulWidget {

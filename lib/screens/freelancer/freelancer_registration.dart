@@ -7,10 +7,10 @@ import 'package:outsourcepro/providers/token_provider.dart';
 import 'package:outsourcepro/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
-import '../constants.dart';
-import '../providers/password_visibility_provider.dart';
-import '../widgets/button.dart';
-import '../widgets/custom_richtext.dart';
+import '../../constants.dart';
+import '../../providers/password_visibility_provider.dart';
+import '../../widgets/button.dart';
+import '../../widgets/custom_richtext.dart';
 
 class FreelancerRegistration extends StatefulWidget {
   const FreelancerRegistration({super.key});

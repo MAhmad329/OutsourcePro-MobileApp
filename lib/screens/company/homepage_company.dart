@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:outsourcepro/constants.dart';
-import 'package:outsourcepro/screens/manage_projects.dart';
-import 'package:outsourcepro/screens/profile_screen.dart';
-import 'package:outsourcepro/screens/team_page.dart';
+import 'package:outsourcepro/screens/company/company_profile_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/navigation_provider.dart';
-import 'projects_screen.dart';
+import '../../constants.dart';
+import '../../providers/navigation_provider.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePageCompany extends StatefulWidget {
+  const HomePageCompany({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePageCompany> createState() => _HomePageCompanyState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageCompanyState extends State<HomePageCompany> {
   late PageController _pageController;
 
   @override
@@ -50,15 +47,17 @@ class _HomePageState extends State<HomePage> {
           controller: _pageController,
           onPageChanged: (index) => navigationProvider.updateIndex(index),
           children: const [
-            ProjectsScreen(),
-            ManageProjects(), TeamPage(),
             Scaffold(
               body: Center(
-                child: Text('4th screen'),
+                child: Text('1st screen'),
               ),
             ),
-            ProfileScreen(),
-            // Add more screens here
+            Scaffold(
+              body: Center(
+                child: Text('2nd screen'),
+              ),
+            ),
+            CompanyProfile(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -81,18 +80,9 @@ class _HomePageState extends State<HomePage> {
               label: 'Projects',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.groups),
-              label: 'Teams', // Replace with your actual labels
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: 'Chats', // Replace with your actual labels
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'Profile', // Replace with your actual labels
             ),
-            // Add more items here
           ],
         ),
       ),

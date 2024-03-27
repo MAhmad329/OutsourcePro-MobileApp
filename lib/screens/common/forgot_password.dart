@@ -6,7 +6,7 @@ import 'package:outsourcepro/widgets/button.dart';
 import 'package:outsourcepro/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
-import '../constants.dart';
+import '../../constants.dart';
 import 'login_screen.dart';
 
 class ForgotPassword extends StatefulWidget {

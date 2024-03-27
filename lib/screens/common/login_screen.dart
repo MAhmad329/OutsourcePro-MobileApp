@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/constants.dart';
-import 'package:outsourcepro/screens/forgot_password.dart';
+import 'package:outsourcepro/screens/common/forgot_password.dart';
 import 'package:outsourcepro/widgets/button.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/auth_provider.dart';
-import '../providers/password_visibility_provider.dart';
-import '../widgets/custom_richtext.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/password_visibility_provider.dart';
+import '../../widgets/custom_richtext.dart';
 
 enum LoginType { freelancer, company }
 

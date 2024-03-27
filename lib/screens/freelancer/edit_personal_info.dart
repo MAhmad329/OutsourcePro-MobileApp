@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../constants.dart';
-import '../widgets/button.dart';
+import '../../constants.dart';
+import '../../widgets/button.dart';
 
 class EditPersonalInformation extends StatefulWidget {
   const EditPersonalInformation({super.key});
