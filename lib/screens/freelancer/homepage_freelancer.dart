@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/constants.dart';
+import 'package:outsourcepro/screens/freelancer/chats_screen.dart';
 import 'package:outsourcepro/screens/freelancer/manage_projects.dart';
 import 'package:outsourcepro/screens/freelancer/profile_screen.dart';
 import 'package:outsourcepro/screens/freelancer/team_page.dart';
@@ -51,14 +52,10 @@ class _HomePageFreelancerState extends State<HomePageFreelancer> {
           onPageChanged: (index) => navigationProvider.updateIndex(index),
           children: const [
             ProjectsScreen(),
-            ManageProjects(), TeamPage(),
-            Scaffold(
-              body: Center(
-                child: Text('4th screen'),
-              ),
-            ),
+            ManageProjects(),
+            TeamPage(),
+            ChatsScreen(),
             ProfileScreen(),
-            // Add more screens here
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

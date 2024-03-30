@@ -72,6 +72,8 @@ class FreelancerProfileProvider extends ChangeNotifier {
             'freelancer']; // Make sure the key matches the JSON response
         _searchResults = freelancersData
             .map((data) => FreelancerProfile.fromJson(data))
+            .where((freelancer) =>
+                freelancer.id != _profile.id) // Exclude the current user
             .toList();
         notifyListeners();
         print(_searchResults);

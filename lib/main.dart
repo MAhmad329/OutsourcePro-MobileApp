@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/providers/auth_provider.dart';
+import 'package:outsourcepro/providers/chat_provider.dart';
 import 'package:outsourcepro/providers/company_profile_provider.dart';
 import 'package:outsourcepro/providers/navigation_provider.dart';
 import 'package:outsourcepro/providers/password_visibility_provider.dart';
@@ -14,7 +15,7 @@ import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -57,6 +58,14 @@ class MyApp extends StatelessWidget {
           create: (_) => TeamProvider(),
           update: (_, tokenProvider, teamProvider) {
             return teamProvider!
+              ..updateDependencies(
+                  tokenProvider.ipaddress, tokenProvider.cookie);
+          },
+        ),
+        ChangeNotifierProxyProvider<TokenProvider, ChatProvider>(
+          create: (_) => ChatProvider(),
+          update: (_, tokenProvider, chatProvider) {
+            return chatProvider!
               ..updateDependencies(
                   tokenProvider.ipaddress, tokenProvider.cookie);
           },

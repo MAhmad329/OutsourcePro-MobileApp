@@ -18,6 +18,7 @@ class SearchProvider extends ChangeNotifier {
   void updateFreelancerSearchQuery(
       String query, FreelancerProfileProvider freelanceProvider) {
     // if (query.isEmpty) {
+    //   freelanceProvider.clearSearchResults();
     //   return;
     // }
     _searchQuery = query;
