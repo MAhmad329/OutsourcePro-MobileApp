@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/providers/auth_provider.dart';
 import 'package:outsourcepro/providers/chat_provider.dart';
 import 'package:outsourcepro/providers/company_profile_provider.dart';
@@ -11,15 +10,26 @@ import 'package:outsourcepro/providers/search_provider.dart';
 import 'package:outsourcepro/providers/team_provider.dart';
 import 'package:outsourcepro/providers/token_provider.dart';
 import 'package:outsourcepro/router/app_router.dart';
+import 'package:outsourcepro/screens/common/landing_page.dart';
+import 'package:outsourcepro/screens/common/selection_screen.dart';
+import 'package:outsourcepro/screens/company/homepage_company.dart';
+import 'package:outsourcepro/screens/freelancer/homepage_freelancer.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'Providers/freelance_profile_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  TokenProvider tokenProvider = TokenProvider();
+  await tokenProvider.loadCookieFromPrefs();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +91,39 @@ class MyApp extends StatelessWidget {
             navigatorKey: navigatorKey,
             theme: ThemeData(fontFamily: 'Poppins'),
             debugShowCheckedModeBanner: false,
+            home: FutureBuilder(
+              future: SharedPreferences.getInstance(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<SharedPreferences> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator(); // Show loading indicator while waiting for SharedPreferences
+                } else if (snapshot.hasError) {
+                  return LandingPage(); // Show error screen if something went wrong
+                } else {
+                  final prefs = snapshot.data;
+                  final bool isLoggedIn = prefs?.getBool('isLoggedIn') ?? false;
+                  final String? userType = prefs?.getString('userType');
+                  final String? cookie = prefs?.getString('cookie');
+
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (cookie != null && cookie.isNotEmpty) {
+                      Provider.of<TokenProvider>(context, listen: false)
+                          .setCookie(cookie);
+                    }
+                  });
+
+                  if (!isLoggedIn) {
+                    return SelectionScreen();
+                  } else if (userType == 'freelancer') {
+                    return HomePageFreelancer();
+                  } else if (userType == 'company') {
+                    return HomePageCompany();
+                  } else {
+                    return SelectionScreen(); // Or another appropriate screen if userType is not valid
+                  }
+                }
+              },
+            ),
             onGenerateRoute: AppRouter().onGenerateRoute,
           );
         },

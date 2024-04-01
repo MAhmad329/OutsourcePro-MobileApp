@@ -28,6 +28,7 @@ class SocketService {
 // Listen for team chat messages
     socket!.on('team chat message', (data) {
       Message message = Message.fromJson(data);
+      print('username: ${data['senderUsername'].toString()}');
       print(
           'Team chat message received: Sender ID: ${message.senderId}, Content: ${message.content}');
     });
@@ -38,23 +39,27 @@ class SocketService {
   void sendIndividualMessage(
       String senderId, String receiverId, String content) {
     socket!.emit('individual chat message', {
-      'senderId': senderId,
+      'sender': senderId,
       'receiverId': receiverId,
       'content': content,
     });
     print('message emited');
   }
 
-  void sendTeamMessage(String teamId, String senderId, String content) {
+  void sendTeamMessage(
+      String teamId, String senderId, String content, String username) {
     socket!.emit('team chat message', {
       'teamId': teamId,
-      'senderId': senderId,
+      'sender': senderId,
+      'senderUsername': username,
       'content': content,
     });
+    print('message emitted');
   }
 
   void joinTeamChat(String teamId) {
     socket!.emit('join team chat', {'teamId': teamId});
+    print('teamchat joined, id $teamId');
   }
 
   void disconnect() {

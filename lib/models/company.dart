@@ -1,6 +1,6 @@
 import 'package:outsourcepro/models/project.dart';
 
-class CompanyProfile {
+class Company {
   String id;
   String companyName;
   String businessAddress;
@@ -9,7 +9,7 @@ class CompanyProfile {
   String pfp;
   List<Project> projects;
 
-  CompanyProfile({
+  Company({
     this.id = '',
     this.companyName = '',
     this.businessAddress = '',
@@ -19,8 +19,8 @@ class CompanyProfile {
     this.projects = const [],
   });
 
-  factory CompanyProfile.fromJson(Map<String, dynamic> json) {
-    return CompanyProfile(
+  factory Company.fromJson(Map<String, dynamic> json) {
+    return Company(
       id: json['_id'] ?? '',
       companyName: json['companyname'] ?? '',
       businessAddress: json['businessAddress'] ?? '',

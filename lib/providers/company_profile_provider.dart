@@ -3,14 +3,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:outsourcepro/providers/token_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/company.dart';
 import '../models/project.dart';
+import '../screens/common/selection_screen.dart';
 import '../widgets/custom_snackbar.dart';
 
 class CompanyProfileProvider extends ChangeNotifier {
-  final CompanyProfile _profile = CompanyProfile();
-  CompanyProfile get profile => _profile;
+  final Company _profile = Company();
+  Company get profile => _profile;
   bool _isUploading = false;
   bool get isUploading => _isUploading;
   String _ipAddress = '';
@@ -161,6 +165,38 @@ class CompanyProfileProvider extends ChangeNotifier {
         print(await response.stream.bytesToString());
       } else {
         // Handle error
+        print(response.reasonPhrase);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> logout(BuildContext context, String type) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('isLoggedIn');
+    await prefs.remove('userType');
+    await prefs.remove('passwordResetEmail');
+    try {
+      var headers = {'Cookie': _cookie};
+      var request = http.Request(
+          'GET', Uri.parse('http://$_ipAddress:3000/api/v1/Company/logout'));
+      request.body = '''''';
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        Provider.of<TokenProvider>(context, listen: false)
+            .setCookie(response.headers['set-cookie']!);
+
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => SelectionScreen()),
+          (Route<dynamic> route) => false,
+        );
+
+        print(await response.stream.bytesToString());
+      } else {
         print(response.reasonPhrase);
       }
     } catch (e) {

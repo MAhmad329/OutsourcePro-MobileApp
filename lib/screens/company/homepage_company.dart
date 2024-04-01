@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:outsourcepro/screens/company/company_profile_screen.dart';
+import 'package:outsourcepro/screens/common/settings_screen.dart';
+import 'package:outsourcepro/screens/company/company_projects_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants.dart';
@@ -39,7 +40,7 @@ class _HomePageCompanyState extends State<HomePageCompany> {
           _pageController.jumpToPage(0);
           return false;
         }
-        return true;
+        return false;
       },
       child: Scaffold(
         body: PageView(
@@ -47,17 +48,13 @@ class _HomePageCompanyState extends State<HomePageCompany> {
           controller: _pageController,
           onPageChanged: (index) => navigationProvider.updateIndex(index),
           children: const [
-            Scaffold(
-              body: Center(
-                child: Text('1st screen'),
-              ),
-            ),
+            CompanyProject(),
             Scaffold(
               body: Center(
                 child: Text('2nd screen'),
               ),
             ),
-            CompanyProfile(),
+            SettingsScreen(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

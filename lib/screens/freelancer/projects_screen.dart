@@ -123,22 +123,22 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 10.w,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.fromBorderSide(
-                          BorderSide(width: 2.w, color: primaryColor)),
-                      borderRadius: BorderRadius.circular(5.0.r),
-                    ),
-                    height: 35.h,
-                    width: 35.w,
-                    child: const Icon(
-                      Icons.tune,
-                      color: Colors.grey,
-                    ),
-                  )
+                  // SizedBox(
+                  //   width: 10.w,
+                  // ),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     border: Border.fromBorderSide(
+                  //         BorderSide(width: 2.w, color: primaryColor)),
+                  //     borderRadius: BorderRadius.circular(5.0.r),
+                  //   ),
+                  //   height: 35.h,
+                  //   width: 35.w,
+                  //   child: const Icon(
+                  //     Icons.tune,
+                  //     color: Colors.grey,
+                  //   ),
+                  // )
                 ],
               ),
               SizedBox(
@@ -193,21 +193,46 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        projects[index].title,
-                                        maxLines: 3,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      Text(
-                                        projects[index].timeElapsed(),
-                                        style: TextStyle(
-                                            fontSize: 11.sp,
-                                            color: Colors.grey),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                                projects[index].owner.pfp),
+                                          ),
+                                          SizedBox(
+                                            width: 15.w,
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  projects[index].title,
+                                                  maxLines: 3,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontSize: 14.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5.h,
+                                                ),
+                                                Text(
+                                                  projects[index].timeElapsed(),
+                                                  style: TextStyle(
+                                                      fontSize: 11.sp,
+                                                      color: Colors.grey),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       SizedBox(height: 10.h),
                                       Text(

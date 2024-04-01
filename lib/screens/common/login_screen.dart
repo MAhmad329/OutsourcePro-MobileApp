@@ -163,7 +163,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ? null
                                   : () {
                                       FocusScope.of(context).unfocus();
-
+                                      Provider.of<AuthProvider>(context,
+                                              listen: false)
+                                          .setEmail(
+                                              emailController.text.trim());
                                       provider.login(
                                           context,
                                           ipaddress,

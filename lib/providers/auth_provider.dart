@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:outsourcepro/providers/token_provider.dart';
 import 'package:outsourcepro/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
 
@@ -18,9 +19,23 @@ class AuthProvider with ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  void setEmail(String email) {
+  AuthProvider() {
+    _loadPasswordResetEmail();
+  }
+
+  Future<void> _loadPasswordResetEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    _passwordResetEmail = prefs.getString('passwordResetEmail') ?? '';
+    notifyListeners();
+  }
+
+  void setEmail(String email) async {
     _passwordResetEmail = email;
     notifyListeners();
+
+    // Store email in SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('passwordResetEmail', email);
   }
 
   Future<void> login(
@@ -32,7 +47,7 @@ class AuthProvider with ChangeNotifier {
   ) async {
     _isLoading = true;
     notifyListeners();
-
+    String userType = type;
     final ipaddress = context.read<TokenProvider>().ipaddress;
     try {
       var headers = {
@@ -54,6 +69,11 @@ class AuthProvider with ChangeNotifier {
         navigatorKey.currentState?.pushReplacementNamed(type == 'freelancer'
             ? 'homepage_freelancer_screen'
             : 'homepage_company_screen');
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        await prefs.setString('userType', userType);
+        await prefs.setString(
+            'cookie', response.headers['set-cookie']!); // Save the user type
       } else {
         String errorMessage = 'Login failed.';
         Map<String, dynamic> errorResponse =
@@ -168,7 +188,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> setNewPassword(String ipAddress, String cookie, String password,
-      BuildContext context, String type) async {
+      BuildContext context, String type, String screen) async {
     _isLoading = true;
     notifyListeners();
     try {
@@ -191,9 +211,13 @@ class AuthProvider with ChangeNotifier {
         ScaffoldMessenger.of(context).showSnackBar(
           customSnackBar('Password changed successfully', Colors.grey),
         );
-        navigatorKey.currentState?.pop();
-        navigatorKey.currentState?.pop();
-        navigatorKey.currentState?.pop();
+        if (screen == 'login') {
+          navigatorKey.currentState?.pop();
+          navigatorKey.currentState?.pop();
+          navigatorKey.currentState?.pop();
+        } else if (screen == 'inApp') {
+          navigatorKey.currentState?.pop();
+        }
       } else {
         _isLoading = false;
         notifyListeners();

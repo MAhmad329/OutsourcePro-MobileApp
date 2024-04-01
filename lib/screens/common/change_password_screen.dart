@@ -10,15 +10,15 @@ import '../../constants.dart';
 import '../../providers/password_visibility_provider.dart';
 import 'login_screen.dart';
 
-class NewPasswordScreen extends StatefulWidget {
+class ChangePasswordScreen extends StatefulWidget {
   final LoginType loginType;
-  const NewPasswordScreen({super.key, required this.loginType});
+  const ChangePasswordScreen({super.key, required this.loginType});
 
   @override
-  State<NewPasswordScreen> createState() => _NewPasswordScreenState();
+  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
 
-class _NewPasswordScreenState extends State<NewPasswordScreen> {
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
@@ -27,13 +27,6 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
     final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back)),
-      ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 30.0.w),
         child: Column(
@@ -136,7 +129,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                           widget.loginType == LoginType.freelancer
                               ? 'freelancer'
                               : 'company',
-                          'login');
+                          'inApp');
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                       customSnackBar('Passwords do not match!', Colors.red));
@@ -152,8 +145,6 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
             ),
             MyButton(
               onTap: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
                 Navigator.pop(context);
               },
               buttonColor: Colors.grey,

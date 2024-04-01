@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:outsourcepro/models/project.dart';
+import 'package:outsourcepro/providers/token_provider.dart';
+import 'package:outsourcepro/screens/common/selection_screen.dart';
 import 'package:outsourcepro/widgets/custom_snackbar.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/education_entry.dart';
 import '../models/experience_entry.dart';
@@ -49,6 +53,22 @@ class FreelancerProfileProvider extends ChangeNotifier {
           .removeWhere((existingProject) => existingProject.id == project.id);
     }
     notifyListeners();
+  }
+
+  Future<void> getAppliedProjects() async {
+    var headers = {'Cookie': _cookie};
+    var request = http.Request('GET',
+        Uri.parse('http://$_ipAddress:3000/api/v1/project/myAppliedProjects'));
+    request.body = '''''';
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
   }
 
   Future<void> searchFreelancer(String query) async {
@@ -349,6 +369,38 @@ class FreelancerProfileProvider extends ChangeNotifier {
     _profile.experienceEntries.add(entry);
     updateFreelancerDetails();
     notifyListeners();
+  }
+
+  Future<void> logout(BuildContext context, String type) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('isLoggedIn');
+    await prefs.remove('userType');
+    await prefs.remove('passwordResetEmail');
+    try {
+      var headers = {'Cookie': _cookie};
+      var request = http.Request(
+          'GET', Uri.parse('http://$_ipAddress:3000/api/v1/Freelancer/logout'));
+      request.body = '''''';
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        Provider.of<TokenProvider>(context, listen: false)
+            .setCookie(response.headers['set-cookie']!);
+
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => SelectionScreen()),
+          (Route<dynamic> route) => false,
+        );
+
+        print(await response.stream.bytesToString());
+      } else {
+        print(response.reasonPhrase);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
 // Add more methods to update other fields of the profile as needed

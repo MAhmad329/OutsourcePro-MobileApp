@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:outsourcepro/models/freelancer.dart';
 
 class Chat {
@@ -39,12 +40,14 @@ class Message {
 
   bool? isRead;
 
-  Message({
-    this.senderId,
-    this.content,
-    this.timestamp,
-    this.isRead,
-  });
+  String? username;
+
+  Message(
+      {this.senderId,
+      this.content,
+      this.timestamp,
+      this.isRead,
+      this.username});
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
@@ -55,6 +58,7 @@ class Message {
       timestamp:
           json['timestamp'] != null ? DateTime.parse(json['timestamp']) : null,
       isRead: json['isRead'] ?? false,
+      username: json['senderUsername'] ?? '',
     );
   }
 
@@ -62,23 +66,7 @@ class Message {
     if (timestamp == null) {
       return 'Unknown';
     }
-    final now = DateTime.now();
-    final difference = now.difference(timestamp!);
-
-    if (difference.inMinutes < 1) {
-      return 'Just now';
-    } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes} min ago';
-    } else if (difference.inHours < 24) {
-      return '${difference.inHours} hours ago';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
-    } else if (difference.inDays < 30) {
-      return '${(difference.inDays / 7).floor()} weeks ago';
-    } else if (difference.inDays < 365) {
-      return '${(difference.inDays / 30).floor()} months ago';
-    } else {
-      return '${(difference.inDays / 365).floor()} years ago';
-    }
+    // Format the timestamp to only include the time
+    return DateFormat('kk:mm').format(timestamp!);
   }
 }

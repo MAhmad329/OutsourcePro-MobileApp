@@ -32,6 +32,11 @@ class TeamProvider extends ChangeNotifier {
     fetchTeam();
   }
 
+  Map<String, String> get teamMemberUsernames {
+    return Map.fromIterable(_team?.members ?? [],
+        key: (member) => member.id, value: (member) => member.username);
+  }
+
   Future<void> fetchTeam() async {
     if (_ipAddress.isEmpty || _cookie.isEmpty) {
       return;

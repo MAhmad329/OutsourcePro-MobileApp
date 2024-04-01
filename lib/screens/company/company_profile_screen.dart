@@ -4,9 +4,12 @@ import 'package:outsourcepro/providers/company_profile_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants.dart';
+import '../../models/company.dart';
 
 class CompanyProfile extends StatefulWidget {
-  const CompanyProfile({super.key});
+  final Company? otherProfile;
+
+  const CompanyProfile({super.key, this.otherProfile});
 
   @override
   State<CompanyProfile> createState() => _CompanyProfileState();
@@ -16,6 +19,8 @@ class _CompanyProfileState extends State<CompanyProfile> {
   @override
   Widget build(BuildContext context) {
     final companyProvider = Provider.of<CompanyProfileProvider>(context);
+    final Company profile = widget.otherProfile ?? companyProvider.profile;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -48,33 +53,51 @@ class _CompanyProfileState extends State<CompanyProfile> {
                     ),
                     child: GestureDetector(
                       onTap: () {
-                        Provider.of<CompanyProfileProvider>(context,
-                                listen: false)
-                            .uploadProfilePicture(context);
+                        if (widget.otherProfile == null) {
+                          Provider.of<CompanyProfileProvider>(context,
+                                  listen: false)
+                              .uploadProfilePicture(context);
+                        }
                       },
-                      child: Consumer<CompanyProfileProvider>(
-                        builder: (_, provider, child) {
-                          return provider.isUploading
-                              ? const CircularProgressIndicator(
-                                  color: Colors.white,
+                      child: widget.otherProfile == null
+                          ? Consumer<CompanyProfileProvider>(
+                              builder: (_, provider, child) {
+                                return provider.isUploading
+                                    ? const CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )
+                                    : provider.profile.pfp != ''
+                                        ? CircleAvatar(
+                                            backgroundColor: Colors.transparent,
+                                            backgroundImage: NetworkImage(
+                                              provider.profile.pfp,
+                                            ),
+                                            radius: 50.r,
+                                          )
+                                        : CircleAvatar(
+                                            backgroundColor: Colors.transparent,
+                                            backgroundImage: const AssetImage(
+                                              'assets/defaultpic.jpg',
+                                            ),
+                                            radius: 50.r,
+                                          );
+                              },
+                            )
+                          : profile.pfp != ''
+                              ? CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage: NetworkImage(
+                                    profile.pfp,
+                                  ),
+                                  radius: 50.r,
                                 )
-                              : provider.profile.pfp != ''
-                                  ? CircleAvatar(
-                                      backgroundColor: Colors.transparent,
-                                      backgroundImage: NetworkImage(
-                                        provider.profile.pfp,
-                                      ),
-                                      radius: 50.r,
-                                    )
-                                  : CircleAvatar(
-                                      backgroundColor: Colors.transparent,
-                                      backgroundImage: const AssetImage(
-                                        'assets/defaultpic.jpg',
-                                      ),
-                                      radius: 50.r,
-                                    );
-                        },
-                      ),
+                              : CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage: const AssetImage(
+                                    'assets/defaultpic.jpg',
+                                  ),
+                                  radius: 50.r,
+                                ),
                     ),
                   ),
                 ),
@@ -86,7 +109,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        companyProvider.profile.companyName,
+                        profile.companyName,
                         style: TextStyle(
                           fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
@@ -96,7 +119,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                       Padding(
                         padding: EdgeInsets.only(right: 8.0.w),
                         child: Text(
-                          companyProvider.profile.businessAddress,
+                          profile.businessAddress,
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 14.sp,
@@ -129,7 +152,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                   height: 5.h,
                 ),
                 Text(
-                  companyProvider.profile.name,
+                  profile.name,
                   style: TextStyle(fontSize: 14.sp),
                 ),
               ],
@@ -149,7 +172,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                   height: 5.h,
                 ),
                 Text(
-                  companyProvider.profile.email,
+                  profile.email,
                   style: TextStyle(fontSize: 14.sp),
                 ),
               ],

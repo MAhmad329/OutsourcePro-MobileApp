@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:outsourcepro/screens/company/homepage_company.dart';
+import 'package:outsourcepro/screens/freelancer/chats_screen.dart';
 
 import '../screens/common/landing_page.dart';
 import '../screens/common/login_screen.dart';
@@ -41,6 +42,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const AddEducation());
       case 'add_experience_screen':
         return MaterialPageRoute(builder: (_) => const AddExperience());
+      case 'chats_screen':
+        return MaterialPageRoute(builder: (_) => const ChatsScreen());
       case 'edit_personal_info':
         return MaterialPageRoute(
             builder: (_) => const EditPersonalInformation());

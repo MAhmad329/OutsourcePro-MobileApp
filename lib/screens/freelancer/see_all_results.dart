@@ -107,7 +107,7 @@ class _SeeAllResultsState extends State<SeeAllResults> {
               .isLoading) // Display the modal progress indicator when loading
             Container(
               color: Colors.black.withOpacity(0.5),
-              child: Center(
+              child: const Center(
                 child: CircularProgressIndicator(),
               ),
             ),

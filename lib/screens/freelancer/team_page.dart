@@ -4,6 +4,7 @@ import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/screens/freelancer/add_team_member.dart';
 import 'package:outsourcepro/screens/freelancer/chat_screen.dart';
 import 'package:outsourcepro/screens/freelancer/profile_screen.dart';
+import 'package:outsourcepro/screens/freelancer/team_chat_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants.dart';
@@ -48,6 +49,17 @@ class _TeamPageState extends State<TeamPage> {
           ),
           centerTitle: true,
           actions: [
+            if (isMember || isTeamLeader)
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TeamChatScreen(
+                                  teamId: teamProvider.team!.id,
+                                )));
+                  },
+                  icon: const Icon(Icons.chat)),
             isMember &&
                     teamProvider.team?.owner.id != freelanceProvider.profile.id
                 ? IconButton(
@@ -96,9 +108,8 @@ class _TeamPageState extends State<TeamPage> {
                         teamProvider.fetchTeam();
                       }
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.exit_to_app,
-                      size: 20.r,
                       color: Colors.red,
                     ))
                 : const Text(''),
@@ -125,36 +136,43 @@ class _TeamPageState extends State<TeamPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      teamProvider.team!.owner.pfp),
-                                  radius: 15.r,
-                                ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Text(
-                                  teamProvider.team!.owner.username,
-                                  style: TextStyle(fontSize: 14.sp),
-                                ),
-                                SizedBox(
-                                  width: 5.w,
-                                ),
-                                if (isTeamLeader)
-                                  Text('(You)',
-                                      style: TextStyle(fontSize: 14.sp)),
-                              ],
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        teamProvider.team!.owner.pfp),
+                                    radius: 15.r,
+                                  ),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  SizedBox(
+                                    width: 150.w,
+                                    child: Expanded(
+                                      child: Text(
+                                        teamProvider.team!.owner.username,
+                                        style: TextStyle(fontSize: 14.sp),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5.w,
+                                  ),
+                                  if (isTeamLeader)
+                                    Text('(You)',
+                                        style: TextStyle(fontSize: 14.sp)),
+                                ],
+                              ),
                             ),
                           ),
                           if (!isTeamLeader)
                             Row(
                               children: [
                                 IconButton(
-                                    icon: Icon(Icons.person),
+                                    icon: const Icon(Icons.person),
                                     onPressed: () {
                                       Navigator.push(
                                         context,
@@ -166,7 +184,7 @@ class _TeamPageState extends State<TeamPage> {
                                       );
                                     }),
                                 IconButton(
-                                  icon: Icon(Icons.chat),
+                                  icon: const Icon(Icons.chat),
                                   onPressed: () {
                                     Navigator.push(
                                       context,
@@ -206,7 +224,6 @@ class _TeamPageState extends State<TeamPage> {
                               },
                               icon: Icon(
                                 Icons.add,
-                                size: 20.r,
                                 color: primaryColor,
                               ))
                       ],
@@ -228,141 +245,155 @@ class _TeamPageState extends State<TeamPage> {
                         }
                         return Padding(
                           padding: EdgeInsets.only(left: 15.0.w),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundImage:
-                                            NetworkImage(member.pfp),
-                                        radius: 15.r,
-                                      ),
-                                      SizedBox(
-                                        width: 10.w,
-                                      ),
-                                      Text(
-                                        member.username,
-                                        style: TextStyle(fontSize: 14.sp),
-                                      ),
-                                    ],
-                                  ),
-                                  if (member.id != freelanceProvider.profile.id)
+                          child: Expanded(
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
                                     Row(
                                       children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ProfileScreen(
-                                                  otherProfile: member,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          icon: Icon(
-                                            Icons.person,
-                                          ),
+                                        CircleAvatar(
+                                          backgroundImage:
+                                              NetworkImage(member.pfp),
+                                          radius: 15.r,
                                         ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ChatScreen(
-                                                            receiverId:
-                                                                member.id,
-                                                            username: member
-                                                                .username)));
-                                          },
-                                          icon: Icon(
-                                            Icons.message,
-                                          ),
+                                        SizedBox(
+                                          width: 10.w,
                                         ),
-                                        if (teamProvider.team!.owner.id ==
-                                            freelanceProvider.profile.id)
-                                          IconButton(
-                                            onPressed: () async {
-                                              final shouldRemove =
-                                                  await showDialog<bool>(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    content: Text(
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      'Are you sure you want to remove ${member.username} from the team?',
-                                                      style: TextStyle(
-                                                          fontSize: 14.sp),
-                                                    ),
-                                                    actions: <Widget>[
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          TextButton(
-                                                            onPressed: () =>
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop(false),
-                                                            child: Text(
-                                                              'Cancel',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      14.sp),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 15.w,
-                                                          ),
-                                                          TextButton(
-                                                            onPressed: () =>
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop(true),
-                                                            child: Text(
-                                                              'Remove',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      14.sp),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-
-                                              // If the user confirmed, remove the member
-                                              if (shouldRemove ?? false) {
-                                                teamProvider.exitTeam(
-                                                    member.id,
-                                                    freelanceProvider
-                                                        .profile.id);
-                                              }
-                                            },
-                                            icon: const Icon(
-                                              Icons.close,
-                                              color: Colors.red,
+                                        SizedBox(
+                                          width: 125.w,
+                                          child: Expanded(
+                                            child: Text(
+                                              member.id ==
+                                                      freelanceProvider
+                                                          .profile.id
+                                                  ? '${member.username} (You)'
+                                                  : member.username,
+                                              style: TextStyle(fontSize: 14.sp),
                                             ),
                                           ),
+                                        ),
                                       ],
                                     ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 15.h,
-                              ),
-                            ],
+                                    if (member.id !=
+                                        freelanceProvider.profile.id)
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProfileScreen(
+                                                    otherProfile: member,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            icon: const Icon(
+                                              Icons.person,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ChatScreen(
+                                                              receiverId:
+                                                                  member.id,
+                                                              username: member
+                                                                  .username)));
+                                            },
+                                            icon: const Icon(
+                                              Icons.message,
+                                            ),
+                                          ),
+                                          if (teamProvider.team!.owner.id ==
+                                              freelanceProvider.profile.id)
+                                            IconButton(
+                                              onPressed: () async {
+                                                final shouldRemove =
+                                                    await showDialog<bool>(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      content: Text(
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        'Are you sure you want to remove ${member.username} from the team?',
+                                                        style: TextStyle(
+                                                            fontSize: 14.sp),
+                                                      ),
+                                                      actions: <Widget>[
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop(
+                                                                          false),
+                                                              child: Text(
+                                                                'Cancel',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        14.sp),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 15.w,
+                                                            ),
+                                                            TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop(
+                                                                          true),
+                                                              child: Text(
+                                                                'Remove',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        14.sp),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+
+                                                // If the user confirmed, remove the member
+                                                if (shouldRemove ?? false) {
+                                                  teamProvider.exitTeam(
+                                                      member.id,
+                                                      freelanceProvider
+                                                          .profile.id);
+                                                }
+                                              },
+                                              icon: const Icon(
+                                                Icons.close,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 15.h,
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },

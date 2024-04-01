@@ -1,48 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
-import 'package:outsourcepro/constants.dart';
-import 'package:outsourcepro/providers/chat_provider.dart';
-import 'package:outsourcepro/providers/token_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../Providers/freelance_profile_provider.dart';
+import '../../constants.dart';
 import '../../models/chat.dart';
+import '../../providers/chat_provider.dart';
+import '../../providers/token_provider.dart';
 import '../../services/socket_service.dart';
 
-class ChatScreen extends StatefulWidget {
-  final String receiverId;
-  final String username;
-  final String? chatId;
-
-  const ChatScreen({
-    super.key,
-    required this.receiverId,
-    required this.username,
-    this.chatId,
-  });
+class TeamChatScreen extends StatefulWidget {
+  final String teamId;
+  const TeamChatScreen({super.key, required this.teamId});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<TeamChatScreen> createState() => _TeamChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _TeamChatScreenState extends State<TeamChatScreen> {
   final SocketService socketService = SocketService();
   final TextEditingController _messageController = TextEditingController();
   List<Message> _messages = [];
-  bool _isActive = false; // Track if the chat screen is active
 
   @override
   void initState() {
     super.initState();
-    _fetchAndSetMessages();
+    _joinTeamChat();
     _setupSocketListeners();
-    _isActive = true; // Set to true when the screen is active
+    _fetchAndSetMessages();
   }
 
   @override
   void dispose() {
-    socketService.disconnect();
-    _isActive = false;
     super.dispose();
   }
 
@@ -52,7 +41,7 @@ class _ChatScreenState extends State<ChatScreen> {
             .profile
             .id;
     await Provider.of<ChatProvider>(context, listen: false)
-        .getChatMessages('individual', userId, widget.receiverId, '', context);
+        .getChatMessages('team', '', '', widget.teamId, context);
     if (mounted) {
       setState(() {
         _messages.clear();
@@ -60,13 +49,9 @@ class _ChatScreenState extends State<ChatScreen> {
         _messages = List.from(_messages.reversed);
       });
     }
-    if (widget.chatId != null) {
-      Provider.of<ChatProvider>(context, listen: false)
-          .markMessageAsRead(widget.chatId!);
-    }
   }
 
-  void _setupSocketListeners() {
+  void _joinTeamChat() {
     String userId =
         Provider.of<FreelancerProfileProvider>(context, listen: false)
             .profile
@@ -74,38 +59,41 @@ class _ChatScreenState extends State<ChatScreen> {
     String ipAddress =
         Provider.of<TokenProvider>(context, listen: false).ipaddress;
     socketService.connect(userId, ipAddress);
-    socketService.socket!.on('individual chat message', (data) {
+    socketService.joinTeamChat(widget.teamId);
+  }
+
+  void _setupSocketListeners() {
+    String userId =
+        Provider.of<FreelancerProfileProvider>(context, listen: false)
+            .profile
+            .id;
+    socketService.socket!.on('team chat message', (data) {
       Message message = Message.fromJson(data);
-      print(message.senderId);
+      print('content is: ${message.content}');
       if (message.senderId != userId) {
+        print(message.senderId);
+        print(userId);
         if (mounted) {
           setState(() {
             _messages.insert(0, message);
           });
-          if (_isActive) {
-            // Mark the message as read only if the chat screen is active
-            Provider.of<ChatProvider>(context, listen: false)
-                .markMessageAsRead(widget.chatId!);
-          }
         }
       }
-      Provider.of<ChatProvider>(context, listen: false)
-          .updateLastMessage(widget.chatId!, message);
     });
   }
 
-  void _sendMessage() {
+  void _sendTeamMessage() {
     if (_messageController.text.isNotEmpty) {
-      String senderId =
+      final sender =
           Provider.of<FreelancerProfileProvider>(context, listen: false)
-              .profile
-              .id;
+              .profile;
       String content = _messageController.text;
       Provider.of<ChatProvider>(context, listen: false)
-          .sendMessage('individual', widget.receiverId, '', content, senderId);
-      socketService.sendIndividualMessage(senderId, widget.receiverId, content);
+          .sendMessage('team', '', widget.teamId, content, sender.id);
+      socketService.sendTeamMessage(
+          widget.teamId, sender.id, content, sender.username);
       Message newMessage = Message(
-          senderId: senderId,
+          senderId: sender.id,
           content: content,
           timestamp: DateTime.now(),
           isRead: false);
@@ -113,8 +101,6 @@ class _ChatScreenState extends State<ChatScreen> {
         _messages.insert(0, newMessage);
       });
       _messageController.clear();
-      Provider.of<ChatProvider>(context, listen: false)
-          .updateLastMessage(widget.chatId!, newMessage);
     }
   }
 
@@ -125,9 +111,8 @@ class _ChatScreenState extends State<ChatScreen> {
             .profile
             .id;
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text(widget.username),
+        title: Text('Team Chat'),
         centerTitle: true,
       ),
       body: Column(
@@ -165,6 +150,15 @@ class _ChatScreenState extends State<ChatScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                if (!isMe)
+                                  Text(
+                                    _messages[index].username ?? 'Unknown User',
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: isMe ? Colors.white : Colors.black,
+                                    ),
+                                  ),
                                 Text(
                                   _messages[index].content ?? '',
                                   style: kText2.copyWith(
@@ -179,7 +173,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           padding: EdgeInsets.only(top: 5.h),
                           child: Text(
                             _messages[index].timeAgo(),
-                            style: kText2.copyWith(fontSize: 8.sp),
+                            style: kText2.copyWith(fontSize: 10.sp),
                           ),
                         ),
                       ],
@@ -203,7 +197,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: _sendMessage,
+                  onPressed: _sendTeamMessage,
                   icon: Icon(
                     Icons.send,
                     color: Colors.grey,

@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
-import 'package:outsourcepro/providers/project_provider.dart';
 import 'package:outsourcepro/providers/team_provider.dart';
 import 'package:outsourcepro/screens/company/company_profile_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants.dart';
 import '../../models/project.dart';
-import '../../widgets/button.dart';
 
-class ProjectDetailsScreen extends StatelessWidget {
-  final VoidCallback? onActionCompleted;
+class SoloOngoingProject extends StatelessWidget {
   final Project project;
-  const ProjectDetailsScreen(
-      {super.key, required this.project, this.onActionCompleted});
+  const SoloOngoingProject({super.key, required this.project});
 
   @override
   Widget build(BuildContext context) {
@@ -31,49 +26,6 @@ class ProjectDetailsScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        bottomNavigationBar: SizedBox(
-          child: Consumer<ProjectProvider>(
-            builder: (_, provider, child) {
-              bool isApplied = provider.hasApplied(project.id,
-                  freelancerProvider.profile.id, teamProvider.team?.id);
-              return MyButton(
-                onTap: canApply
-                    ? () {
-                        if (isApplied) {
-                          provider.cancelApplication(project.id, context,
-                              onSuccess: () {
-                            freelancerProvider.fetchFreelancerDetails();
-                          });
-                        } else {
-                          if (project.requiresTeam && isTeamLeader) {
-                            provider.applyToProjectAsTeam(project.id, context,
-                                onSuccess: () {
-                              freelancerProvider.fetchFreelancerDetails();
-                            });
-                          } else {
-                            provider.applyToProject(project.id, context,
-                                onSuccess: () {
-                              freelancerProvider.fetchFreelancerDetails();
-                            });
-                          }
-                        }
-                      }
-                    : null,
-                buttonText: isApplied ? 'Cancel' : 'Apply',
-                buttonColor: canApply
-                    ? (isApplied ? Colors.red : primaryColor)
-                    : Colors.grey,
-                buttonWidth: double.infinity.w,
-                buttonHeight: 40.h,
-                textColor: Colors.white,
-                borderColor: canApply
-                    ? (isApplied ? Colors.red : primaryColor)
-                    : Colors.grey,
-                borderRadius: 0,
-              );
-            },
-          ),
-        ),
         appBar: AppBar(
           title: Text(
             'Project Details',
@@ -236,38 +188,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          project.requiresTeam
-                              ? 'Team Applicants'
-                              : 'Freelancer Applicants',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5.h,
-                        ),
-                        Consumer<ProjectProvider>(
-                          builder: (context, provider, child) {
-                            Project updatedProject = provider.projects
-                                .firstWhere((proj) => proj.id == project.id);
-                            return Text(
-                              updatedProject.requiresTeam
-                                  ? updatedProject.teamApplicants.length
-                                      .toString()
-                                  : updatedProject.freelancerApplicants.length
-                                      .toString(),
-                              style: TextStyle(fontSize: 12.sp),
-                            );
-                          },
-                        )
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Requirement',
+                          'Assigned to',
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
@@ -277,10 +198,33 @@ class ProjectDetailsScreen extends StatelessWidget {
                           height: 5.h,
                         ),
                         Text(
-                          project.requiresTeam ? 'Team' : 'Freelancer',
+                          freelancerProvider.profile.username,
                           style: TextStyle(fontSize: 12.sp),
                         ),
                       ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 15.0.w),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Due',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5.h,
+                          ),
+                          Text(
+                            'Soon',
+                            style: TextStyle(fontSize: 12.sp),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

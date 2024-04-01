@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/constants.dart';
+import 'package:outsourcepro/screens/common/settings_screen.dart';
 import 'package:outsourcepro/screens/freelancer/chats_screen.dart';
 import 'package:outsourcepro/screens/freelancer/manage_projects.dart';
-import 'package:outsourcepro/screens/freelancer/profile_screen.dart';
 import 'package:outsourcepro/screens/freelancer/team_page.dart';
 import 'package:provider/provider.dart';
 
@@ -24,11 +24,23 @@ class _HomePageFreelancerState extends State<HomePageFreelancer> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    _pageController.addListener(() {
+      final pageIndex = _pageController.page?.round();
+      if (pageIndex != null &&
+          pageIndex !=
+              Provider.of<NavigationProvider>(context, listen: false)
+                  .currentIndex) {
+        Provider.of<NavigationProvider>(context, listen: false)
+            .updateIndex(pageIndex);
+      }
+    });
   }
 
   @override
   void dispose() {
+    _pageController.removeListener(() {}); // Remove the listener
     _pageController.dispose();
+    _pageController.jumpToPage(0);
     super.dispose();
   }
 
@@ -49,13 +61,12 @@ class _HomePageFreelancerState extends State<HomePageFreelancer> {
         body: PageView(
           physics: const NeverScrollableScrollPhysics(),
           controller: _pageController,
-          onPageChanged: (index) => navigationProvider.updateIndex(index),
           children: const [
             ProjectsScreen(),
             ManageProjects(),
             TeamPage(),
             ChatsScreen(),
-            ProfileScreen(),
+            SettingsScreen(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -86,8 +97,8 @@ class _HomePageFreelancerState extends State<HomePageFreelancer> {
               label: 'Chats', // Replace with your actual labels
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile', // Replace with your actual labels
+              icon: Icon(Icons.settings),
+              label: 'Settings', // Replace with your actual labels
             ),
             // Add more items here
           ],

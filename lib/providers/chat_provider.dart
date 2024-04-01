@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:outsourcepro/providers/team_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../models/chat.dart';
 
@@ -92,8 +94,8 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getChatMessages(
-      String type, String senderId, String receiverId, String teamId) async {
+  Future<void> getChatMessages(String type, String senderId, String receiverId,
+      String teamId, BuildContext context) async {
     _Messages.clear();
     try {
       var headers = {'Content-Type': 'application/json', 'Cookie': _cookie};
@@ -121,10 +123,16 @@ class ChatProvider extends ChangeNotifier {
         List<dynamic> messagesData = jsonResponse['messages'];
         _Messages.clear();
         print(_Messages);
-        _Messages = messagesData
-            .map((messageData) => Message.fromJson(messageData))
-            .toList();
-        notifyListeners();
+
+        Map<String, String> usernames =
+            Provider.of<TeamProvider>(context, listen: false)
+                .teamMemberUsernames;
+
+        _Messages = messagesData.map((messageData) {
+          Message message = Message.fromJson(messageData);
+          message.username = usernames[message.senderId] ?? '';
+          return message;
+        }).toList();
         print(_Messages);
       } else {
         print(response.reasonPhrase);

@@ -1,8 +1,12 @@
+import 'company.dart';
+
 class Project {
   final String id;
   final String title;
   final String description;
   final String type;
+
+  final Company owner;
 
   final List<String> requiredMembers;
   final int budget;
@@ -11,6 +15,7 @@ class Project {
   final bool requiresTeam;
   final String? selectedApplicant;
   final DateTime createdAt;
+  final DateTime deadline;
 
   Project({
     required this.id,
@@ -22,8 +27,10 @@ class Project {
     required this.freelancerApplicants,
     required this.teamApplicants,
     required this.requiresTeam,
+    required this.owner,
     this.selectedApplicant,
     required this.createdAt,
+    required this.deadline,
   });
 
   factory Project.fromJson(Map<String, dynamic> json) {
@@ -34,6 +41,9 @@ class Project {
       type: json['type'],
       budget: json['budget'],
       requiredMembers: List<String>.from(json['requiredMembers'] ?? []),
+      owner: json['owner'] is Map<String, dynamic>
+          ? Company.fromJson(json['owner'])
+          : Company(id: json['owner']),
       freelancerApplicants:
           List<dynamic>.from(json['freelancerApplicants'] ?? []),
       teamApplicants: List<dynamic>.from(json['teamApplicants'] ?? []),
@@ -41,6 +51,9 @@ class Project {
       selectedApplicant: json['selectedApplicant'],
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
+      deadline: json['deadline'] != null
+          ? DateTime.parse(json['deadline'])
           : DateTime.now(),
     );
   }
@@ -53,11 +66,13 @@ class Project {
       'type': type,
       'requiredMembers': requiredMembers,
       'budget': budget,
+      'owner': owner.toJson(),
       'freelancerApplicants': freelancerApplicants,
       'teamApplicants': teamApplicants,
       'requiresTeam': requiresTeam,
       'selectedApplicant': selectedApplicant,
       'createdAt': createdAt.toIso8601String(),
+      'deadline': deadline.toIso8601String(),
     };
   }
 
