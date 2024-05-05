@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import 'company.dart';
 
 class Project {
@@ -74,6 +76,14 @@ class Project {
       'createdAt': createdAt.toIso8601String(),
       'deadline': deadline.toIso8601String(),
     };
+  }
+
+  String timeAgo() {
+    if (deadline.toIso8601String() == null) {
+      return 'Unknown';
+    }
+    // Format the timestamp to only include the time
+    return DateFormat('dd-MM-yyyy').format(deadline!);
   }
 
   String timeElapsed() {

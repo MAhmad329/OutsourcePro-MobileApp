@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/constants.dart';
 import 'package:outsourcepro/screens/common/settings_screen.dart';
 import 'package:outsourcepro/screens/freelancer/chats_screen.dart';
+import 'package:outsourcepro/screens/freelancer/community_forum.dart';
 import 'package:outsourcepro/screens/freelancer/manage_projects.dart';
 import 'package:outsourcepro/screens/freelancer/team_page.dart';
 import 'package:provider/provider.dart';
@@ -61,11 +62,12 @@ class _HomePageFreelancerState extends State<HomePageFreelancer> {
         body: PageView(
           physics: const NeverScrollableScrollPhysics(),
           controller: _pageController,
-          children: const [
+          children: [
             ProjectsScreen(),
             ManageProjects(),
             TeamPage(),
             ChatsScreen(),
+            CommunityForum(),
             SettingsScreen(),
           ],
         ),
@@ -97,9 +99,14 @@ class _HomePageFreelancerState extends State<HomePageFreelancer> {
               label: 'Chats', // Replace with your actual labels
             ),
             BottomNavigationBarItem(
+              icon: Icon(Icons.forum),
+              label: 'Community', // Replace with your actual labels
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.settings),
               label: 'Settings', // Replace with your actual labels
             ),
+
             // Add more items here
           ],
         ),

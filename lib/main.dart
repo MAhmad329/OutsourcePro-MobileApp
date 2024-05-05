@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/providers/auth_provider.dart';
 import 'package:outsourcepro/providers/chat_provider.dart';
+import 'package:outsourcepro/providers/community_provider.dart';
 import 'package:outsourcepro/providers/company_profile_provider.dart';
 import 'package:outsourcepro/providers/navigation_provider.dart';
 import 'package:outsourcepro/providers/password_visibility_provider.dart';
@@ -44,6 +45,14 @@ class MyApp extends StatelessWidget {
           create: (_) => FreelancerProfileProvider(),
           update: (_, tokenProvider, freelanceProvider) {
             return freelanceProvider!
+              ..updateDependencies(
+                  tokenProvider.ipaddress, tokenProvider.cookie);
+          },
+        ),
+        ChangeNotifierProxyProvider<TokenProvider, CommunityProvider>(
+          create: (_) => CommunityProvider(),
+          update: (_, tokenProvider, communityProvider) {
+            return communityProvider!
               ..updateDependencies(
                   tokenProvider.ipaddress, tokenProvider.cookie);
           },
@@ -96,9 +105,11 @@ class MyApp extends StatelessWidget {
               builder: (BuildContext context,
                   AsyncSnapshot<SharedPreferences> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator(); // Show loading indicator while waiting for SharedPreferences
+                  return const Scaffold(
+                      body:
+                          CircularProgressIndicator()); // Show loading indicator while waiting for SharedPreferences
                 } else if (snapshot.hasError) {
-                  return LandingPage(); // Show error screen if something went wrong
+                  return const LandingPage(); // Show error screen if something went wrong
                 } else {
                   final prefs = snapshot.data;
                   final bool isLoggedIn = prefs?.getBool('isLoggedIn') ?? false;
@@ -113,13 +124,13 @@ class MyApp extends StatelessWidget {
                   });
 
                   if (!isLoggedIn) {
-                    return SelectionScreen();
+                    return const SelectionScreen();
                   } else if (userType == 'freelancer') {
-                    return HomePageFreelancer();
+                    return const HomePageFreelancer();
                   } else if (userType == 'company') {
-                    return HomePageCompany();
+                    return const HomePageCompany();
                   } else {
-                    return SelectionScreen(); // Or another appropriate screen if userType is not valid
+                    return const SelectionScreen(); // Or another appropriate screen if userType is not valid
                   }
                 }
               },

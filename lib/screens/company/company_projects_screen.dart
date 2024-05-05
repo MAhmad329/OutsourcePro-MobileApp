@@ -29,6 +29,7 @@ class _CompanyProjectState extends State<CompanyProject> {
       appBar: AppBar(
         title: Text('Company Projects'),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0.w),

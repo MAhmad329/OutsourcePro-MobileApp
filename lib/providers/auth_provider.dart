@@ -208,9 +208,7 @@ class AuthProvider with ChangeNotifier {
         _isLoading = false;
         notifyListeners();
         print(await response.stream.bytesToString());
-        ScaffoldMessenger.of(context).showSnackBar(
-          customSnackBar('Password changed successfully', Colors.grey),
-        );
+
         if (screen == 'login') {
           navigatorKey.currentState?.pop();
           navigatorKey.currentState?.pop();

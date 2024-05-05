@@ -41,6 +41,14 @@ class _OngoingProjectScreenState extends State<OngoingProjectScreen> {
               ),
               SizedBox(height: 25.h),
               Text(
+                'Due',
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+              ),
+              Text(DateFormat('dd-MM-yyyy').format(widget.project.deadline)),
+              SizedBox(
+                height: 15.h,
+              ),
+              Text(
                 "Progress",
                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
               ),
@@ -75,12 +83,10 @@ class _OngoingProjectScreenState extends State<OngoingProjectScreen> {
                         SizedBox(height: 10.h),
                         tasks.isEmpty
                             ? Text('No tasks assigned yet')
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: tasks.length,
-                                itemBuilder: (context, index) {
-                                  return TaskCard(task: tasks[index]);
-                                },
+                            : Column(
+                                children: tasks
+                                    .map((task) => TaskCard(task: task))
+                                    .toList(),
                               ),
                       ],
                     );
@@ -177,6 +183,7 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       child: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(

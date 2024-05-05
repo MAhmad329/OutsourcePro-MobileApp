@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class TokenProvider extends ChangeNotifier {
   String _cookie = '';
   String get cookie => _cookie;
-  String ipaddress = '192.168.0.106';
+  String ipaddress = '192.168.0.126';
   void setCookie(String cookie) {
     _cookie = cookie;
     _saveCookieToPrefs(cookie);

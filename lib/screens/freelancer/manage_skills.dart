@@ -115,7 +115,7 @@ void showDeleteSkillDialog(
               MyButton(
                 buttonText: 'Cancel',
                 buttonColor: Colors.black26,
-                buttonWidth: 120.w,
+                buttonWidth: 100.w,
                 buttonHeight: 40.h,
                 onTap: () {
                   Navigator.of(context).pop();
@@ -127,7 +127,7 @@ void showDeleteSkillDialog(
               MyButton(
                 buttonText: 'Confirm',
                 buttonColor: primaryColor,
-                buttonWidth: 120.w,
+                buttonWidth: 100.w,
                 buttonHeight: 40.h,
                 onTap: () {
                   provider.removeSkill(index);

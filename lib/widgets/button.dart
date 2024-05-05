@@ -46,7 +46,7 @@ class MyButton extends StatelessWidget {
                 buttonText ?? '', // Use empty string if buttonText is null
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   color: textColor,
                   fontWeight: FontWeight.w500,
                 ),

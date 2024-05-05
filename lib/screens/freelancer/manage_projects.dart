@@ -30,6 +30,7 @@ class _ManageProjectsState extends State<ManageProjects> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0.5,
         shadowColor: Colors.black,

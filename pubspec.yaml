@@ -47,6 +47,8 @@ dependencies:
   socket_io_client: ^2.0.3+1
   dropdown_search: ^5.0.6
   shared_preferences: ^2.2.2
+  timeago: ^3.6.1
+  auto_size_text_field: ^2.2.3
 
 
 
