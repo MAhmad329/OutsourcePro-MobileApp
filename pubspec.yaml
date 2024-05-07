@@ -49,6 +49,7 @@ dependencies:
   shared_preferences: ^2.2.2
   timeago: ^3.6.1
   auto_size_text_field: ^2.2.3
+  carousel_slider: ^4.2.1
 
 
 
