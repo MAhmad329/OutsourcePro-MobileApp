@@ -23,13 +23,15 @@ class TeamProvider extends ChangeNotifier {
     notifyListeners(); // Notify UI of state change
   }
 
-  TeamProvider() {
-    fetchTeam();
+  void reset() {
+    _team = null;
+    _isLoading = false;
+    notifyListeners();
   }
+
   void updateDependencies(String ipAddress, String cookie) {
     _ipAddress = ipAddress;
     _cookie = cookie;
-    fetchTeam();
   }
 
   Map<String, String> get teamMemberUsernames {
@@ -43,8 +45,10 @@ class TeamProvider extends ChangeNotifier {
     }
     try {
       var headers = {'Cookie': _cookie};
-      var request = http.Request('GET',
-          Uri.parse('http://$_ipAddress:3000/api/v1/Freelancer/fetchteam'));
+      var request = http.Request(
+          'GET',
+          Uri.parse(
+              'http://$_ipAddress:3000/api/v1/Freelancer/fetchteamMobile'));
 
       request.headers.addAll(headers);
 

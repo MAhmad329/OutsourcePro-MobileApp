@@ -167,4 +167,10 @@ class ChatProvider extends ChangeNotifier {
       print(e.toString());
     }
   }
+
+  void reset() {
+    _chats.clear();
+    _Messages.clear();
+    notifyListeners();
+  }
 }

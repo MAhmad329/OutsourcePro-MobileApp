@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
+import 'package:outsourcepro/screens/common/calling/team_call.dart';
 import 'package:outsourcepro/screens/freelancer/add_team_member.dart';
 import 'package:outsourcepro/screens/freelancer/chat_screen.dart';
 import 'package:outsourcepro/screens/freelancer/profile_screen.dart';
@@ -59,7 +60,38 @@ class _TeamPageState extends State<TeamPage> {
                                   teamId: teamProvider.team!.id,
                                 )));
                   },
-                  icon: const Icon(Icons.chat)),
+                  icon: Icon(
+                    Icons.chat_outlined,
+                    size: 20.r,
+                  )),
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TeamCall(
+                          callType: 'video',
+                        ),
+                      ));
+                },
+                icon: Icon(
+                  Icons.video_call_outlined,
+                  size: 25.r,
+                )),
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TeamCall(
+                          callType: 'audio',
+                        ),
+                      ));
+                },
+                icon: Icon(
+                  Icons.call,
+                  size: 20.r,
+                )),
             isMember &&
                     teamProvider.team?.owner.id != freelanceProvider.profile.id
                 ? IconButton(
@@ -136,36 +168,36 @@ class _TeamPageState extends State<TeamPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        teamProvider.team!.owner.pfp),
-                                    radius: 15.r,
-                                  ),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  SizedBox(
-                                    width: 150.w,
-                                    child: Expanded(
-                                      child: Text(
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      teamProvider.team!.owner.pfp),
+                                  radius: 15.r,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                SizedBox(
+                                  width: 150.w,
+                                  child: Row(
+                                    children: [
+                                      Text(
                                         teamProvider.team!.owner.username,
                                         style: TextStyle(fontSize: 14.sp),
                                       ),
-                                    ),
+                                      SizedBox(
+                                        width: 5.w,
+                                      ),
+                                      if (isTeamLeader)
+                                        Text('(You)',
+                                            style: TextStyle(fontSize: 14.sp)),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 5.w,
-                                  ),
-                                  if (isTeamLeader)
-                                    Text('(You)',
-                                        style: TextStyle(fontSize: 14.sp)),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                           if (!isTeamLeader)
@@ -245,158 +277,196 @@ class _TeamPageState extends State<TeamPage> {
                         }
                         return Padding(
                           padding: EdgeInsets.only(left: 15.0.w),
-                          child: Expanded(
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundImage:
+                                            NetworkImage(member.pfp),
+                                        radius: 15.r,
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      SizedBox(
+                                        width: 125.w,
+                                        child: Text(
+                                          member.id ==
+                                                  freelanceProvider.profile.id
+                                              ? '${member.username} (You)'
+                                              : member.username,
+                                          style: TextStyle(fontSize: 14.sp),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  if (member.id != freelanceProvider.profile.id)
                                     Row(
                                       children: [
-                                        CircleAvatar(
-                                          backgroundImage:
-                                              NetworkImage(member.pfp),
-                                          radius: 15.r,
-                                        ),
-                                        SizedBox(
-                                          width: 10.w,
-                                        ),
-                                        SizedBox(
-                                          width: 125.w,
-                                          child: Expanded(
-                                            child: Text(
-                                              member.id ==
-                                                      freelanceProvider
-                                                          .profile.id
-                                                  ? '${member.username} (You)'
-                                                  : member.username,
-                                              style: TextStyle(fontSize: 14.sp),
-                                            ),
+                                        IconButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ProfileScreen(
+                                                  otherProfile: member,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          icon: const Icon(
+                                            Icons.person,
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    if (member.id !=
-                                        freelanceProvider.profile.id)
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.push(
+                                        IconButton(
+                                          onPressed: () {
+                                            Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProfileScreen(
-                                                    otherProfile: member,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            icon: const Icon(
-                                              Icons.person,
-                                            ),
+                                                    builder: (context) =>
+                                                        ChatScreen(
+                                                            receiverId:
+                                                                member.id,
+                                                            username: member
+                                                                .username)));
+                                          },
+                                          icon: const Icon(
+                                            Icons.message,
                                           ),
+                                        ),
+                                        if (teamProvider.team!.owner.id ==
+                                            freelanceProvider.profile.id)
                                           IconButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ChatScreen(
-                                                              receiverId:
-                                                                  member.id,
-                                                              username: member
-                                                                  .username)));
+                                            onPressed: () async {
+                                              final shouldRemove =
+                                                  await showDialog<bool>(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    content: Text(
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      'Are you sure you want to remove ${member.username} from the team?',
+                                                      style: TextStyle(
+                                                          fontSize: 14.sp),
+                                                    ),
+                                                    actions: <Widget>[
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(false),
+                                                            child: Text(
+                                                              'Cancel',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      14.sp),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 15.w,
+                                                          ),
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(true),
+                                                            child: Text(
+                                                              'Remove',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      14.sp),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+
+                                              // If the user confirmed, remove the member
+                                              if (shouldRemove ?? false) {
+                                                teamProvider.exitTeam(
+                                                    member.id,
+                                                    freelanceProvider
+                                                        .profile.id);
+                                              }
                                             },
                                             icon: const Icon(
-                                              Icons.message,
+                                              Icons.close,
+                                              color: Colors.red,
                                             ),
                                           ),
-                                          if (teamProvider.team!.owner.id ==
-                                              freelanceProvider.profile.id)
-                                            IconButton(
-                                              onPressed: () async {
-                                                final shouldRemove =
-                                                    await showDialog<bool>(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return AlertDialog(
-                                                      content: Text(
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        'Are you sure you want to remove ${member.username} from the team?',
-                                                        style: TextStyle(
-                                                            fontSize: 14.sp),
-                                                      ),
-                                                      actions: <Widget>[
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            TextButton(
-                                                              onPressed: () =>
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop(
-                                                                          false),
-                                                              child: Text(
-                                                                'Cancel',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        14.sp),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 15.w,
-                                                            ),
-                                                            TextButton(
-                                                              onPressed: () =>
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop(
-                                                                          true),
-                                                              child: Text(
-                                                                'Remove',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        14.sp),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-
-                                                // If the user confirmed, remove the member
-                                                if (shouldRemove ?? false) {
-                                                  teamProvider.exitTeam(
-                                                      member.id,
-                                                      freelanceProvider
-                                                          .profile.id);
-                                                }
-                                              },
-                                              icon: const Icon(
-                                                Icons.close,
-                                                color: Colors.red,
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 15.h,
-                                ),
-                              ],
-                            ),
+                                      ],
+                                    ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 15.h,
+                              ),
+                            ],
                           ),
                         );
                       },
+                    ),
+                    SizedBox(height: 10.h),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Team Skills',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        Wrap(
+                          spacing: 6.0.r,
+                          runSpacing: 8.0.r,
+                          children: List.generate(
+                            teamProvider.team!.teamSkills.length,
+                            (index) => Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.0.w,
+                                vertical: 8.0.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(
+                                  8.0.r,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    teamProvider.team!.teamSkills[index],
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

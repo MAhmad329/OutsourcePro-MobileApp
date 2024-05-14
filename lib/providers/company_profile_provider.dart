@@ -13,12 +13,18 @@ import '../screens/common/selection_screen.dart';
 import '../widgets/custom_snackbar.dart';
 
 class CompanyProfileProvider extends ChangeNotifier {
-  final Company _profile = Company();
+  Company _profile = Company();
   Company get profile => _profile;
   bool _isUploading = false;
   bool get isUploading => _isUploading;
   String _ipAddress = '';
   String _cookie = '';
+
+  void reset() {
+    _profile = Company();
+    _isUploading = false;
+    notifyListeners();
+  }
 
   void updateDependencies(String ipAddress, String cookie) {
     _ipAddress = ipAddress;

@@ -234,4 +234,10 @@ class AuthProvider with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  void reset() {
+    _isLoading = false;
+    _passwordResetEmail = '';
+    notifyListeners();
+  }
 }

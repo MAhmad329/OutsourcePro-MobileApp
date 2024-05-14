@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/providers/community_provider.dart';
+import 'package:outsourcepro/screens/common/create_post.dart';
 import 'package:outsourcepro/screens/common/post_card.dart';
 import 'package:provider/provider.dart';
 
@@ -77,6 +78,15 @@ class _CommunityForumState extends State<CommunityForum> {
                       ),
                     ),
                   ),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreatePost(),
+                            ));
+                      },
+                      icon: Icon(Icons.create))
                 ],
               ),
               SizedBox(height: 10.h),

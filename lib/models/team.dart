@@ -1,12 +1,12 @@
 import 'package:outsourcepro/models/freelancer.dart';
-import 'package:outsourcepro/models/project.dart';
 
 class Team {
   final String id;
   final String name;
   final FreelancerProfile owner;
   final List<FreelancerProfile> members;
-  final List<Project> projects;
+  final List<String> projects;
+  final List<String> teamSkills;
 
   Team({
     required this.id,
@@ -14,6 +14,7 @@ class Team {
     required this.owner,
     required this.members,
     required this.projects,
+    required this.teamSkills,
   });
 
   factory Team.fromJson(Map<String, dynamic> json) {
@@ -21,17 +22,16 @@ class Team {
     print('Members type: ${json['members'].runtimeType}');
 
     return Team(
-      id: json['_id'],
-      name: json['name'],
-      owner: json['owner'] is Map<String, dynamic>
-          ? FreelancerProfile.fromJson(json['owner'])
-          : FreelancerProfile(
-              id: json['owner']), // Handle the case where owner is a String
-      members: List<FreelancerProfile>.from(
-          json['members'].map((member) => FreelancerProfile.fromJson(member))),
-      projects: List<Project>.from(
-          json['projects'].map((project) => Project.fromJson(project))),
-    );
+        id: json['_id'],
+        name: json['name'],
+        owner: FreelancerProfile.fromJson(json['owner']),
+        teamSkills: List<String>.from(json['teamSkills'] ?? []),
+        members: List<FreelancerProfile>.from(json['members']
+            .map((member) => FreelancerProfile.fromJson(member))),
+        projects: List<String>.from(json['projects'] ?? [])
+        // List<Project>.from(
+        //     json['projects'].map((project) => Project.fromJson(project))),
+        );
   }
 
   Map<String, dynamic> toJson() {
@@ -39,7 +39,8 @@ class Team {
       '_id': id,
       'name': name,
       'owner': owner.toJson(),
-      'members': members,
+      'teamSkills': teamSkills,
+      'members': members.map((e) => e.toJson()).toList(),
       'projects': projects,
     };
   }

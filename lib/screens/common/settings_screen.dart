@@ -11,6 +11,12 @@ import 'package:outsourcepro/screens/freelancer/profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../providers/auth_provider.dart';
+import '../../providers/chat_provider.dart';
+import '../../providers/community_provider.dart';
+import '../../providers/project_provider.dart';
+import '../../providers/token_provider.dart';
+
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -232,6 +238,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   Provider.of<NavigationProvider>(context,
                                           listen: false)
                                       .updateIndex(0);
+                                  Provider.of<AuthProvider>(context,
+                                          listen: false)
+                                      .reset();
+                                  Provider.of<ChatProvider>(context,
+                                          listen: false)
+                                      .reset();
+                                  Provider.of<CommunityProvider>(context,
+                                          listen: false)
+                                      .reset();
+                                  Provider.of<CompanyProfileProvider>(context,
+                                          listen: false)
+                                      .reset();
+                                  Provider.of<FreelancerProfileProvider>(
+                                          context,
+                                          listen: false)
+                                      .reset();
+                                  Provider.of<ProjectProvider>(context,
+                                          listen: false)
+                                      .reset();
+
+                                  Provider.of<TokenProvider>(context,
+                                          listen: false)
+                                      .reset();
 
                                   SharedPreferences prefs =
                                       await SharedPreferences.getInstance();
@@ -242,10 +271,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             context,
                                             listen: false)
                                         .logout(context, 'freelancer');
+                                    await prefs.clear();
                                   } else if (userType == 'company') {
                                     Provider.of<CompanyProfileProvider>(context,
                                             listen: false)
                                         .logout(context, 'company');
+                                    await prefs.clear();
                                   }
                                 },
                                 icon: Icon(

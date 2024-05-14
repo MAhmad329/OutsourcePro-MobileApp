@@ -69,22 +69,36 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                               height: 40.0.h,
                             ),
                           )
-                        : Text(widget.post.author.name[0]),
+                        : Text(
+                            widget.post.author.name[0],
+                            style: TextStyle(color: Colors.yellow),
+                          ),
                   ),
                   SizedBox(width: 15.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          widget.post.author.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                        GestureDetector(
+                          child: Text(
+                            widget.post.author.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
+                          onTap: () {
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => CommunityProfileScreen(
+                            //         author: widget.post.author,
+                            //       ),
+                            //     ));
+                          },
                         ),
                         Text(
                           timeago.format(widget.post.timestamp),
@@ -99,12 +113,27 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                   ),
                 ],
               ),
-              SizedBox(height: 10.h),
-              _buildContent(hasLongContent),
-              SizedBox(height: 10.h),
-              if (widget.post.media.isNotEmpty)
-                _buildMediaSection(widget.post.media),
-              SizedBox(height: 10.h),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            PostDetailsScreen(post: widget.post),
+                      ));
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10.h),
+                    _buildContent(hasLongContent),
+                    SizedBox(height: 10.h),
+                    if (widget.post.media.isNotEmpty)
+                      _buildMediaSection(widget.post.media),
+                    SizedBox(height: 10.h),
+                  ],
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

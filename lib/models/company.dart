@@ -29,7 +29,8 @@ class Company {
       pfp: json['pfp'] ?? '',
       projects: (json['projects'] as List? ?? [])
           .map((e) => e is Map<String, dynamic> ? Project.fromJson(e) : null)
-          .where((e) => e != null)
+          .where((e) =>
+              e != null) // Filter out nulls which occur when `e` is not a Map.
           .cast<Project>()
           .toList(),
     );

@@ -25,15 +25,28 @@ class ProjectProvider extends ChangeNotifier {
 
   List<Project> _soloAssignedProjects = [];
   List<Project> _teamAssignedProjects = [];
-
+  List<Project> _teamAppliedProjects = [];
   List<Project> get soloAssignedProjects => _soloAssignedProjects;
   List<Project> get teamAssignedProjects => _teamAssignedProjects;
+  List<Project> get teamAppliedProjects => _teamAppliedProjects;
   String _ipAddress = '';
   String _cookie = '';
 
   ProjectProvider() {
     fetchProjects();
   }
+
+  void reset() {
+    _projects.clear();
+    _companySoloprojects.clear();
+    _companyTeamprojects.clear();
+    _tasks.clear();
+    _soloAssignedProjects.clear();
+    _teamAssignedProjects.clear();
+    _isLoading = false;
+    notifyListeners();
+  }
+
   void updateDependencies(String ipAddress, String cookie) {
     _ipAddress = ipAddress;
     _cookie = cookie;
@@ -43,9 +56,10 @@ class ProjectProvider extends ChangeNotifier {
   bool hasApplied(String projectId, String freelancerId, String? teamId) {
     Project project = projects.firstWhere((proj) => proj.id == projectId);
     if (project.requiresTeam) {
-      return project.teamApplicants.contains(teamId);
+      return project.teamApplicants.any((team) => team.id == teamId);
     } else {
-      return project.freelancerApplicants.contains(freelancerId);
+      return project.freelancerApplicants
+          .any((freelancer) => freelancer.id == freelancerId);
     }
   }
 
@@ -159,6 +173,33 @@ class ProjectProvider extends ChangeNotifier {
           'GET',
           Uri.parse(
               'http://$_ipAddress:3000/api/v1/project/myTeamAssignedProjects'));
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        String responseString = await response.stream.bytesToString();
+        Map<String, dynamic> responseData = json.decode(responseString);
+        List<dynamic> projectsData = responseData['Projects'];
+        _teamAssignedProjects =
+            projectsData.map((data) => Project.fromJson(data)).toList();
+        notifyListeners();
+        print(responseString);
+      } else {
+        print(response.reasonPhrase);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> getTeamAppliedProjects() async {
+    try {
+      var headers = {'Cookie': _cookie};
+      var request = http.Request(
+          'GET',
+          Uri.parse(
+              'http://$_ipAddress:3000/api/v1/project/myAppliedProjects'));
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
@@ -313,8 +354,10 @@ class ProjectProvider extends ChangeNotifier {
       return;
     }
     try {
-      var request = http.Request('GET',
-          Uri.parse('http://$_ipAddress:3000/api/v1/project/getProjects'));
+      var request = http.Request(
+          'GET',
+          Uri.parse(
+              'http://$_ipAddress:3000/api/v1/project/getProjectsMobile'));
       request.body = '''''';
 
       http.StreamedResponse response = await request.send();
@@ -347,20 +390,22 @@ class ProjectProvider extends ChangeNotifier {
       var request = http.Request(
           'GET',
           Uri.parse(
-              'http://$_ipAddress:3000/api/v1/Project/getmyTeamprojects'));
+              'http://$_ipAddress:3000/api/v1/Project/getmyTeamprojectsWithOwner'));
       request.body = '''''';
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
+        print('CALLED');
         String responseString = await response.stream.bytesToString();
         Map<String, dynamic> responseData = json.decode(responseString);
         List<dynamic> projectsData = responseData['data'];
         _companyTeamprojects =
             projectsData.map((data) => Project.fromJson(data)).toList();
+        print(_companyTeamprojects);
         notifyListeners();
-        print(await response.stream.bytesToString());
+        //print(await response.stream.bytesToString());
       } else {
         print(response.reasonPhrase);
       }
@@ -389,7 +434,7 @@ class ProjectProvider extends ChangeNotifier {
             projectsData.map((data) => Project.fromJson(data)).toList();
         print(_companySoloprojects);
         notifyListeners();
-        print(await response.stream.bytesToString());
+        // print(await response.stream.bytesToString());
       } else {
         print(response.reasonPhrase);
       }

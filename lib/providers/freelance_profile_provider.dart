@@ -15,7 +15,7 @@ import '../models/experience_entry.dart';
 import '../models/freelancer.dart';
 
 class FreelancerProfileProvider extends ChangeNotifier {
-  final FreelancerProfile _profile = FreelancerProfile();
+  FreelancerProfile _profile = FreelancerProfile();
   String _ipAddress = '';
   bool _isUploading = false;
   bool get isUploading => _isUploading;
@@ -30,6 +30,13 @@ class FreelancerProfileProvider extends ChangeNotifier {
 
   FreelancerProfileProvider() {
     fetchFreelancerDetails();
+  }
+
+  void reset() {
+    _profile = FreelancerProfile();
+    _searchResults.clear();
+    appliedProjects.clear();
+    notifyListeners();
   }
 
   void updateDependencies(String ipAddress, String cookie) {
@@ -192,7 +199,7 @@ class FreelancerProfileProvider extends ChangeNotifier {
     try {
       final picker = ImagePicker();
       final pickedFile = await picker.pickImage(
-        source: ImageSource.gallery,
+        source: ImageSource.camera,
         imageQuality: 50,
       );
 

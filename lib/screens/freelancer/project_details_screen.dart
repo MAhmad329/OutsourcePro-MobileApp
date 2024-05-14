@@ -27,38 +27,63 @@ class ProjectDetailsScreen extends StatelessWidget {
     bool isTeamLeader =
         teamProvider.team?.owner.id == freelancerProvider.profile.id;
     bool hasTeam = teamProvider.team != null;
-    bool canApply = !project.requiresTeam || (hasTeam && isTeamLeader);
 
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: SizedBox(
         child: Consumer<ProjectProvider>(
           builder: (_, provider, child) {
+            // Determine if the user has already applied to the project
             bool isApplied = provider.hasApplied(project.id,
                 freelancerProvider.profile.id, teamProvider.team?.id);
+
+            // Determine if the user can apply based on the project type and team status
+            bool canApply = !project.requiresTeam ||
+                (project.requiresTeam && isTeamLeader && hasTeam);
+
             return MyButton(
               onTap: canApply
                   ? () {
                       if (isApplied) {
+                        // If already applied, provide an option to cancel the application
                         provider.cancelApplication(project.id, context,
                             onSuccess: () {
-                          freelancerProvider.fetchFreelancerDetails();
+                          freelancerProvider
+                              .fetchFreelancerDetails(); // Refresh details after action
+                          provider
+                              .fetchProjects(); // Refresh project list to update UI state
+                          if (onActionCompleted != null) {
+                            onActionCompleted!();
+                          }
                         });
                       } else {
+                        // If not applied, provide an option to apply
                         if (project.requiresTeam && isTeamLeader) {
                           provider.applyToProjectAsTeam(project.id, context,
                               onSuccess: () {
-                            freelancerProvider.fetchFreelancerDetails();
+                            freelancerProvider
+                                .fetchFreelancerDetails(); // Refresh details after action
+                            provider
+                                .fetchProjects(); // Refresh project list to update UI state
+                            if (onActionCompleted != null) {
+                              onActionCompleted!();
+                            }
                           });
                         } else {
                           provider.applyToProject(project.id, context,
                               onSuccess: () {
-                            freelancerProvider.fetchFreelancerDetails();
+                            freelancerProvider
+                                .fetchFreelancerDetails(); // Refresh details after action
+                            provider
+                                .fetchProjects(); // Refresh project list to update UI state
+                            if (onActionCompleted != null) {
+                              onActionCompleted!();
+                            }
                           });
                         }
                       }
                     }
-                  : null,
+                  : null, // Disable button if conditions are not met
               buttonText: isApplied ? 'Cancel' : 'Apply',
               buttonColor: canApply
                   ? (isApplied ? Colors.red : primaryColor)
@@ -90,9 +115,6 @@ class ProjectDetailsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // SizedBox(
-              //   height: 5.h,
-              // ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

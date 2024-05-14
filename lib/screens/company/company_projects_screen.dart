@@ -16,11 +16,11 @@ class CompanyProject extends StatefulWidget {
 class _CompanyProjectState extends State<CompanyProject> {
   @override
   void initState() {
+    super.initState();
     Provider.of<ProjectProvider>(context, listen: false)
         .getCompanySoloProjects();
     Provider.of<ProjectProvider>(context, listen: false)
         .getCompanyTeamProjects();
-    super.initState();
   }
 
   @override

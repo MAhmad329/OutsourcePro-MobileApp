@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 import '../models/post.dart';
 
@@ -15,7 +16,6 @@ class CommunityProvider extends ChangeNotifier {
   void updateDependencies(String ipAddress, String cookie) {
     _ipAddress = ipAddress;
     _cookie = cookie;
-    getAllPosts();
   }
 
   Future<void> getAllPosts() async {
@@ -41,6 +41,64 @@ class CommunityProvider extends ChangeNotifier {
       }
     } catch (e) {
       print(e.toString());
+    }
+  }
+
+  Future<List<String>> uploadImages(List<XFile> images) async {
+    List<String> uploadedUrls = [];
+    if (_ipAddress.isEmpty || _cookie.isEmpty) {
+      return uploadedUrls;
+    }
+
+    for (var image in images) {
+      var headers = {'Cookie': _cookie};
+      var request = http.MultipartRequest(
+          'POST', Uri.parse('http://$_ipAddress:3000/api/v1/uploadFile'));
+      request.files
+          .add(await http.MultipartFile.fromPath('filename', image.path));
+      request.headers.addAll(headers);
+
+      try {
+        var response = await request.send();
+
+        if (response.statusCode == 200) {
+          String responseBody = await response.stream.bytesToString();
+          var jsonResponse = json.decode(responseBody);
+          uploadedUrls.add(jsonResponse['url']);
+          print("Image uploaded: ${jsonResponse['url']}");
+        } else {
+          String responseBody = await response.stream.bytesToString();
+          print(
+              "Failed to upload image: ${response.reasonPhrase}, Body: $responseBody");
+        }
+      } catch (e) {
+        print("Error uploading image: $e");
+      }
+    }
+
+    return uploadedUrls;
+  }
+
+  Future<void> createPost(String content, List<XFile> images) async {
+    if (_ipAddress.isEmpty || _cookie.isEmpty) {
+      return;
+    }
+
+    List<String> imageUrls = await uploadImages(images);
+    var headers = {'Content-Type': 'application/json', 'Cookie': _cookie};
+    var request = http.Request('POST',
+        Uri.parse('http://$_ipAddress:3000/api/v1/community/createPost'));
+    request.body = json
+        .encode({"content": content != '' ? content : '', "media": imageUrls});
+    request.headers.addAll(headers);
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print("Post created successfully.");
+      await getAllPosts(); // Refresh the list of posts
+    } else {
+      print("Failed to create post: ${response.reasonPhrase}");
     }
   }
 
@@ -187,5 +245,10 @@ class CommunityProvider extends ChangeNotifier {
     } else {
       likePost(post.id, userId);
     }
+  }
+
+  void reset() {
+    _posts.clear();
+    notifyListeners();
   }
 }

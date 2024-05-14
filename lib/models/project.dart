@@ -1,4 +1,6 @@
 import 'package:intl/intl.dart';
+import 'package:outsourcepro/models/freelancer.dart';
+import 'package:outsourcepro/models/team.dart';
 
 import 'company.dart';
 
@@ -12,8 +14,8 @@ class Project {
 
   final List<String> requiredMembers;
   final int budget;
-  final List<dynamic> freelancerApplicants;
-  final List<dynamic> teamApplicants;
+  final List<FreelancerProfile> freelancerApplicants;
+  final List<Team> teamApplicants;
   final bool requiresTeam;
   final String? selectedApplicant;
   final DateTime createdAt;
@@ -43,12 +45,27 @@ class Project {
       type: json['type'],
       budget: json['budget'],
       requiredMembers: List<String>.from(json['requiredMembers'] ?? []),
-      owner: json['owner'] is Map<String, dynamic>
-          ? Company.fromJson(json['owner'])
-          : Company(id: json['owner']),
-      freelancerApplicants:
-          List<dynamic>.from(json['freelancerApplicants'] ?? []),
-      teamApplicants: List<dynamic>.from(json['teamApplicants'] ?? []),
+      owner: Company.fromJson(json['owner']),
+      // json['owner'] is Map<String, dynamic>
+      //     ? Company.fromJson(json['owner'])
+      //     : Company(id: json['owner']),
+      freelancerApplicants: (json['freelancerApplicants'] as List?)
+              ?.map((item) => item is Map<String, dynamic>
+                  ? FreelancerProfile.fromJson(item)
+                  : null)
+              .where((item) => item != null)
+              .cast<FreelancerProfile>()
+              .toList() ??
+          [],
+
+      teamApplicants: (json['teamApplicants'] as List?)
+              ?.map((item) =>
+                  item is Map<String, dynamic> ? Team.fromJson(item) : null)
+              .where((item) => item != null)
+              .cast<Team>()
+              .toList() ??
+          [],
+
       requiresTeam: json['requiresTeam'] ?? false,
       selectedApplicant: json['selectedApplicant'],
       createdAt: json['createdAt'] != null
@@ -69,8 +86,9 @@ class Project {
       'requiredMembers': requiredMembers,
       'budget': budget,
       'owner': owner.toJson(),
-      'freelancerApplicants': freelancerApplicants,
-      'teamApplicants': teamApplicants,
+      'freelancerApplicants':
+          freelancerApplicants.map((e) => e.toJson()).toList(),
+      'teamApplicants': teamApplicants.map((e) => e.toJson()).toList(),
       'requiresTeam': requiresTeam,
       'selectedApplicant': selectedApplicant,
       'createdAt': createdAt.toIso8601String(),

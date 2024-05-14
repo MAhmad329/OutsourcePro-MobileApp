@@ -8,6 +8,7 @@ import 'package:outsourcepro/screens/freelancer/manage_projects.dart';
 import 'package:outsourcepro/screens/freelancer/team_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../Providers/freelance_profile_provider.dart';
 import '../../providers/navigation_provider.dart';
 import 'projects_screen.dart';
 
@@ -24,6 +25,8 @@ class _HomePageFreelancerState extends State<HomePageFreelancer> {
   @override
   void initState() {
     super.initState();
+    Provider.of<FreelancerProfileProvider>(context, listen: false)
+        .fetchFreelancerDetails();
     _pageController = PageController(
       initialPage:
           Provider.of<NavigationProvider>(context, listen: false).currentIndex,
