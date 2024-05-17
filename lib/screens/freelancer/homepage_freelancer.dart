@@ -53,6 +53,8 @@ class _HomePageFreelancerState extends State<HomePageFreelancer> {
   @override
   Widget build(BuildContext context) {
     final navigationProvider = Provider.of<NavigationProvider>(context);
+    print(
+        'FUCKID: ${Provider.of<FreelancerProfileProvider>(context, listen: false).profile.id}');
 
     return WillPopScope(
       onWillPop: () async {

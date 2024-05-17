@@ -17,20 +17,31 @@ import 'package:outsourcepro/screens/company/homepage_company.dart';
 import 'package:outsourcepro/screens/freelancer/homepage_freelancer.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
+import 'package:video_player/video_player.dart';
 import 'Providers/freelance_profile_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
   TokenProvider tokenProvider = TokenProvider();
   await tokenProvider.loadCookieFromPrefs();
-  runApp(const MyApp());
+  //SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  ZegoUIKit().initLog().then((value) {
+    ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI(
+      [ZegoUIKitSignalingPlugin()],
+    );
+
+    runApp(MyApp(navigatorKey: navigatorKey));
+  });
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final GlobalKey<NavigatorState> navigatorKey;
+  const MyApp({super.key, required this.navigatorKey});
 
   @override
   Widget build(BuildContext context) {

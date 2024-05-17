@@ -9,6 +9,8 @@ import 'package:outsourcepro/screens/common/selection_screen.dart';
 import 'package:outsourcepro/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 import '../models/education_entry.dart';
 import '../models/experience_entry.dart';
@@ -60,6 +62,27 @@ class FreelancerProfileProvider extends ChangeNotifier {
           .removeWhere((existingProject) => existingProject.id == project.id);
     }
     notifyListeners();
+  }
+
+  void onUserLogin(String userId, String userName) {
+    /// 1.2.1. initialized ZegoUIKitPrebuiltCallInvitationService
+    /// when app's user is logged in or re-logged in
+    /// We recommend calling this method as soon as the user logs in to your app.
+    ZegoUIKitPrebuiltCallInvitationService().init(
+      appID: 1428909108 /*input your AppID*/,
+      appSign:
+          'c4b44e6b3090707d1ae39ee96a3ffc3792f1787755944add58fc745c1c9c4347' /*input your AppSign*/,
+      userID: userId,
+      userName: userName,
+      plugins: [ZegoUIKitSignalingPlugin()],
+    );
+  }
+
+  /// on App's user logout
+  void onUserLogout() {
+    /// 1.2.2. de-initialization ZegoUIKitPrebuiltCallInvitationService
+    /// when app's user is logged out
+    ZegoUIKitPrebuiltCallInvitationService().uninit();
   }
 
   Future<void> getAppliedProjects() async {
@@ -182,6 +205,7 @@ class FreelancerProfileProvider extends ChangeNotifier {
                 .cast<Project>()
                 .toList();
 
+        onUserLogin(_profile.id, _profile.username);
         notifyListeners();
       } else {
         print(response.reasonPhrase);

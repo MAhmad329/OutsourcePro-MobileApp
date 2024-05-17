@@ -36,23 +36,28 @@ class SocketService {
     socket!.onDisconnect((_) => print('Disconnected from Socket.IO server'));
   }
 
-  void sendIndividualMessage(
-      String senderId, String receiverId, String content) {
+  void sendIndividualMessage(String senderId, String receiverId, String content,
+      {String? fileUrl, String? fileType}) {
     socket!.emit('individual chat message', {
       'sender': senderId,
       'receiverId': receiverId,
       'content': content,
+      'fileUrl': fileUrl,
+      'fileType': fileType,
     });
     print('message emited');
   }
 
   void sendTeamMessage(
-      String teamId, String senderId, String content, String username) {
+      String teamId, String senderId, String content, String username,
+      {String? fileUrl, String? fileType}) {
     socket!.emit('team chat message', {
       'teamId': teamId,
       'sender': senderId,
       'senderUsername': username,
       'content': content,
+      'fileUrl': fileUrl,
+      'fileType': fileType,
     });
     print('message emitted');
   }

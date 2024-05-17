@@ -1,13 +1,20 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:http/http.dart' as http;
+import 'package:open_file/open_file.dart';
 import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/constants.dart';
 import 'package:outsourcepro/providers/chat_provider.dart';
 import 'package:outsourcepro/providers/token_provider.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/chat.dart';
 import '../../services/socket_service.dart';
+import '../common/calling/1on1_call.dart';
 
 class ChatScreen extends StatefulWidget {
   final String receiverId;
@@ -29,14 +36,14 @@ class _ChatScreenState extends State<ChatScreen> {
   final SocketService socketService = SocketService();
   final TextEditingController _messageController = TextEditingController();
   List<Message> _messages = [];
-  bool _isActive = false; // Track if the chat screen is active
+  bool _isActive = false;
 
   @override
   void initState() {
     super.initState();
     _fetchAndSetMessages();
     _setupSocketListeners();
-    _isActive = true; // Set to true when the screen is active
+    _isActive = true;
   }
 
   @override
@@ -83,7 +90,6 @@ class _ChatScreenState extends State<ChatScreen> {
             _messages.insert(0, message);
           });
           if (_isActive) {
-            // Mark the message as read only if the chat screen is active
             Provider.of<ChatProvider>(context, listen: false)
                 .markMessageAsRead(widget.chatId!);
           }
@@ -94,19 +100,24 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  void _sendMessage() {
-    if (_messageController.text.isNotEmpty) {
+  void _sendMessage({String? fileUrl, String? fileType}) {
+    if (_messageController.text.isNotEmpty || fileUrl != null) {
       String senderId =
           Provider.of<FreelancerProfileProvider>(context, listen: false)
               .profile
               .id;
       String content = _messageController.text;
-      Provider.of<ChatProvider>(context, listen: false)
-          .sendMessage('individual', widget.receiverId, '', content, senderId);
-      socketService.sendIndividualMessage(senderId, widget.receiverId, content);
+
+      Provider.of<ChatProvider>(context, listen: false).sendMessage(
+          'individual', widget.receiverId, '', content, senderId,
+          fileUrl: fileUrl, fileType: fileType);
+      socketService.sendIndividualMessage(senderId, widget.receiverId, content,
+          fileUrl: fileUrl, fileType: fileType);
       Message newMessage = Message(
           senderId: senderId,
           content: content,
+          fileUrl: fileUrl,
+          fileType: fileType,
           timestamp: DateTime.now(),
           isRead: false);
       setState(() {
@@ -116,6 +127,49 @@ class _ChatScreenState extends State<ChatScreen> {
       Provider.of<ChatProvider>(context, listen: false)
           .updateLastMessage(widget.chatId!, newMessage);
     }
+  }
+
+  Future<void> _pickAndUploadFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      String? extension = result.files.single.extension;
+
+      if (extension != null &&
+          ['pdf', 'docx', 'jpg', 'jpeg', 'png']
+              .contains(extension.toLowerCase())) {
+        String? fileUrl =
+            await Provider.of<ChatProvider>(context, listen: false)
+                .uploadFile(file);
+
+        if (fileUrl != null) {
+          _sendMessage(fileUrl: fileUrl, fileType: extension);
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  'Unsupported file format. Please upload a PDF, DOCX, JPG, JPEG, or PNG file.')),
+        );
+      }
+    }
+  }
+
+  Future<File?> downloadFile(String url, String fileName) async {
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final bytes = response.bodyBytes;
+        final tempDir = await getTemporaryDirectory();
+        final file = File('${tempDir.path}/$fileName');
+        await file.writeAsBytes(bytes);
+        return file;
+      }
+    } catch (e) {
+      print("Error downloading file: $e");
+    }
+    return null;
   }
 
   @override
@@ -129,6 +183,28 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text(widget.username),
         centerTitle: true,
+        actions: [
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OneOnOneCall(
+                    receiverId: widget.receiverId,
+                    userName: widget.username,
+                  ),
+                ),
+              );
+            },
+            child: const Text(
+              'Call',
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+          SizedBox(
+            width: 15.w,
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -165,12 +241,75 @@ class _ChatScreenState extends State<ChatScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  _messages[index].content ?? '',
-                                  style: kText2.copyWith(
-                                      color: isMe ? Colors.white : Colors.black,
-                                      fontSize: 16.sp),
-                                ),
+                                if (_messages[index].fileUrl != null)
+                                  _messages[index].fileType == 'pdf' ||
+                                          _messages[index].fileType == 'docx'
+                                      ? InkWell(
+                                          onTap: () async {
+                                            final url =
+                                                _messages[index].fileUrl!;
+                                            final fileName =
+                                                'downloaded_file.${_messages[index].fileType}';
+                                            final file = await downloadFile(
+                                                url, fileName);
+                                            if (file != null) {
+                                              OpenFile.open(file.path);
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        'Error opening file.')),
+                                              );
+                                            }
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Icon(_messages[index].fileType ==
+                                                      'pdf'
+                                                  ? Icons.picture_as_pdf
+                                                  : Icons.insert_drive_file),
+                                              SizedBox(width: 8.w),
+                                              Text(
+                                                _messages[index]
+                                                    .fileType!
+                                                    .toUpperCase(),
+                                                style: kText2.copyWith(
+                                                    color: isMe
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                    fontSize: 16.sp),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    InteractiveViewer(
+                                                  child: Image.network(
+                                                    _messages[index].fileUrl!,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Image.network(
+                                              _messages[index].fileUrl!),
+                                        ),
+                                if (_messages[index].content != null &&
+                                    _messages[index].content!.isNotEmpty)
+                                  Text(
+                                    _messages[index].content!,
+                                    style: kText2.copyWith(
+                                        color:
+                                            isMe ? Colors.white : Colors.black,
+                                        fontSize: 16.sp),
+                                  ),
                               ],
                             ),
                           ),
@@ -193,6 +332,14 @@ class _ChatScreenState extends State<ChatScreen> {
             padding: EdgeInsets.all(8.0.r),
             child: Row(
               children: [
+                IconButton(
+                  onPressed: _pickAndUploadFile,
+                  icon: Icon(
+                    Icons.attach_file,
+                    color: Colors.grey,
+                    size: 24.r,
+                  ),
+                ),
                 Expanded(
                   child: TextField(
                     style: TextStyle(fontSize: 14.sp),
@@ -203,7 +350,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: _sendMessage,
+                  onPressed: () => _sendMessage(),
                   icon: Icon(
                     Icons.send,
                     color: Colors.grey,

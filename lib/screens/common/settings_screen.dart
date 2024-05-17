@@ -261,6 +261,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   Provider.of<TokenProvider>(context,
                                           listen: false)
                                       .reset();
+                                  Provider.of<FreelancerProfileProvider>(
+                                          context,
+                                          listen: false)
+                                      .onUserLogout();
 
                                   SharedPreferences prefs =
                                       await SharedPreferences.getInstance();

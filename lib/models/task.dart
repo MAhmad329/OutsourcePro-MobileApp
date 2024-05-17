@@ -3,9 +3,9 @@ import 'package:outsourcepro/models/freelancer.dart';
 class Task {
   String? id;
   String? description;
-  FreelancerProfile? assignee;
+  List<FreelancerProfile>? assignee;
   String? owner;
-  String? submittedWork;
+  List<dynamic>? submittedWork;
   DateTime? deadline;
   String? status;
   String? team;
@@ -28,10 +28,11 @@ class Task {
       id: json['_id'],
       description: json['description'],
       assignee: json['assignee'] != null
-          ? FreelancerProfile.fromJson(json['assignee'])
-          : null,
+          ? List<FreelancerProfile>.from(
+              json['assignee'].map((x) => FreelancerProfile.fromJson(x)))
+          : [],
       owner: json['owner'],
-      submittedWork: json['submittedWork'] ?? '',
+      submittedWork: json['submittedWork'] ?? [],
       deadline: DateTime.parse(json['deadline']),
       status: json['status'],
       team: json['team'],
@@ -43,7 +44,7 @@ class Task {
     return {
       '_id': id,
       'description': description,
-      'assignee': assignee?.toJson(),
+      'assignee': assignee?.map((x) => x.toJson()).toList(),
       'owner': owner,
       'submittedWork': submittedWork,
       'deadline': deadline?.toIso8601String(),

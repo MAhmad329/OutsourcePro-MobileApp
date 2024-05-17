@@ -4,6 +4,7 @@ import 'package:outsourcepro/Providers/freelance_profile_provider.dart';
 import 'package:outsourcepro/providers/community_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:video_player/video_player.dart';
 
 import '../../constants.dart';
 import '../../models/post.dart';
@@ -21,6 +22,37 @@ class CommunityPostCard extends StatefulWidget {
 class _CommunityPostCardState extends State<CommunityPostCard> {
   bool _isExpanded = false;
   int _currentIndex = 0;
+  VideoPlayerController? _videoController;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.post.media.isNotEmpty) {
+      _initializeVideoController(widget.post.media[0]);
+    }
+  }
+
+  @override
+  void dispose() {
+    _videoController?.dispose();
+    super.dispose();
+  }
+
+  void _initializeVideoController(String url) {
+    if (_isVideo(url)) {
+      _videoController = VideoPlayerController.network(url)
+        ..initialize().then((_) {
+          setState(() {});
+          _videoController?.play();
+        }).catchError((error) {
+          print('Error initializing video player: $error');
+        });
+    }
+  }
+
+  bool _isVideo(String url) {
+    return url.contains('.mp4') || url.contains('.mov') || url.contains('.avi');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +60,8 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
         Provider.of<CommunityProvider>(context, listen: false);
     final hasLongContent = _hasLongContent(widget.post.content, 3, context);
     final bool isLiked = widget.post.isLikedBy(
-        Provider.of<FreelancerProfileProvider>(context, listen: false)
-            .profile
-            .id);
+      Provider.of<FreelancerProfileProvider>(context, listen: false).profile.id,
+    );
 
     return Card(
       shape: RoundedRectangleBorder(
@@ -143,11 +174,12 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                     onPressed: () {
                       setState(() {
                         communityProvider.toggleLikeStatus(
-                            widget.post,
-                            Provider.of<FreelancerProfileProvider>(context,
-                                    listen: false)
-                                .profile
-                                .id);
+                          widget.post,
+                          Provider.of<FreelancerProfileProvider>(context,
+                                  listen: false)
+                              .profile
+                              .id,
+                        );
                       });
                     },
                   ),
@@ -195,9 +227,10 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
             child: Text(
               _isExpanded ? 'Show Less' : 'Read More',
               style: TextStyle(
-                  color: primaryColor,
-                  fontSize: 12.sp,
-                  decoration: TextDecoration.underline),
+                color: primaryColor,
+                fontSize: 12.sp,
+                decoration: TextDecoration.underline,
+              ),
             ),
           ),
       ],
@@ -229,9 +262,25 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
               setState(() {
                 _currentIndex = index;
               });
+              if (_isVideo(media[index])) {
+                _videoController?.pause();
+                _initializeVideoController(media[index]);
+              } else {
+                _videoController?.pause();
+              }
             },
             itemBuilder: (context, index) {
-              return Image.network(media[index]);
+              if (_isVideo(media[index])) {
+                return _videoController != null &&
+                        _videoController!.value.isInitialized
+                    ? AspectRatio(
+                        aspectRatio: _videoController!.value.aspectRatio,
+                        child: VideoPlayer(_videoController!),
+                      )
+                    : const Center(child: CircularProgressIndicator());
+              } else {
+                return Image.network(media[index]);
+              }
             },
           ),
         ),

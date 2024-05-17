@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -29,7 +30,8 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> sendMessage(String type, String receiverId, String teamId,
-      String content, String senderId) async {
+      String content, String senderId,
+      {String? fileUrl, String? fileType}) async {
     try {
       var headers = {'Content-Type': 'application/json', 'Cookie': _cookie};
       var request = http.Request(
@@ -40,6 +42,8 @@ class ChatProvider extends ChangeNotifier {
           "receiverId": receiverId,
           "senderId": senderId,
           "content": content,
+          "fileUrl": fileUrl, // Add fileUrl
+          "fileType": fileType, // Add fileType
         });
       } else if (type == 'team') {
         request.body = json.encode({
@@ -47,6 +51,8 @@ class ChatProvider extends ChangeNotifier {
           "team": teamId,
           "content": content,
           "senderId": senderId,
+          "fileUrl": fileUrl, // Add fileUrl
+          "fileType": fileType, // Add fileType
         });
       }
 
@@ -58,6 +64,8 @@ class ChatProvider extends ChangeNotifier {
         Message sentMessage = Message(
           senderId: senderId,
           content: content,
+          fileUrl: fileUrl, // Add fileUrl
+          fileType: fileType, // Add fileType
         );
         _Messages.add(sentMessage);
         notifyListeners();
@@ -139,6 +147,32 @@ class ChatProvider extends ChangeNotifier {
       }
     } catch (e) {
       print(e.toString());
+    }
+  }
+
+  Future<String?> uploadFile(File file) async {
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://$_ipAddress:3000/api/v1/uploadFile'),
+      );
+      request.files.add(await http.MultipartFile.fromPath('filename', file.path));
+      request.headers.addAll({'Cookie': _cookie});
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        var responseData = await http.Response.fromStream(response);
+        var data = json.decode(responseData.body);
+        return data['url'];
+      } else {
+        var responseData = await http.Response.fromStream(response);
+        print('File upload failed: ${responseData.body}');
+        return null;
+      }
+    } catch (e) {
+      print('File upload error: $e');
+      return null;
     }
   }
 

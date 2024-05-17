@@ -194,17 +194,28 @@ class TaskCard extends StatelessWidget {
               style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8.h),
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(task.assignee!.pfp),
-                ),
-                SizedBox(
-                  width: 10.w,
-                ),
-                Expanded(child: Text(task.assignee?.username ?? 'Unassigned')),
-              ],
-            ),
+            task.assignee != null && task.assignee!.isNotEmpty
+                ? Column(
+                    children: task.assignee!.map((assignee) {
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(assignee.pfp),
+                              ),
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                              Expanded(child: Text(assignee.username)),
+                            ],
+                          ),
+                          SizedBox(height: 8.h), // Add gap between assignees
+                        ],
+                      );
+                    }).toList(),
+                  )
+                : Text('Unassigned'),
             SizedBox(height: 10.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

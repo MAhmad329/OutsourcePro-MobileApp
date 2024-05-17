@@ -36,18 +36,21 @@ class Chat {
 class Message {
   String? senderId;
   String? content;
+  String? fileUrl; // Add fileUrl
+  String? fileType; // Add fileType
   DateTime? timestamp;
-
   bool? isRead;
-
   String? username;
 
-  Message(
-      {this.senderId,
-      this.content,
-      this.timestamp,
-      this.isRead,
-      this.username});
+  Message({
+    this.senderId,
+    this.content,
+    this.fileUrl, // Add fileUrl
+    this.fileType, // Add fileType
+    this.timestamp,
+    this.isRead,
+    this.username,
+  });
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
@@ -55,6 +58,8 @@ class Message {
           json['sender'] as String?, // Cast to String? to allow null values
       content:
           json['content'] as String?, // Cast to String? to allow null values
+      fileUrl: json['fileUrl'] as String?, // Add fileUrl
+      fileType: json['fileType'] as String?, // Add fileType
       timestamp:
           json['timestamp'] != null ? DateTime.parse(json['timestamp']) : null,
       isRead: json['isRead'] ?? false,
