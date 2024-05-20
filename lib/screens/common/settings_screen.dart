@@ -269,7 +269,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   SharedPreferences prefs =
                                       await SharedPreferences.getInstance();
                                   final String? userType =
-                                      prefs?.getString('userType');
+                                      prefs.getString('userType');
                                   if (userType == 'freelancer') {
                                     Provider.of<FreelancerProfileProvider>(
                                             context,

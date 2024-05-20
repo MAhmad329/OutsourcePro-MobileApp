@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:outsourcepro/models/team.dart';
-import 'package:outsourcepro/screens/freelancer/chat_screen.dart';
+import 'package:outsourcepro/providers/company_profile_provider.dart';
 import 'package:outsourcepro/screens/freelancer/profile_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../common/freelancerCompanyChatScreen.dart';
 
 class TeamViewScreen extends StatefulWidget {
   final Team team;
@@ -94,9 +97,16 @@ class _TeamViewScreenState extends State<TeamViewScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ChatScreen(
+                                    builder: (context) =>
+                                        FreelancerCompanyChatScreen(
                                       receiverId: widget.team!.owner.id,
                                       username: widget.team!.owner.username,
+                                      userId:
+                                          Provider.of<CompanyProfileProvider>(
+                                                  context)
+                                              .profile
+                                              .id,
+                                      userType: 'company',
                                     ),
                                   ),
                                 );

@@ -26,8 +26,7 @@ class _TeamCallState extends State<TeamCall> {
       userName: Provider.of<FreelancerProfileProvider>(context, listen: false)
           .profile
           .username,
-      callID:
-          '${Provider.of<TeamProvider>(context, listen: false).team!.id} - ${widget.callType}',
+      callID: Provider.of<TeamProvider>(context, listen: false).team!.id,
       config: widget.callType == 'video'
           ? ZegoUIKitPrebuiltCallConfig.groupVideoCall()
           : ZegoUIKitPrebuiltCallConfig.groupVoiceCall(),

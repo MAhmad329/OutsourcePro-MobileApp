@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:outsourcepro/providers/company_profile_provider.dart';
+import 'package:outsourcepro/screens/common/freelancerCompanyChatsScreen.dart';
 import 'package:outsourcepro/screens/common/settings_screen.dart';
 import 'package:outsourcepro/screens/company/company_projects_screen.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +34,7 @@ class _HomePageCompanyState extends State<HomePageCompany> {
   @override
   Widget build(BuildContext context) {
     final navigationProvider = Provider.of<NavigationProvider>(context);
+    final profileProvider = Provider.of<CompanyProfileProvider>(context);
 
     return WillPopScope(
       onWillPop: () async {
@@ -47,13 +50,10 @@ class _HomePageCompanyState extends State<HomePageCompany> {
           physics: const NeverScrollableScrollPhysics(),
           controller: _pageController,
           onPageChanged: (index) => navigationProvider.updateIndex(index),
-          children: const [
+          children: [
             CompanyProject(),
-            Scaffold(
-              body: Center(
-                child: Text('2nd screen'),
-              ),
-            ),
+            FreelancerCompanyChatsScreen(
+                userId: profileProvider.profile.id, userType: 'company'),
             SettingsScreen(),
           ],
         ),
@@ -73,8 +73,8 @@ class _HomePageCompanyState extends State<HomePageCompany> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.work),
-              label: 'Projects',
+              icon: Icon(Icons.chat_outlined),
+              label: 'Chats',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),

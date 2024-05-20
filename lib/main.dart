@@ -4,6 +4,7 @@ import 'package:outsourcepro/providers/auth_provider.dart';
 import 'package:outsourcepro/providers/chat_provider.dart';
 import 'package:outsourcepro/providers/community_provider.dart';
 import 'package:outsourcepro/providers/company_profile_provider.dart';
+import 'package:outsourcepro/providers/freelancerCompanyChatProvider.dart';
 import 'package:outsourcepro/providers/navigation_provider.dart';
 import 'package:outsourcepro/providers/password_visibility_provider.dart';
 import 'package:outsourcepro/providers/project_provider.dart';
@@ -19,7 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
-import 'package:video_player/video_player.dart';
+
 import 'Providers/freelance_profile_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -94,6 +95,15 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProxyProvider<TokenProvider, ChatProvider>(
           create: (_) => ChatProvider(),
+          update: (_, tokenProvider, chatProvider) {
+            return chatProvider!
+              ..updateDependencies(
+                  tokenProvider.ipaddress, tokenProvider.cookie);
+          },
+        ),
+        ChangeNotifierProxyProvider<TokenProvider,
+            FreelancerCompanyChatProvider>(
+          create: (_) => FreelancerCompanyChatProvider(),
           update: (_, tokenProvider, chatProvider) {
             return chatProvider!
               ..updateDependencies(
